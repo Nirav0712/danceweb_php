@@ -60,7 +60,7 @@ ob_start();
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             <div class="lg:col-span-5 relative">
                 <div class="rounded-3xl overflow-hidden shadow-xl border border-slate-200">
-                    <img src="<?= htmlspecialchars($sections['about_intro']['image_url'] ?? '/assets/about/director.jpg', ENT_QUOTES, 'UTF-8') ?>" alt="Director Shri Tirthraj Trivedi" class="w-full h-auto object-cover">
+                    <img src="<?= htmlspecialchars($sections['about_intro']['image_url'] ?? '/assets/about/director.jpg', ENT_QUOTES, 'UTF-8') ?>" alt="Director Shri Tirthraj Trivedi" class="w-full h-auto object-cover" loading="lazy">
                 </div>
                 <div class="absolute -bottom-6 -right-6 bg-white p-5 rounded-2xl shadow-lg border border-slate-100 hidden sm:block max-w-xs">
                     <span class="text-xs font-bold text-slate-900 block"><?= htmlspecialchars($settings['director_name'] ?? 'Shri Tirthraj Trivedi', ENT_QUOTES, 'UTF-8') ?></span>
@@ -100,7 +100,7 @@ ob_start();
             <?php foreach ($categories as $cat): ?>
                 <div class="group bg-slate-50 rounded-2xl border border-slate-200/80 overflow-hidden hover:shadow-lg transition-all transform hover:-translate-y-1">
                     <div class="h-48 overflow-hidden bg-slate-200">
-                        <img src="<?= htmlspecialchars($cat['cover_image_url'] ?? '/assets/homepage/default_cat.jpg', ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars($cat['name'], ENT_QUOTES, 'UTF-8') ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <img src="<?= htmlspecialchars($cat['cover_image_url'] ?? '/assets/homepage/default_cat.jpg', ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars($cat['name'], ENT_QUOTES, 'UTF-8') ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
                     </div>
                     <div class="p-6 space-y-3">
                         <h3 class="font-serif font-bold text-lg text-slate-900 group-hover:text-amber-600 transition-colors">
@@ -126,7 +126,7 @@ ob_start();
     <div class="flex items-center gap-6 overflow-x-auto py-4 px-4 no-scrollbar">
         <?php foreach ($tourFlags as $flag): ?>
             <div class="flex-shrink-0 bg-slate-800/80 border border-slate-700 p-4 rounded-xl text-center w-36 space-y-2">
-                <img src="<?= htmlspecialchars($flag['flag_image_url'] ?? '', ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars($flag['country_name'] ?? '', ENT_QUOTES, 'UTF-8') ?>" class="w-12 h-8 mx-auto object-cover rounded shadow-xs">
+                <img src="<?= htmlspecialchars($flag['flag_image_url'] ?? '', ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars($flag['country_name'] ?? '', ENT_QUOTES, 'UTF-8') ?>" class="w-12 h-8 mx-auto object-cover rounded shadow-xs" loading="lazy">
                 <span class="font-semibold text-xs text-white block truncate"><?= htmlspecialchars($flag['country_name'] ?? '', ENT_QUOTES, 'UTF-8') ?></span>
                 <span class="text-[10px] text-amber-400 font-medium block"><?= htmlspecialchars($flag['tour_year'] ?? '', ENT_QUOTES, 'UTF-8') ?></span>
             </div>
@@ -151,7 +151,7 @@ ob_start();
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
             <?php foreach ($gallery as $item): ?>
                 <div class="group relative rounded-xl overflow-hidden aspect-square bg-slate-200 shadow-xs">
-                    <img src="<?= htmlspecialchars($item['image_url'] ?? '', ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars($item['title'] ?? 'Performance Photo', ENT_QUOTES, 'UTF-8') ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                    <img src="<?= htmlspecialchars($item['image_url'] ?? '', ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars($item['title'] ?? 'Performance Photo', ENT_QUOTES, 'UTF-8') ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy">
                     <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity p-4 flex flex-col justify-end text-white">
                         <span class="font-semibold text-xs truncate"><?= htmlspecialchars($item['title'] ?? '', ENT_QUOTES, 'UTF-8') ?></span>
                     </div>

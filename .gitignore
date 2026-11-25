@@ -50,6 +50,10 @@ composer.phar
 !/public/uploads/.htaccess
 !/public/uploads/.gitkeep
 
+# 8. Storage Caches
+/storage/cache/*
+!/storage/cache/.gitkeep
+
 # Ensure environment example templates are always tracked
 !.env.example
 !.env.hostinger.example

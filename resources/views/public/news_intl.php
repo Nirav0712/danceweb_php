@@ -16,7 +16,7 @@ ob_start();
                 <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs hover:shadow-md transition-shadow">
                     <?php if (!empty($item['image_url'])): ?>
                         <div class="h-64 bg-slate-100 overflow-hidden">
-                            <img src="<?= htmlspecialchars($item['image_url'], ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars($item['headline'], ENT_QUOTES, 'UTF-8') ?>" class="w-full h-full object-cover">
+                            <img src="<?= htmlspecialchars($item['image_url'], ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars($item['headline'], ENT_QUOTES, 'UTF-8') ?>" class="w-full h-full object-cover" loading="lazy">
                         </div>
                     <?php endif; ?>
                     <div class="p-6 space-y-3">

@@ -47,6 +47,7 @@ $router->get('/blogs', [PublicController::class, 'blogs']);
 $router->get('/blog', [PublicController::class, 'blogs']); // Legacy synonym
 $router->get('/blogs/{slug}', [PublicController::class, 'blogDetail']);
 $router->get('/contact', [PublicController::class, 'contact']);
+$router->get('/page/{slug}', [PublicController::class, 'customPage']);
 
 // Public Lead / Action Endpoints
 $router->post('/api/enquiries', [PublicController::class, 'submitEnquiry']);

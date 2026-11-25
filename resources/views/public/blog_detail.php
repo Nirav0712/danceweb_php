@@ -17,7 +17,7 @@ ob_start();
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <?php if (!empty($blog['featured_image_url'])): ?>
             <div class="rounded-3xl overflow-hidden shadow-lg mb-10 border border-slate-100">
-                <img src="<?= htmlspecialchars($blog['featured_image_url'], ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars($blog['title'], ENT_QUOTES, 'UTF-8') ?>" class="w-full h-auto object-cover">
+                <img src="<?= htmlspecialchars($blog['featured_image_url'], ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars($blog['title'], ENT_QUOTES, 'UTF-8') ?>" class="w-full h-auto object-cover" loading="lazy">
             </div>
         <?php endif; ?>
 

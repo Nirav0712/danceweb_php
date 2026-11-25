@@ -47,6 +47,10 @@ abstract class BaseAdminController
 
     protected function redirect(string $url, string $flashSuccess = null, string $flashError = null): Response
     {
+        if (strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
+            \App\Services\CacheService::flush();
+        }
+
         if ($flashSuccess) {
             \App\Core\Session::flash('success', $flashSuccess);
         }

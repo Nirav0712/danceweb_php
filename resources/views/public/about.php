@@ -37,7 +37,7 @@ ob_start();
                 </div>
             </div>
             <div class="rounded-3xl overflow-hidden shadow-xl border border-slate-200">
-                <img src="<?= htmlspecialchars($page['banner_image_url'] ?? '/assets/about/academy_group.jpg', ENT_QUOTES, 'UTF-8') ?>" alt="Academy Dancers" class="w-full h-auto object-cover">
+                <img src="<?= htmlspecialchars($page['banner_image_url'] ?? '/assets/about/academy_group.jpg', ENT_QUOTES, 'UTF-8') ?>" alt="Academy Dancers" class="w-full h-auto object-cover" loading="lazy">
             </div>
         </div>
     </div>
@@ -54,7 +54,7 @@ ob_start();
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
             <?php foreach ($associations as $assoc): ?>
                 <div class="bg-white p-6 rounded-2xl border border-slate-200 text-center space-y-3 shadow-xs">
-                    <img src="<?= htmlspecialchars($assoc['logo_url'] ?? '', ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars($assoc['name'] ?? '', ENT_QUOTES, 'UTF-8') ?>" class="h-16 w-auto mx-auto object-contain">
+                    <img src="<?= htmlspecialchars($assoc['logo_url'] ?? '', ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars($assoc['name'] ?? '', ENT_QUOTES, 'UTF-8') ?>" class="h-16 w-auto mx-auto object-contain" loading="lazy">
                     <h3 class="font-bold text-slate-900 text-sm"><?= htmlspecialchars($assoc['name'] ?? '', ENT_QUOTES, 'UTF-8') ?></h3>
                     <p class="text-slate-500 text-xs"><?= htmlspecialchars($assoc['description'] ?? '', ENT_QUOTES, 'UTF-8') ?></p>
                 </div>

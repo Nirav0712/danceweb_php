@@ -9,6 +9,16 @@ class Response
     protected string $content = '';
     protected ?string $redirectUrl = null;
 
+    public function __construct()
+    {
+        $this->headers = [
+            'X-Content-Type-Options' => 'nosniff',
+            'X-Frame-Options' => 'SAMEORIGIN',
+            'Referrer-Policy' => 'strict-origin-when-cross-origin',
+            'Permissions-Policy' => 'camera=(), microphone=(), geolocation=()',
+        ];
+    }
+
     public function status(int $code): self
     {
         $this->statusCode = $code;

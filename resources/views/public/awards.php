@@ -16,7 +16,7 @@ ob_start();
                 <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs hover:shadow-md transition-shadow">
                     <?php if (!empty($award['certificate_image_url'])): ?>
                         <div class="h-56 bg-slate-100 overflow-hidden">
-                            <img src="<?= htmlspecialchars($award['certificate_image_url'], ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars($award['title'], ENT_QUOTES, 'UTF-8') ?>" class="w-full h-full object-cover">
+                            <img src="<?= htmlspecialchars($award['certificate_image_url'], ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars($award['title'], ENT_QUOTES, 'UTF-8') ?>" class="w-full h-full object-cover" loading="lazy">
                         </div>
                     <?php endif; ?>
                     <div class="p-6 space-y-3">

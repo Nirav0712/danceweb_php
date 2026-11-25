@@ -45,6 +45,28 @@ class UploadService
             return ['success' => false, 'error' => "Invalid file type: {$mime}. Only JPG, PNG, WEBP, GIF, and SVG are supported."];
         }
 
+        // Extra security validation for SVG files against stored XSS
+        if ($mime === 'image/svg+xml') {
+            $svgContent = file_get_contents($file['tmp_name']);
+            if ($svgContent !== false) {
+                $dangerousPatterns = [
+                    '/<script/i',
+                    '/javascript\s*:/i',
+                    '/data\s*:\s*text\/html/i',
+                    '/onload\s*=/i',
+                    '/onerror\s*=/i',
+                    '/onclick\s*=/i',
+                    '/<foreignobject/i',
+                    '/xlink:href\s*=\s*["\']javascript/i',
+                ];
+                foreach ($dangerousPatterns as $pattern) {
+                    if (preg_match($pattern, $svgContent)) {
+                        return ['success' => false, 'error' => 'Security Error: Malicious scripts or event handlers detected in SVG upload.'];
+                    }
+                }
+            }
+        }
+
         $ext = static::$allowedMimes[$mime];
         $cleanFolder = trim(str_replace(['..', '/', '\\'], '', $folder));
         if (empty($cleanFolder)) {

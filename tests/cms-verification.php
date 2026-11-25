@@ -18,6 +18,8 @@ require_once __DIR__ . '/../app/Services/AuthService.php';
 require_once __DIR__ . '/../app/Services/Permissions.php';
 require_once __DIR__ . '/../app/Services/AuditService.php';
 require_once __DIR__ . '/../app/Services/UploadService.php';
+require_once __DIR__ . '/../app/Services/CacheService.php';
+require_once __DIR__ . '/../app/Services/SeoService.php';
 require_once __DIR__ . '/../app/Services/ContentService.php';
 require_once __DIR__ . '/../app/Helpers/Security.php';
 require_once __DIR__ . '/../app/Middleware/AuthMiddleware.php';
