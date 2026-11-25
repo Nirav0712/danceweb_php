@@ -58,15 +58,20 @@ $router->get('/sitemap.xml', [PublicController::class, 'sitemapXml']);
 $router->get('/robots.txt', [PublicController::class, 'robotsTxt']);
 
 // System / Health Check
-$router->get('/health', function () {
+$healthCheckHandler = function () {
     $dbOk = \App\Core\Database::checkHealth();
-    return [
-        'status' => $dbOk ? 'UP' : 'DOWN',
+    $status = $dbOk ? 'UP' : 'DOWN';
+    $statusCode = $dbOk ? 200 : 503;
+    return (new \App\Core\Response())->json([
+        'status' => $status,
         'database' => $dbOk ? 'connected' : 'disconnected',
         'php_version' => PHP_VERSION,
         'timestamp' => date('c'),
-    ];
-});
+    ], $statusCode);
+};
+
+$router->get('/health', $healthCheckHandler);
+$router->get('/api/health', $healthCheckHandler);
 
 // ==============================================================================
 // 2. ADMIN AUTHENTICATION

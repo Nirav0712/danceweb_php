@@ -41,19 +41,17 @@ Options -Indexes
     RewriteRule ^(app|config|database|resources|routes|scripts|storage|tests)(\/|$) - [F,L,NC]
     RewriteRule ^(\.env|\.git|composer\.) - [F,L,NC]
 
-    # Serve static assets directly from public/ if requested directly
-    RewriteCond %{REQUEST_URI} ^/public/ [NC]
+    # 1. Allow existing files or directories in root to be served directly
     RewriteCond %{REQUEST_FILENAME} -f [OR]
     RewriteCond %{REQUEST_FILENAME} -d
     RewriteRule ^ - [L]
 
-    # Map asset requests (e.g. /assets/..., /favicon.ico, /logodance.png, /uploads/...) to public/
-    RewriteCond %{DOCUMENT_ROOT}/public%{REQUEST_URI} -f
+    # 2. If the file exists in public/, rewrite and serve it (e.g. /assets/..., /favicon.ico, /logodance.png, /uploads/...)
+    RewriteCond %{DOCUMENT_ROOT}/public/$1 -f [OR]
+    RewriteCond public/$1 -f
     RewriteRule ^(.*)$ public/$1 [L]
 
-    # Front Controller routing: send all non-file/non-directory requests to index.php
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
+    # 3. Front Controller routing: send all non-file/non-directory requests to index.php
     RewriteRule ^ index.php [L,QSA]
 </IfModule>
 
