@@ -20,15 +20,15 @@ ob_start();
 
         <?php if (!empty($sections)): ?>
             <?php foreach ($sections as $section): ?>
-                <div class="prose max-w-none">
-                    <?php if (!empty($section['title'])): ?>
-                        <h2 class="text-2xl font-bold text-slate-900 mb-2"><?= htmlspecialchars($section['title'], ENT_QUOTES, 'UTF-8') ?></h2>
+                <div class="prose max-w-none mb-8">
+                    <?php if (!empty($section['heading'])): ?>
+                        <h2 class="text-2xl font-bold text-slate-900 mb-2"><?= htmlspecialchars($section['heading'], ENT_QUOTES, 'UTF-8') ?></h2>
                     <?php endif; ?>
-                    <?php if (!empty($section['subtitle'])): ?>
-                        <h3 class="text-sm font-semibold text-indigo-600 uppercase tracking-wider mb-4"><?= htmlspecialchars($section['subtitle'], ENT_QUOTES, 'UTF-8') ?></h3>
+                    <?php if (!empty($section['subheading'])): ?>
+                        <h3 class="text-sm font-semibold text-indigo-600 uppercase tracking-wider mb-4"><?= htmlspecialchars($section['subheading'], ENT_QUOTES, 'UTF-8') ?></h3>
                     <?php endif; ?>
                     <div class="text-slate-600 leading-relaxed text-sm">
-                        <?= $section['body'] ?? '' ?>
+                        <?= $section['content'] ?? '' ?>
                     </div>
                 </div>
             <?php endforeach; ?>

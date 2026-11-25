@@ -48,6 +48,15 @@ $router->get('/blog', [PublicController::class, 'blogs']); // Legacy synonym
 $router->get('/blogs/{slug}', [PublicController::class, 'blogDetail']);
 $router->get('/contact', [PublicController::class, 'contact']);
 $router->get('/page/{slug}', [PublicController::class, 'customPage']);
+$router->get('/privacy-policy', function($req) {
+    return (new \App\Controllers\PublicController())->customPage($req, ['slug' => 'privacy-policy']);
+});
+$router->get('/terms', function($req) {
+    return (new \App\Controllers\PublicController())->customPage($req, ['slug' => 'terms']);
+});
+$router->get('/faq', function($req) {
+    return (new \App\Controllers\PublicController())->customPage($req, ['slug' => 'faq']);
+});
 
 // Public Lead / Action Endpoints
 $router->post('/api/enquiries', [PublicController::class, 'submitEnquiry']);

@@ -18,6 +18,7 @@
 
 # 3. Deployment Artifacts & Archives
 /dist-hostinger/
+/dist-production/
 *.zip
 *.tar
 *.tar.gz

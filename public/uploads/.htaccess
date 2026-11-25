@@ -1,18 +1,10 @@
 # ==============================================================================
 # Security: Disable script execution in uploads directory
+# Compatible with Hostinger LiteSpeed, Apache 2.4, FastCGI, and PHP-FPM
 # ==============================================================================
 
-<IfModule mod_php.c>
-    php_flag engine off
-</IfModule>
-<IfModule mod_php7.c>
-    php_flag engine off
-</IfModule>
-<IfModule mod_php8.c>
-    php_flag engine off
-</IfModule>
-
-<FilesMatch "(?i)\.(php|phtml|php3|php4|php5|php7|php8|phps|cgi|pl|py|sh|bash|exe|bat|cmd)$">
+# 1. Deny execution and direct web access to all script extensions
+<FilesMatch "(?i)\.(php|phtml|php3|php4|php5|php7|php8|phps|phar|cgi|pl|py|sh|bash|exe|bat|cmd|htaccess|htpasswd|ini|log|env|sql)$">
     <IfModule mod_authz_core.c>
         Require all denied
     </IfModule>
@@ -22,4 +14,11 @@
     </IfModule>
 </FilesMatch>
 
+# 2. Strip any script handler mappings
+<IfModule mod_mime.c>
+    RemoveHandler .php .phtml .php3 .php4 .php5 .php7 .php8 .phps .phar .cgi .pl .py .sh
+    RemoveType .php .phtml .php3 .php4 .php5 .php7 .php8 .phps .phar .cgi .pl .py .sh
+</IfModule>
+
+# 3. Disable CGI execution and directory listings
 Options -ExecCGI -Indexes

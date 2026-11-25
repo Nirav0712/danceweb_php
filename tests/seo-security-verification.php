@@ -179,7 +179,7 @@ assertCheck("Malicious SVG with onload handler rejected", $uploadResult2['succes
 $uploadsHtaccess = ROOT_DIR . '/public/uploads/.htaccess';
 assertCheck("Uploads directory .htaccess exists", file_exists($uploadsHtaccess));
 $uploadsHtaccessContent = file_get_contents($uploadsHtaccess);
-assertCheck("Uploads .htaccess disables PHP engine", str_contains($uploadsHtaccessContent, 'php_flag engine off'));
+assertCheck("Uploads .htaccess blocks script execution", str_contains($uploadsHtaccessContent, 'Require all denied') && str_contains($uploadsHtaccessContent, 'RemoveHandler'));
 
 // -----------------------------------------------------------------------------
 // 4. PERFORMANCE, CACHING & INSTANT CMS INVALIDATION

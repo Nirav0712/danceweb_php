@@ -72,7 +72,13 @@ $branches = \App\Services\ContentService::getBranches();
 
         <div class="mt-12 pt-8 border-t border-slate-900 flex flex-col sm:flex-row justify-between items-center gap-4 text-slate-500 text-[11px]">
             <p>© <?= date('Y') ?> Dynamice Children Academy. All Rights Reserved. Reg. Trust & Cultural Organization.</p>
-            <div class="flex items-center gap-4">
+            <div class="flex flex-wrap items-center gap-3 sm:gap-4">
+                <a href="/privacy-policy" class="hover:text-slate-400 transition-colors">Privacy Policy</a>
+                <span>•</span>
+                <a href="/terms" class="hover:text-slate-400 transition-colors">Terms</a>
+                <span>•</span>
+                <a href="/faq" class="hover:text-slate-400 transition-colors">FAQ</a>
+                <span>•</span>
                 <a href="/admin/login" class="hover:text-slate-400 transition-colors">Admin Console</a>
                 <span>•</span>
                 <a href="/seo/sitemap.xml" class="hover:text-slate-400 transition-colors">Sitemap</a>

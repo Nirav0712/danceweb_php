@@ -76,7 +76,12 @@ try {
         echo '<p><strong>File:</strong> ' . htmlspecialchars($e->getFile(), ENT_QUOTES, 'UTF-8') . ' : ' . $e->getLine() . '</p>';
         echo '<pre>' . htmlspecialchars($e->getTraceAsString(), ENT_QUOTES, 'UTF-8') . '</pre>';
     } else {
-        echo '<h1>500 Internal Server Error</h1>';
-        echo '<p>An unexpected error occurred. Please try again later.</p>';
+        $errorView = ROOT_DIR . '/resources/views/errors/500.php';
+        if (file_exists($errorView)) {
+            require $errorView;
+        } else {
+            echo '<h1>500 Internal Server Error</h1>';
+            echo '<p>An unexpected error occurred. Please try again later.</p>';
+        }
     }
 }
