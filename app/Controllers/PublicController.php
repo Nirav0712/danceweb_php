@@ -26,6 +26,36 @@ class PublicController
         // 4. Fetch featured gallery items
         $gallery = Database::fetchAll("SELECT * FROM gallery_items WHERE is_featured = 1 ORDER BY sort_order ASC LIMIT 8");
 
+        // 4b. Fetch hero images (combine hero section images, featured gallery items, and curated high-res assets)
+        $heroImages = [];
+        $heroGallery = Database::fetchAll("SELECT title, image_url FROM gallery_items ORDER BY is_featured DESC, sort_order ASC LIMIT 12");
+        foreach ($heroGallery as $item) {
+            if (!empty($item['image_url'])) {
+                $heroImages[] = [
+                    'url' => $item['image_url'],
+                    'title' => $item['title'] ?? 'Dynamic Children Academy Performance',
+                ];
+            }
+        }
+        // Ensure robust default high-quality images from media library if gallery has few entries
+        $defaultHeroAssets = [
+            ['url' => '/assets/banners/homebanner.jpg', 'title' => 'Academy World Record Performance'],
+            ['url' => '/assets/about/academy_group.jpg', 'title' => 'Cultural Dance Troupe'],
+            ['url' => '/assets/about/founded-2002-stage.jpg', 'title' => 'Traditional Heritage Stage Showcase'],
+            ['url' => '/assets/about/dance-teaching-steps.jpg', 'title' => 'Mastery & Technique Training'],
+            ['url' => '/assets/gallery/1.jpg', 'title' => 'Folk Dance Troupe'],
+            ['url' => '/assets/gallery/2.jpg', 'title' => 'Classical Garba & Raas'],
+        ];
+        foreach ($defaultHeroAssets as $def) {
+            $exists = false;
+            foreach ($heroImages as $h) {
+                if ($h['url'] === $def['url']) { $exists = true; break; }
+            }
+            if (!$exists) {
+                $heroImages[] = $def;
+            }
+        }
+
         // 5. Fetch tour flags
         $tourFlags = Database::fetchAll("SELECT * FROM tour_flags WHERE is_active = 1 ORDER BY sort_order ASC LIMIT 16");
 
@@ -58,6 +88,7 @@ class PublicController
             'danceForms' => $danceForms,
             'awards' => $awards,
             'gallery' => $gallery,
+            'heroImages' => $heroImages,
             'tourFlags' => $tourFlags,
             'testimonials' => $testimonials,
             'sections' => $sections,
