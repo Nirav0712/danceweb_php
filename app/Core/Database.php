@@ -9,25 +9,37 @@ class Database
     public static function getConnection(): \PDO
     {
         if (static::$pdo === null) {
-            $host = Config::get('database.host', '127.0.0.1');
+            $host = Config::get('database.host');
             $port = Config::get('database.port', '3306');
-            $dbname = Config::get('database.database', 'dynamice_academy_db');
+            $dbname = Config::get('database.database');
             $charset = Config::get('database.charset', 'utf8mb4');
-            $username = Config::get('database.username', 'root');
-            $password = Config::get('database.password', '');
+            $username = Config::get('database.username');
+            $password = Config::get('database.password');
             $options = Config::get('database.options', [
                 \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
                 \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
                 \PDO::ATTR_EMULATE_PREPARES => false,
             ]);
 
+            // If environment variables were not loaded and credentials appear unset in production
+            $appEnv = Config::get('app.env', 'development');
+            if (empty($dbname) || empty($username)) {
+                $errorMsg = 'Database configuration is incomplete. Please check your Hostinger .env configuration file.';
+                Logger::error($errorMsg);
+                throw new \RuntimeException($errorMsg);
+            }
+
             $dsn = "mysql:host={$host};port={$port};dbname={$dbname};charset={$charset}";
 
             try {
                 static::$pdo = new \PDO($dsn, $username, $password, $options);
             } catch (\PDOException $e) {
-                Logger::error('Database Connection Error: ' . $e->getMessage());
-                throw new \RuntimeException('Failed to connect to MySQL database: ' . $e->getMessage(), (int) $e->getCode(), $e);
+                // Sanitize log: log driver and sanitized error message without leaking credentials
+                $safeError = "Database Connection Failed [Code: {$e->getCode()}] for database '{$dbname}' on host '{$host}': " . $e->getMessage();
+                Logger::error($safeError);
+                
+                // Throw safe exception without password
+                throw new \RuntimeException("Database connection failed for database '{$dbname}'. Ensure your Hostinger .env contains the correct DB_HOST, DB_NAME, DB_USER, and DB_PASS.", (int) $e->getCode(), $e);
             }
         }
 
@@ -60,8 +72,8 @@ class Database
 
     public static function fetchOne(string $sql, array $params = []): ?array
     {
-        $result = static::query($sql, $params)->fetch();
-        return $result ?: null;
+        $res = static::query($sql, $params)->fetch();
+        return $res === false ? null : $res;
     }
 
     public static function lastInsertId(): string
