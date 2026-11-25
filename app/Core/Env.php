@@ -6,6 +6,7 @@ class Env
 {
     protected static array $variables = [];
     protected static bool $loaded = false;
+    protected static ?string $loadedFile = null;
 
     public static function load(string $filePath): void
     {
@@ -61,6 +62,12 @@ class Env
                 if ((str_starts_with($val, '"') && str_ends_with($val, '"')) ||
                     (str_starts_with($val, "'") && str_ends_with($val, "'"))) {
                     $val = substr($val, 1, -1);
+                } else {
+                    // If not quoted, strip inline comments starting with whitespace+#
+                    $commentPos = strpos($val, ' #');
+                    if ($commentPos !== false) {
+                        $val = trim(substr($val, 0, $commentPos));
+                    }
                 }
 
                 // Boolean & null conversion
@@ -75,6 +82,7 @@ class Env
             }
         }
         static::$loaded = true;
+        static::$loadedFile = $target;
     }
 
     public static function isLoaded(): bool
@@ -82,8 +90,23 @@ class Env
         return static::$loaded;
     }
 
+    public static function getLoadedFile(): ?string
+    {
+        return static::$loadedFile;
+    }
+
     public static function get(string $key, mixed $default = null): mixed
     {
-        return static::$variables[$key] ?? $_ENV[$key] ?? getenv($key) ?: $default;
+        if (array_key_exists($key, static::$variables)) {
+            return static::$variables[$key];
+        }
+        if (isset($_ENV[$key])) {
+            return $_ENV[$key];
+        }
+        $env = getenv($key);
+        if ($env !== false) {
+            return $env;
+        }
+        return $default;
     }
 }

@@ -5,6 +5,12 @@ namespace App\Core;
 class Database
 {
     protected static ?\PDO $pdo = null;
+    protected static ?string $lastConnectionError = null;
+
+    public static function getLastConnectionError(): ?string
+    {
+        return static::$lastConnectionError;
+    }
 
     public static function getConnection(): \PDO
     {
@@ -25,6 +31,7 @@ class Database
             $appEnv = Config::get('app.env', 'development');
             if (empty($dbname) || empty($username)) {
                 $errorMsg = 'Database configuration is incomplete. Please check your Hostinger .env configuration file.';
+                static::$lastConnectionError = $errorMsg;
                 Logger::error($errorMsg);
                 throw new \RuntimeException($errorMsg);
             }
@@ -33,9 +40,11 @@ class Database
 
             try {
                 static::$pdo = new \PDO($dsn, $username, $password, $options);
+                static::$lastConnectionError = null;
             } catch (\PDOException $e) {
                 // Sanitize log: log driver and sanitized error message without leaking credentials
                 $safeError = "Database Connection Failed [Code: {$e->getCode()}] for database '{$dbname}' on host '{$host}': " . $e->getMessage();
+                static::$lastConnectionError = "SQLSTATE[{$e->getCode()}] " . $e->getMessage();
                 Logger::error($safeError);
                 
                 // Throw safe exception without password
@@ -53,6 +62,9 @@ class Database
             $stmt = $pdo->query('SELECT 1');
             return $stmt !== false;
         } catch (\Throwable $e) {
+            if (static::$lastConnectionError === null) {
+                static::$lastConnectionError = $e->getMessage();
+            }
             return false;
         }
     }

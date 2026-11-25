@@ -62,12 +62,29 @@ $healthCheckHandler = function () {
     $dbOk = \App\Core\Database::checkHealth();
     $status = $dbOk ? 'UP' : 'DOWN';
     $statusCode = $dbOk ? 200 : 503;
-    return (new \App\Core\Response())->json([
+
+    $payload = [
         'status' => $status,
         'database' => $dbOk ? 'connected' : 'disconnected',
         'php_version' => PHP_VERSION,
         'timestamp' => date('c'),
-    ], $statusCode);
+    ];
+
+    if (!$dbOk) {
+        $dbPass = \App\Core\Config::get('database.password');
+        $payload['diagnostics'] = [
+            'env_loaded' => \App\Core\Env::isLoaded(),
+            'env_file' => \App\Core\Env::getLoadedFile(),
+            'db_host' => \App\Core\Config::get('database.host'),
+            'db_name' => \App\Core\Config::get('database.database'),
+            'db_user' => \App\Core\Config::get('database.username'),
+            'db_pass_configured' => !empty($dbPass),
+            'db_pass_length' => is_string($dbPass) ? strlen($dbPass) : 0,
+            'error' => \App\Core\Database::getLastConnectionError(),
+        ];
+    }
+
+    return (new \App\Core\Response())->json($payload, $statusCode);
 };
 
 $router->get('/health', $healthCheckHandler);
