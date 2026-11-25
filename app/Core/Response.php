@@ -64,6 +64,16 @@ class Response
         return $this;
     }
 
+    public function getContent(): string
+    {
+        return $this->content;
+    }
+
+    public function getBody(): string
+    {
+        return $this->content;
+    }
+
     public function getRedirectUrl(): ?string
     {
         return $this->redirectUrl;
