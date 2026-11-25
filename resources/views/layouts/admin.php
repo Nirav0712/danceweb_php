@@ -9,8 +9,10 @@ $navSections = [
     'Overview' => [
         ['label' => 'Dashboard', 'url' => '/admin', 'icon' => 'layout-dashboard', 'permission' => 'dashboard:view'],
     ],
-    'Content & Pages' => [
+    'Homepage Hero' => [
         ['label' => 'Hero Banner & Heading', 'url' => '/admin/hero', 'icon' => 'sparkles', 'permission' => 'sections:manage'],
+    ],
+    'Content & Pages' => [
         ['label' => 'Website Pages', 'url' => '/admin/pages', 'icon' => 'file-text', 'permission' => 'pages:view'],
         ['label' => 'Page Sections', 'url' => '/admin/sections', 'icon' => 'layers', 'permission' => 'sections:manage'],
         ['label' => 'Navigation Menus', 'url' => '/admin/navigation', 'icon' => 'menu', 'permission' => 'menus:manage'],
