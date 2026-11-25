@@ -8,17 +8,21 @@ class Session
 
     public static function start(): void
     {
+        if (static::$started) {
+            return;
+        }
+
         if (session_status() === PHP_SESSION_ACTIVE) {
             static::$started = true;
         } else {
-            $lifetime = Config::get('app.session.lifetime', 7200);
-            $secure = Config::get('app.session.secure', false);
-
             if (!headers_sent()) {
                 ini_set('session.use_only_cookies', '1');
                 ini_set('session.use_strict_mode', '1');
                 ini_set('session.cookie_httponly', '1');
                 ini_set('session.cookie_samesite', 'Lax');
+
+                $lifetime = Config::get('app.session.lifetime', 7200);
+                $secure = Config::get('app.session.secure', false);
 
                 session_set_cookie_params([
                     'lifetime' => $lifetime,
@@ -30,15 +34,26 @@ class Session
                 ]);
             }
 
-            @session_start();
+            if (session_status() !== PHP_SESSION_ACTIVE) {
+                @session_start();
+            }
             static::$started = true;
         }
 
-        // Session expiration / inactivity check
+        if (!isset($_SESSION) || !is_array($_SESSION)) {
+            $_SESSION = [];
+        }
+
+        // Session expiration / inactivity check (evaluated on session startup)
         $lifetime = Config::get('app.session.lifetime', 7200);
         if (isset($_SESSION['_last_activity']) && (time() - $_SESSION['_last_activity'] > $lifetime)) {
             static::destroy();
-            @session_start();
+            if (session_status() !== PHP_SESSION_ACTIVE) {
+                @session_start();
+            }
+            if (!isset($_SESSION) || !is_array($_SESSION)) {
+                $_SESSION = [];
+            }
             static::$started = true;
         }
         $_SESSION['_last_activity'] = time();

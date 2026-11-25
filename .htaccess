@@ -46,12 +46,15 @@ Options -Indexes
     RewriteCond %{REQUEST_FILENAME} -d
     RewriteRule ^ - [L]
 
-    # 2. If the file exists in public/, rewrite and serve it (e.g. /assets/..., /favicon.ico, /logodance.png, /uploads/...)
+    # 2. If the request matches a static asset inside public/ (excluding index.php), rewrite to public/
+    RewriteCond %{REQUEST_URI} !^/index\.php$ [NC]
     RewriteCond %{DOCUMENT_ROOT}/public/$1 -f [OR]
     RewriteCond public/$1 -f
     RewriteRule ^(.*)$ public/$1 [L]
 
     # 3. Front Controller routing: send all non-file/non-directory requests to index.php
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^ index.php [L,QSA]
 </IfModule>
 

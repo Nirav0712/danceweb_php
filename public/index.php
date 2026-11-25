@@ -3,8 +3,12 @@
 declare(strict_types=1);
 
 // Unified Front Controller
-define('APP_START', microtime(true));
-define('ROOT_DIR', dirname(__DIR__));
+if (!defined('APP_START')) {
+    define('APP_START', microtime(true));
+}
+if (!defined('ROOT_DIR')) {
+    define('ROOT_DIR', dirname(__DIR__));
+}
 
 // Autoloader for App\* classes
 spl_autoload_register(function (string $class) {

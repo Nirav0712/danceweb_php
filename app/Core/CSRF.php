@@ -7,10 +7,12 @@ class CSRF
     public static function getToken(): string
     {
         Session::start();
-        if (!Session::has('_csrf_token')) {
-            Session::set('_csrf_token', bin2hex(random_bytes(32)));
+        $token = Session::get('_csrf_token');
+        if (empty($token) || !is_string($token)) {
+            $token = bin2hex(random_bytes(32));
+            Session::set('_csrf_token', $token);
         }
-        return Session::get('_csrf_token');
+        return $token;
     }
 
     public static function token(): string
