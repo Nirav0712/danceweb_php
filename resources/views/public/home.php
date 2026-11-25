@@ -1,68 +1,57 @@
 <?php
 ob_start();
 ?>
-<!-- Hero Section — Image-Focused Responsive Carousel -->
-<section class="relative bg-slate-50/70 py-6 sm:py-8 overflow-hidden border-b border-slate-100">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <?php
-        $slides = !empty($heroImages) ? $heroImages : [
-            ['url' => '/assets/banners/homebanner.jpg', 'title' => 'Dynamic Children Academy Performance'],
-            ['url' => '/assets/about/academy_group.jpg', 'title' => 'Cultural Dance Troupe'],
-            ['url' => '/assets/about/founded-2002-stage.jpg', 'title' => 'Traditional Heritage Stage Showcase'],
-            ['url' => '/assets/about/dance-teaching-steps.jpg', 'title' => 'Mastery & Technique Training'],
-            ['url' => '/assets/gallery/1.jpg', 'title' => 'Folk Dance Troupe'],
-            ['url' => '/assets/gallery/2.jpg', 'title' => 'Classical Garba & Raas'],
-        ];
-        // Ensure at least 3 slides for desktop display
-        while (count($slides) < 3) {
-            $slides = array_merge($slides, $slides);
-        }
-        ?>
-        <div class="relative group" id="hero-carousel-container" aria-label="Hero Image Carousel">
-            <!-- Carousel Track Window -->
-            <div class="overflow-hidden rounded-2xl shadow-sm">
-                <div id="hero-slider-track" class="flex transition-transform duration-700 ease-out" style="transform: translateX(0%);">
-                    <?php foreach ($slides as $index => $item): ?>
-                    <div class="hero-carousel-item flex-shrink-0 px-2 box-border transition-all duration-300">
-                        <!-- Elegant Purple-to-Pink Gradient Border Wrapper -->
-                        <div class="p-[2.5px] rounded-2xl bg-gradient-to-r from-purple-600 via-fuchsia-500 to-pink-500 shadow-md hover:shadow-xl transition-shadow duration-300 h-[280px] sm:h-[350px] md:h-[390px] lg:h-[420px]">
-                            <div class="w-full h-full bg-slate-900 rounded-[14px] overflow-hidden relative">
-                                <img src="<?= htmlspecialchars($item['url'], ENT_QUOTES, 'UTF-8') ?>"
-                                     alt="<?= htmlspecialchars($item['title'] ?? 'Dynamic Children Academy', ENT_QUOTES, 'UTF-8') ?>"
-                                     loading="<?= $index < 3 ? 'eager' : 'lazy' ?>"
-                                     class="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
-                                     onerror="this.onerror=null;this.src='/assets/banners/homebanner.jpg';">
-                            </div>
-                        </div>
-                    </div>
-                    <?php endforeach; ?>
-                </div>
+<!-- Full-Width Image Hero Banner Slider -->
+<section class="relative w-full overflow-hidden bg-slate-950" id="hero-slider-section">
+    <?php
+    $slides = !empty($heroImages) ? $heroImages : [
+        ['url' => '/assets/banners/homebanner.jpg', 'title' => 'Dynamic Children Academy Showcase'],
+        ['url' => '/assets/about/academy_group.jpg', 'title' => 'Cultural Dance Troupe'],
+        ['url' => '/assets/about/founded-2002-stage.jpg', 'title' => 'Traditional Heritage Stage Showcase'],
+        ['url' => '/assets/about/dance-teaching-steps.jpg', 'title' => 'Mastery & Technique Training'],
+        ['url' => '/assets/gallery/1.jpg', 'title' => 'Folk Dance Troupe'],
+        ['url' => '/assets/gallery/2.jpg', 'title' => 'Classical Garba & Raas'],
+    ];
+    ?>
+    <!-- Full-Width Slider Container -->
+    <div class="relative w-full h-[320px] sm:h-[450px] md:h-[550px] lg:h-[680px] select-none" id="hero-carousel-container" aria-label="Hero Image Banner">
+        <!-- Slides Track -->
+        <div id="hero-slider-track" class="w-full h-full relative overflow-hidden">
+            <?php foreach ($slides as $index => $item): ?>
+            <div class="hero-slide absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out <?= $index === 0 ? 'opacity-100 z-10 pointer-events-auto' : 'opacity-0 z-0 pointer-events-none' ?>"
+                 data-slide-index="<?= $index ?>">
+                <img src="<?= htmlspecialchars($item['url'], ENT_QUOTES, 'UTF-8') ?>"
+                     alt="<?= htmlspecialchars($item['title'] ?? 'Dynamic Children Academy Performance', ENT_QUOTES, 'UTF-8') ?>"
+                     loading="<?= $index === 0 ? 'eager' : 'lazy' ?>"
+                     class="w-full h-full object-cover object-center block"
+                     onerror="this.onerror=null;this.src='/assets/banners/homebanner.jpg';">
             </div>
+            <?php endforeach; ?>
+        </div>
 
-            <!-- Navigation Controls: Previous Button -->
-            <button id="hero-prev-btn"
-                    type="button"
-                    class="absolute -left-3 sm:-left-5 top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/90 hover:bg-white text-slate-700 hover:text-purple-600 shadow-lg border border-slate-200/80 flex items-center justify-center transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-400 opacity-90 hover:opacity-100"
-                    aria-label="Previous Slide">
-                <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path>
-                </svg>
-            </button>
+        <!-- Navigation Controls: Previous Button -->
+        <button id="hero-prev-btn"
+                type="button"
+                class="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/40 hover:bg-black/75 text-white/90 hover:text-white backdrop-blur-sm flex items-center justify-center transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/50"
+                aria-label="Previous Slide">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path>
+            </svg>
+        </button>
 
-            <!-- Navigation Controls: Next Button -->
-            <button id="hero-next-btn"
-                    type="button"
-                    class="absolute -right-3 sm:-right-5 top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/90 hover:bg-white text-slate-700 hover:text-purple-600 shadow-lg border border-slate-200/80 flex items-center justify-center transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-400 opacity-90 hover:opacity-100"
-                    aria-label="Next Slide">
-                <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
-                </svg>
-            </button>
+        <!-- Navigation Controls: Next Button -->
+        <button id="hero-next-btn"
+                type="button"
+                class="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/40 hover:bg-black/75 text-white/90 hover:text-white backdrop-blur-sm flex items-center justify-center transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/50"
+                aria-label="Next Slide">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
+            </svg>
+        </button>
 
-            <!-- Pagination Dots -->
-            <div id="hero-pagination-dots" class="flex justify-center items-center gap-2 mt-4 sm:mt-5" role="tablist" aria-label="Carousel pagination">
-                <!-- Injected via JavaScript based on page count -->
-            </div>
+        <!-- Pagination Dots -->
+        <div id="hero-pagination-dots" class="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2.5" role="tablist" aria-label="Carousel pagination">
+            <!-- Injected via JavaScript based on slide count -->
         </div>
     </div>
 </section>
@@ -250,72 +239,34 @@ ob_start();
     </div>
 </section>
 
-<!-- Hero Section Responsive Carousel JavaScript & Dynamic Styling -->
-<style>
-/* Hero Carousel Layout Proportions */
-/* Desktop: 3 images (Left smaller ~28%, Center smaller ~28%, Right wider ~44%) */
-@media (min-width: 1024px) {
-    .hero-carousel-item.pos-0 { width: 28%; }
-    .hero-carousel-item.pos-1 { width: 28%; }
-    .hero-carousel-item.pos-2 { width: 44%; }
-    .hero-carousel-item.pos-other { width: 28%; }
-}
-/* Tablet: 2 images (50% each) */
-@media (min-width: 640px) and (max-width: 1023px) {
-    .hero-carousel-item { width: 50% !important; }
-}
-/* Mobile: 1 image (100% full width) */
-@media (max-width: 639px) {
-    .hero-carousel-item { width: 100% !important; }
-}
-</style>
-
+<!-- Full-Width Hero Slider JavaScript -->
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    const track = document.getElementById('hero-slider-track');
     const container = document.getElementById('hero-carousel-container');
+    const track = document.getElementById('hero-slider-track');
     const prevBtn = document.getElementById('hero-prev-btn');
     const nextBtn = document.getElementById('hero-next-btn');
     const dotsContainer = document.getElementById('hero-pagination-dots');
 
-    if (!track || !container) return;
+    if (!container || !track) return;
 
-    const items = Array.from(track.getElementsByClassName('hero-carousel-item'));
-    const totalItems = items.length;
-    if (totalItems === 0) return;
+    const slides = Array.from(track.getElementsByClassName('hero-slide'));
+    const totalSlides = slides.length;
+    if (totalSlides === 0) return;
 
     let currentIndex = 0;
     let autoPlayTimer = null;
 
-    function getVisibleCount() {
-        const w = window.innerWidth;
-        if (w >= 1024) return 3;
-        if (w >= 640) return 2;
-        return 1;
-    }
-
-    function applyItemClasses() {
-        const visible = getVisibleCount();
-        items.forEach((item, idx) => {
-            item.classList.remove('pos-0', 'pos-1', 'pos-2', 'pos-other');
-            if (visible === 3) {
-                const rel = (idx - currentIndex + totalItems) % totalItems;
-                if (rel === 0) item.classList.add('pos-0');
-                else if (rel === 1) item.classList.add('pos-1');
-                else if (rel === 2) item.classList.add('pos-2');
-                else item.classList.add('pos-other');
-            }
-        });
-    }
-
     function renderDots() {
         if (!dotsContainer) return;
         dotsContainer.innerHTML = '';
-        for (let i = 0; i < totalItems; i++) {
+        for (let i = 0; i < totalSlides; i++) {
             const dot = document.createElement('button');
             dot.type = 'button';
-            dot.className = 'w-2.5 h-2.5 rounded-full transition-all duration-300 ' +
-                (i === currentIndex ? 'bg-gradient-to-r from-purple-600 to-pink-500 w-7' : 'bg-slate-300 hover:bg-slate-400');
+            dot.className = 'transition-all duration-300 rounded-full ' +
+                (i === currentIndex
+                    ? 'w-7 sm:w-8 h-2 sm:h-2.5 bg-amber-500 shadow-md'
+                    : 'w-2 sm:w-2.5 h-2 sm:h-2.5 bg-white/60 hover:bg-white');
             dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
             dot.addEventListener('click', () => {
                 goToSlide(i);
@@ -325,32 +276,33 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    function updateTrack() {
-        const visible = getVisibleCount();
-        applyItemClasses();
+    function updateSlideVisibility() {
+        slides.forEach((slide, idx) => {
+            if (idx === currentIndex) {
+                slide.classList.remove('opacity-0', 'pointer-events-none');
+                slide.classList.add('opacity-100', 'z-10', 'pointer-events-auto');
+            } else {
+                slide.classList.remove('opacity-100', 'z-10', 'pointer-events-auto');
+                slide.classList.add('opacity-0', 'z-0', 'pointer-events-none');
+            }
+        });
 
-        // Calculate translation offset based on the current slide's offsetLeft
-        if (items[currentIndex]) {
-            const offset = items[currentIndex].offsetLeft;
-            track.style.transform = `translateX(-${offset}px)`;
-        }
-
-        // Update dots
+        // Update dots styling
         if (dotsContainer) {
             const dots = dotsContainer.children;
             for (let i = 0; i < dots.length; i++) {
                 if (i === currentIndex) {
-                    dots[i].className = 'w-7 h-2.5 rounded-full bg-gradient-to-r from-purple-600 to-pink-500 transition-all duration-300';
+                    dots[i].className = 'w-7 sm:w-8 h-2 sm:h-2.5 bg-amber-500 shadow-md transition-all duration-300 rounded-full';
                 } else {
-                    dots[i].className = 'w-2.5 h-2.5 rounded-full bg-slate-300 hover:bg-slate-400 transition-all duration-300';
+                    dots[i].className = 'w-2 sm:w-2.5 h-2 sm:h-2.5 bg-white/60 hover:bg-white transition-all duration-300 rounded-full';
                 }
             }
         }
     }
 
     function goToSlide(index) {
-        currentIndex = (index + totalItems) % totalItems;
-        updateTrack();
+        currentIndex = (index + totalSlides) % totalSlides;
+        updateSlideVisibility();
     }
 
     function nextSlide() {
@@ -414,12 +366,8 @@ document.addEventListener('DOMContentLoaded', function () {
         startAutoPlay();
     }, { passive: true });
 
-    window.addEventListener('resize', () => {
-        updateTrack();
-    });
-
     renderDots();
-    updateTrack();
+    updateSlideVisibility();
     startAutoPlay();
 });
 </script>
