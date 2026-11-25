@@ -71,7 +71,7 @@ ob_start();
 <section class="bg-white py-8 sm:py-12 border-b border-slate-100">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h2 class="font-serif text-2xl sm:text-[26px] font-bold text-slate-800 tracking-tight leading-snug">
-            Culture Is a <span class="text-amber-500 font-extrabold">Way of live</span>
+            Culture Is a <span class="text-amber-500 font-extrabold">Way of Life</span>
         </h2>
     </div>
 </section>
