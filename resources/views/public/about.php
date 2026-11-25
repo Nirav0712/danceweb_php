@@ -5,9 +5,9 @@ ob_start();
 <section class="bg-slate-900 text-white py-16 sm:py-24 relative overflow-hidden">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center max-w-3xl mx-auto space-y-4">
         <span class="text-xs font-bold text-amber-400 uppercase tracking-widest">Heritage & Vision</span>
-        <h1 class="font-serif text-3xl sm:text-5xl font-bold">About Dynamice Children Academy</h1>
+        <h1 class="font-serif text-3xl sm:text-5xl font-bold"><?= htmlspecialchars($page['title'] ?? 'About Dynamice Children Academy', ENT_QUOTES, 'UTF-8') ?></h1>
         <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
-            Founded with an enduring passion to preserve, teach, and elevate the rich folk traditions of Gujarat onto national and global platforms.
+            <?= htmlspecialchars($page['subtitle'] ?? 'Founded with an enduring passion to preserve, teach, and elevate the rich folk traditions of Gujarat onto national and global platforms.', ENT_QUOTES, 'UTF-8') ?>
         </p>
     </div>
 </section>
@@ -20,14 +20,14 @@ ob_start();
                 <span class="text-xs font-bold text-amber-600 uppercase tracking-widest">Our Founding Story</span>
                 <h2 class="font-serif text-3xl sm:text-4xl font-bold text-slate-900">25+ Years of Cultural Devotion</h2>
                 <p class="text-slate-600 text-sm leading-relaxed">
-                    Under the visionary guidance of Shri Tirthraj Trivedi, Dynamice Children Academy started as a passionate cultural initiative to impart classical discipline and lively folk dance technique to children.
+                    Under the visionary guidance of <?= htmlspecialchars($settings['director_name'] ?? 'Shri Tirthraj Trivedi', ENT_QUOTES, 'UTF-8') ?>, Dynamice Children Academy started as a passionate cultural initiative to impart classical discipline and lively folk dance technique to children.
                 </p>
                 <p class="text-slate-600 text-sm leading-relaxed">
                     Over two and a half decades, the academy has trained over 15,000 students, earned coveted Limca Book and Golden Book of World Records citations, and represented the Republic of India at international dance competitions across Europe and Asia.
                 </p>
                 <div class="grid grid-cols-2 gap-4 pt-4">
                     <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
-                        <span class="font-serif font-bold text-2xl text-amber-600 block">1998</span>
+                        <span class="font-serif font-bold text-2xl text-amber-600 block"><?= htmlspecialchars($settings['founding_year'] ?? '1998', ENT_QUOTES, 'UTF-8') ?></span>
                         <span class="text-xs text-slate-500 font-medium">Inception Year</span>
                     </div>
                     <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
@@ -37,7 +37,7 @@ ob_start();
                 </div>
             </div>
             <div class="rounded-3xl overflow-hidden shadow-xl border border-slate-200">
-                <img src="/assets/about/academy_group.jpg" alt="Academy Dancers" class="w-full h-auto object-cover">
+                <img src="<?= htmlspecialchars($page['banner_image_url'] ?? '/assets/about/academy_group.jpg', ENT_QUOTES, 'UTF-8') ?>" alt="Academy Dancers" class="w-full h-auto object-cover">
             </div>
         </div>
     </div>

@@ -31,13 +31,20 @@ class PublicController
         // 6. Fetch testimonials
         $testimonials = Database::fetchAll("SELECT * FROM testimonials WHERE is_active = 1 ORDER BY sort_order ASC LIMIT 4");
 
-        // 7. Fetch sections
-        $sections = Database::fetchAll("SELECT * FROM sections WHERE page_id = (SELECT id FROM pages WHERE slug = 'home' LIMIT 1) ORDER BY sort_order ASC");
+        // 7. Fetch sections and index by section_key
+        $rawSections = Database::fetchAll("SELECT * FROM sections WHERE is_visible = 1 AND page_id = (SELECT id FROM pages WHERE slug = 'home' LIMIT 1) ORDER BY sort_order ASC");
+        $sections = [];
+        foreach ($rawSections as $sec) {
+            $sections[$sec['section_key']] = $sec;
+        }
+
+        $page = Database::fetchOne("SELECT * FROM pages WHERE slug = 'home' LIMIT 1");
+        $settings = ContentService::getSettings();
 
         return (new Response())->html(View::render('public.home', [
-            'title' => 'Dynamice Children Academy — Premier Dance Institute Gujarat',
-            'metaTitle' => 'Dynamice Children Academy — Indian Folk & Classical Dance Academy',
-            'metaDescription' => 'Discover the joy of Indian folk, classical, and contemporary dance with Dynamice Children Academy in Nikol and Bapunagar, Ahmedabad.',
+            'title' => $page['title'] ?? 'Dynamice Children Academy — Premier Dance Institute Gujarat',
+            'metaTitle' => $page['meta_title'] ?? 'Dynamice Children Academy — Indian Folk & Classical Dance Academy',
+            'metaDescription' => $page['meta_description'] ?? 'Discover the joy of Indian folk, classical, and contemporary dance with Dynamice Children Academy in Nikol and Bapunagar, Ahmedabad.',
             'categories' => $categories,
             'danceForms' => $danceForms,
             'awards' => $awards,
@@ -45,6 +52,8 @@ class PublicController
             'tourFlags' => $tourFlags,
             'testimonials' => $testimonials,
             'sections' => $sections,
+            'page' => $page,
+            'settings' => $settings,
         ]));
     }
 
@@ -52,13 +61,15 @@ class PublicController
     {
         $associations = Database::fetchAll("SELECT * FROM associations ORDER BY sort_order ASC");
         $page = Database::fetchOne("SELECT * FROM pages WHERE slug = 'about' LIMIT 1");
+        $settings = ContentService::getSettings();
 
         return (new Response())->html(View::render('public.about', [
-            'title' => 'About Us — Dynamice Children Academy',
-            'metaTitle' => 'About Academy & Founder Director Shri Tirthraj Trivedi',
-            'metaDescription' => 'Learn about the legacy of Dynamice Children Academy, founded in 1998 to train generations of children in authentic Indian cultural dance.',
+            'title' => $page['title'] ?? 'About Us — Dynamice Children Academy',
+            'metaTitle' => $page['meta_title'] ?? 'About Academy & Founder Director Shri Tirthraj Trivedi',
+            'metaDescription' => $page['meta_description'] ?? 'Learn about the legacy of Dynamice Children Academy, founded in 1998 to train generations of children in authentic Indian cultural dance.',
             'associations' => $associations,
             'page' => $page,
+            'settings' => $settings,
         ]));
     }
 

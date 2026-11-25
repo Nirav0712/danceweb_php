@@ -4,23 +4,23 @@ ob_start();
 <!-- Hero Section -->
 <section class="relative bg-slate-950 text-white overflow-hidden py-24 sm:py-32">
     <div class="absolute inset-0 z-0 opacity-40">
-        <img src="/assets/banners/homebanner.jpg" alt="Dynamice Dance Performance" class="w-full h-full object-cover">
+        <img src="<?= htmlspecialchars($sections['hero']['image_url'] ?? ($page['banner_image_url'] ?? '/assets/banners/homebanner.jpg'), ENT_QUOTES, 'UTF-8') ?>" alt="Dynamice Dance Performance" class="w-full h-full object-cover">
     </div>
     <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-transparent z-10"></div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
         <div class="max-w-2xl space-y-6">
             <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 text-xs font-semibold">
-                <span>🏆 Limca & Golden Book World Records</span>
+                <span><?= htmlspecialchars($sections['hero']['subheading'] ?? '🏆 Limca & Golden Book World Records', ENT_QUOTES, 'UTF-8') ?></span>
             </div>
             <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">
-                Cultivating Heritage, Inspiring Rhythm
+                <?= htmlspecialchars($sections['hero']['heading'] ?? ($page['title'] ?? 'Cultivating Heritage, Inspiring Rhythm'), ENT_QUOTES, 'UTF-8') ?>
             </h1>
             <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
-                Welcome to Dynamice Children Academy — Gujarat's premier dance institute nurturing children in traditional Indian folk arts, classical disciplines, and global cultural tours since 1998.
+                <?= htmlspecialchars($sections['hero']['content'] ?? ($page['subtitle'] ?? 'Welcome to Dynamice Children Academy — Gujarat\'s premier dance institute nurturing children in traditional Indian folk arts, classical disciplines, and global cultural tours since 1998.'), ENT_QUOTES, 'UTF-8') ?>
             </p>
             <div class="flex flex-wrap items-center gap-4 pt-4">
-                <a href="/contact" class="px-6 py-3.5 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-700 hover:to-amber-600 text-white font-bold text-sm rounded-xl shadow-lg transition-all transform hover:-translate-y-0.5">
-                    Enroll for Admissions
+                <a href="<?= htmlspecialchars($sections['hero']['button_url'] ?? '/contact', ENT_QUOTES, 'UTF-8') ?>" class="px-6 py-3.5 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-700 hover:to-amber-600 text-white font-bold text-sm rounded-xl shadow-lg transition-all transform hover:-translate-y-0.5">
+                    <?= htmlspecialchars($sections['hero']['button_text'] ?? 'Enroll for Admissions', ENT_QUOTES, 'UTF-8') ?>
                 </a>
                 <a href="/about" class="px-6 py-3.5 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white font-semibold text-sm rounded-xl border border-white/20 transition-all">
                     Discover Our Story
@@ -60,26 +60,26 @@ ob_start();
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             <div class="lg:col-span-5 relative">
                 <div class="rounded-3xl overflow-hidden shadow-xl border border-slate-200">
-                    <img src="/assets/about/director.jpg" alt="Director Shri Tirthraj Trivedi" class="w-full h-auto object-cover">
+                    <img src="<?= htmlspecialchars($sections['about_intro']['image_url'] ?? '/assets/about/director.jpg', ENT_QUOTES, 'UTF-8') ?>" alt="Director Shri Tirthraj Trivedi" class="w-full h-auto object-cover">
                 </div>
                 <div class="absolute -bottom-6 -right-6 bg-white p-5 rounded-2xl shadow-lg border border-slate-100 hidden sm:block max-w-xs">
-                    <span class="text-xs font-bold text-slate-900 block">Shri Tirthraj Trivedi</span>
+                    <span class="text-xs font-bold text-slate-900 block"><?= htmlspecialchars($settings['director_name'] ?? 'Shri Tirthraj Trivedi', ENT_QUOTES, 'UTF-8') ?></span>
                     <span class="text-[11px] text-amber-600 font-semibold block">Founder Director & Choreographer</span>
                 </div>
             </div>
             <div class="lg:col-span-7 space-y-6">
                 <div class="inline-flex items-center gap-2 text-xs font-bold text-amber-600 uppercase tracking-widest">
-                    <span>Message from the Founder</span>
+                    <span><?= htmlspecialchars($sections['about_intro']['subheading'] ?? 'Message from the Founder', ENT_QUOTES, 'UTF-8') ?></span>
                 </div>
                 <h2 class="font-serif text-3xl sm:text-4xl font-bold text-slate-900 leading-snug">
-                    "Dance is not merely movement; it is the heartbeat of cultural heritage."
+                    "<?= htmlspecialchars($sections['about_intro']['heading'] ?? 'Dance is not merely movement; it is the heartbeat of cultural heritage.', ENT_QUOTES, 'UTF-8') ?>"
                 </h2>
                 <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
-                    For over two decades, Dynamice Children Academy has fostered discipline, poise, and cultural self-expression in thousands of young girls and boys. Our mission is to take the authentic folk rhythms of Gujarat and India to the world's most prestigious stages.
+                    <?= htmlspecialchars($sections['about_intro']['content'] ?? 'For over two decades, Dynamice Children Academy has fostered discipline, poise, and cultural self-expression in thousands of young girls and boys. Our mission is to take the authentic folk rhythms of Gujarat and India to the world\'s most prestigious stages.', ENT_QUOTES, 'UTF-8') ?>
                 </p>
                 <div class="pt-4 flex items-center gap-4">
-                    <a href="/about" class="inline-flex items-center gap-2 text-amber-600 hover:text-amber-700 font-bold text-sm">
-                        <span>Read Director's Full Profile</span>
+                    <a href="<?= htmlspecialchars($sections['about_intro']['button_url'] ?? '/about', ENT_QUOTES, 'UTF-8') ?>" class="inline-flex items-center gap-2 text-amber-600 hover:text-amber-700 font-bold text-sm">
+                        <span><?= htmlspecialchars($sections['about_intro']['button_text'] ?? 'Read Director\'s Full Profile', ENT_QUOTES, 'UTF-8') ?></span>
                         <span>→</span>
                     </a>
                 </div>

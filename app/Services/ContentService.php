@@ -90,7 +90,19 @@ class ContentService
             foreach ($rows as $r) {
                 $settings[$r['setting_key']] = $r['setting_value'];
             }
-            if (!empty($settings)) return $settings;
+            if (!empty($settings)) {
+                // Aliases for template convenience and backwards compatibility
+                if (!isset($settings['phone_primary']) && isset($settings['primary_phone'])) {
+                    $settings['phone_primary'] = $settings['primary_phone'];
+                }
+                if (!isset($settings['phone_secondary']) && isset($settings['secondary_phone'])) {
+                    $settings['phone_secondary'] = $settings['secondary_phone'];
+                }
+                if (!isset($settings['email']) && isset($settings['official_email'])) {
+                    $settings['email'] = $settings['official_email'];
+                }
+                return $settings;
+            }
         } catch (\Throwable $e) {}
 
         return [
