@@ -50,5 +50,6 @@ composer.phar
 !/public/uploads/.htaccess
 !/public/uploads/.gitkeep
 
-# Ensure .env.example is always tracked
+# Ensure environment example templates are always tracked
 !.env.example
+!.env.hostinger.example
