@@ -33,10 +33,13 @@
                     <h4 class="font-bold text-slate-900 text-xs"><?= htmlspecialchars($t['person_name'], ENT_QUOTES, 'UTF-8') ?></h4>
                     <span class="text-[11px] text-slate-400"><?= htmlspecialchars($t['relation_or_role'] ?? 'Student', ENT_QUOTES, 'UTF-8') ?></span>
                 </div>
-                <form method="POST" action="/admin/testimonials/<?= $t['id'] ?>/delete" onsubmit="return confirm('Delete this review?');">
-                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token, ENT_QUOTES, 'UTF-8') ?>">
-                    <button type="submit" class="text-rose-600 hover:text-rose-800 font-semibold text-xs">Delete</button>
-                </form>
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="editTestimonial(<?= htmlspecialchars(json_encode($t), ENT_QUOTES, 'UTF-8') ?>)" class="text-indigo-600 hover:text-indigo-800 font-semibold text-xs">Edit</button>
+                    <form method="POST" action="/admin/testimonials/<?= $t['id'] ?>/delete" onsubmit="return confirm('Delete this review?');" class="inline">
+                        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token, ENT_QUOTES, 'UTF-8') ?>">
+                        <button type="submit" class="text-rose-600 hover:text-rose-800 font-semibold text-xs">Delete</button>
+                    </form>
+                </div>
             </div>
         </div>
         <?php endforeach; ?>
@@ -81,4 +84,55 @@
         </form>
     </div>
 </div>
+
+<div id="editTestimonialModal" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-slate-100">
+        <h3 class="text-lg font-bold text-slate-900 mb-4">Edit Testimonial</h3>
+        <form id="editTestimonialForm" method="POST" action="" class="space-y-4">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token, ENT_QUOTES, 'UTF-8') ?>">
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Person Name</label>
+                <input type="text" id="edit_t_person_name" name="person_name" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Relation / Role</label>
+                <input type="text" id="edit_t_relation_or_role" name="relation_or_role" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Star Rating (1-5)</label>
+                    <select id="edit_t_rating" name="rating" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+                        <option value="5">★★★★★ (5 Stars)</option>
+                        <option value="4">★★★★☆ (4 Stars)</option>
+                        <option value="3">★★★☆☆ (3 Stars)</option>
+                    </select>
+                </div>
+                <div class="flex items-center pt-5">
+                    <input type="checkbox" id="edit_t_is_featured" name="is_featured" class="rounded border-slate-300 text-indigo-600">
+                    <label for="edit_t_is_featured" class="ml-2 text-xs text-slate-600">Featured on Home</label>
+                </div>
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Review Text</label>
+                <textarea id="edit_t_review_text" name="review_text" rows="3" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none"></textarea>
+            </div>
+            <div class="flex justify-end gap-3 pt-2">
+                <button type="button" onclick="document.getElementById('editTestimonialModal').classList.add('hidden')" class="px-4 py-2 border border-slate-200 rounded-xl text-xs font-semibold">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold">Update Review</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function editTestimonial(item) {
+    document.getElementById('editTestimonialForm').action = '/admin/testimonials/' + item.id + '/update';
+    document.getElementById('edit_t_person_name').value = item.person_name || '';
+    document.getElementById('edit_t_relation_or_role').value = item.relation_or_role || '';
+    document.getElementById('edit_t_rating').value = item.rating || 5;
+    document.getElementById('edit_t_is_featured').checked = parseInt(item.is_featured) === 1;
+    document.getElementById('edit_t_review_text').value = item.review_text || '';
+    document.getElementById('editTestimonialModal').classList.remove('hidden');
+}
+</script>
 <?php $content = ob_get_clean(); require __DIR__ . '/../../layouts/admin.php'; ?>

@@ -42,6 +42,7 @@
                             </span>
                         </td>
                         <td class="px-6 py-4 text-right space-x-2">
+                            <button type="button" onclick="editPage(<?= htmlspecialchars(json_encode($p), ENT_QUOTES, 'UTF-8') ?>)" class="text-indigo-600 hover:text-indigo-800 font-semibold text-xs">Edit</button>
                             <a href="/admin/sections?page_id=<?= $p['id'] ?>" class="text-indigo-600 hover:text-indigo-800 font-semibold text-xs">Sections</a>
                             <form method="POST" action="/admin/pages/<?= $p['id'] ?>/delete" class="inline" onsubmit="return confirm('Delete this page?');">
                                 <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token, ENT_QUOTES, 'UTF-8') ?>">
@@ -58,6 +59,94 @@
 
 <div id="createPageModal" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl border border-slate-100 max-h-[90vh] overflow-y-auto">
+        <h3 class="text-lg font-bold text-slate-900 mb-4">Add Website Page</h3>
+        <form method="POST" action="/admin/pages" class="space-y-4">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token, ENT_QUOTES, 'UTF-8') ?>">
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Page Title</label>
+                <input type="text" name="title" required placeholder="e.g. Workshop Events" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">URL Slug</label>
+                <input type="text" name="slug" required placeholder="e.g. workshops" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Subtitle / Tagline</label>
+                <input type="text" name="subtitle" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Hero Banner Image URL</label>
+                <input type="text" name="banner_image_url" placeholder="/assets/banners/pagebanner.jpg" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Meta Title</label>
+                <input type="text" name="meta_title" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Meta Description</label>
+                <textarea name="meta_description" rows="2" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none"></textarea>
+            </div>
+            <div class="flex items-center gap-2">
+                <input type="checkbox" name="is_published" id="isPub" checked class="rounded border-slate-300 text-indigo-600">
+                <label for="isPub" class="text-xs text-slate-600">Publish Immediately</label>
+            </div>
+            <div class="flex justify-end gap-3 pt-2">
+                <button type="button" onclick="document.getElementById('createPageModal').classList.add('hidden')" class="px-4 py-2 border border-slate-200 rounded-xl text-xs font-semibold">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold">Save Page</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="editPageModal" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl border border-slate-100 max-h-[90vh] overflow-y-auto">
+        <h3 class="text-lg font-bold text-slate-900 mb-4">Edit Website Page</h3>
+        <form id="editPageForm" method="POST" action="" class="space-y-4">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token, ENT_QUOTES, 'UTF-8') ?>">
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Page Title</label>
+                <input type="text" id="edit_p_title" name="title" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Subtitle / Tagline</label>
+                <input type="text" id="edit_p_subtitle" name="subtitle" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Hero Banner Image URL</label>
+                <input type="text" id="edit_p_banner_image_url" name="banner_image_url" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Meta Title</label>
+                <input type="text" id="edit_p_meta_title" name="meta_title" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Meta Description</label>
+                <textarea id="edit_p_meta_description" name="meta_description" rows="2" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none"></textarea>
+            </div>
+            <div class="flex items-center gap-2">
+                <input type="checkbox" id="edit_p_is_published" name="is_published" class="rounded border-slate-300 text-indigo-600">
+                <label for="edit_p_is_published" class="text-xs text-slate-600">Published</label>
+            </div>
+            <div class="flex justify-end gap-3 pt-2">
+                <button type="button" onclick="document.getElementById('editPageModal').classList.add('hidden')" class="px-4 py-2 border border-slate-200 rounded-xl text-xs font-semibold">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold">Update Page</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function editPage(item) {
+    document.getElementById('editPageForm').action = '/admin/pages/' + item.id + '/update';
+    document.getElementById('edit_p_title').value = item.title || '';
+    document.getElementById('edit_p_subtitle').value = item.subtitle || '';
+    document.getElementById('edit_p_banner_image_url').value = item.banner_image_url || '';
+    document.getElementById('edit_p_meta_title').value = item.meta_title || '';
+    document.getElementById('edit_p_meta_description').value = item.meta_description || '';
+    document.getElementById('edit_p_is_published').checked = parseInt(item.is_published) === 1;
+    document.getElementById('editPageModal').classList.remove('hidden');
+}
+</script>
         <h3 class="text-lg font-bold text-slate-900 mb-4">Add Website Page</h3>
         <form method="POST" action="/admin/pages" class="space-y-4">
             <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token, ENT_QUOTES, 'UTF-8') ?>">

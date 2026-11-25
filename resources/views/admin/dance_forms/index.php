@@ -45,6 +45,7 @@
                         </span>
                     </td>
                     <td class="px-6 py-4 text-right space-x-2">
+                        <button type="button" onclick="editForm(<?= htmlspecialchars(json_encode($f), ENT_QUOTES, 'UTF-8') ?>)" class="text-indigo-600 hover:text-indigo-800 font-semibold text-xs">Edit</button>
                         <form method="POST" action="/admin/dance-forms/<?= $f['id'] ?>/delete" class="inline" onsubmit="return confirm('Delete this dance form?');">
                             <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token, ENT_QUOTES, 'UTF-8') ?>">
                             <button type="submit" class="text-rose-600 hover:text-rose-800 font-semibold text-xs">Delete</button>
@@ -78,6 +79,79 @@
                 <label class="block text-xs font-semibold text-slate-700 mb-1">Tagline</label>
                 <input type="text" name="tagline" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
             </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Target Age Group</label>
+                <input type="text" name="target_age_group" placeholder="e.g. 5-15 years" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Description / Curriculum</label>
+                <textarea name="description" rows="3" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none"></textarea>
+            </div>
+            <div class="flex items-center gap-2">
+                <input type="checkbox" name="is_active" id="isActForm" checked class="rounded border-slate-300 text-indigo-600">
+                <label for="isActForm" class="text-xs text-slate-600">Active</label>
+            </div>
+            <div class="flex justify-end gap-3 pt-2">
+                <button type="button" onclick="document.getElementById('createFormModal').classList.add('hidden')" class="px-4 py-2 border border-slate-200 rounded-xl text-xs font-semibold">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold">Save Form</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="editFormModal" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl border border-slate-100 max-h-[90vh] overflow-y-auto">
+        <h3 class="text-lg font-bold text-slate-900 mb-4">Edit Dance Form</h3>
+        <form id="editDanceForm" method="POST" action="" class="space-y-4">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token, ENT_QUOTES, 'UTF-8') ?>">
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Category</label>
+                <select id="edit_df_category_id" name="category_id" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+                    <?php foreach ($categories as $cat): ?>
+                        <option value="<?= $cat['id'] ?>"><?= htmlspecialchars($cat['name'], ENT_QUOTES, 'UTF-8') ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Name</label>
+                <input type="text" id="edit_df_name" name="name" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Tagline</label>
+                <input type="text" id="edit_df_tagline" name="tagline" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Target Age Group</label>
+                <input type="text" id="edit_df_target_age_group" name="target_age_group" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Description / Curriculum</label>
+                <textarea id="edit_df_description" name="description" rows="3" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none"></textarea>
+            </div>
+            <div class="flex items-center gap-2">
+                <input type="checkbox" id="edit_df_is_active" name="is_active" class="rounded border-slate-300 text-indigo-600">
+                <label for="edit_df_is_active" class="text-xs text-slate-600">Active</label>
+            </div>
+            <div class="flex justify-end gap-3 pt-2">
+                <button type="button" onclick="document.getElementById('editFormModal').classList.add('hidden')" class="px-4 py-2 border border-slate-200 rounded-xl text-xs font-semibold">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold">Update Form</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function editForm(item) {
+    document.getElementById('editDanceForm').action = '/admin/dance-forms/' + item.id + '/update';
+    document.getElementById('edit_df_category_id').value = item.category_id || '';
+    document.getElementById('edit_df_name').value = item.name || '';
+    document.getElementById('edit_df_tagline').value = item.tagline || '';
+    document.getElementById('edit_df_target_age_group').value = item.target_age_group || '';
+    document.getElementById('edit_df_description').value = item.description || '';
+    document.getElementById('edit_df_is_active').checked = parseInt(item.is_active) === 1;
+    document.getElementById('editFormModal').classList.remove('hidden');
+}
+</script>
             <div>
                 <label class="block text-xs font-semibold text-slate-700 mb-1">Target Age Group</label>
                 <input type="text" name="target_age_group" placeholder="e.g. 5-15 years" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">

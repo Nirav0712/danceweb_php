@@ -40,6 +40,7 @@
                     </td>
                     <td class="px-6 py-4 font-mono text-slate-500"><?= date('M j, Y', strtotime($post['published_at'])) ?></td>
                     <td class="px-6 py-4 text-right space-x-2">
+                        <button type="button" onclick="editBlog(<?= htmlspecialchars(json_encode($post), ENT_QUOTES, 'UTF-8') ?>)" class="text-indigo-600 hover:text-indigo-800 font-semibold text-xs">Edit</button>
                         <form method="POST" action="/admin/blogs/<?= $post['id'] ?>/delete" class="inline" onsubmit="return confirm('Delete this story?');">
                             <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token, ENT_QUOTES, 'UTF-8') ?>">
                             <button type="submit" class="text-rose-600 hover:text-rose-800 font-semibold text-xs">Delete</button>
@@ -90,4 +91,65 @@
         </form>
     </div>
 </div>
+
+<div id="editBlogModal" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-xl w-full p-6 shadow-xl border border-slate-100 max-h-[90vh] overflow-y-auto">
+        <h3 class="text-lg font-bold text-slate-900 mb-4">Edit Story</h3>
+        <form id="editBlogForm" method="POST" action="" class="space-y-4">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token, ENT_QUOTES, 'UTF-8') ?>">
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Story Title</label>
+                <input type="text" id="edit_b_title" name="title" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Category</label>
+                    <input type="text" id="edit_b_category" name="category" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Author Name</label>
+                    <input type="text" id="edit_b_author_name" name="author_name" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+                </div>
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Featured Cover Image URL</label>
+                <input type="text" id="edit_b_featured_image_url" name="featured_image_url" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Status</label>
+                <select id="edit_b_status" name="status" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+                    <option value="DRAFT">DRAFT</option>
+                    <option value="PUBLISHED">PUBLISHED</option>
+                    <option value="ARCHIVED">ARCHIVED</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Short Excerpt</label>
+                <textarea id="edit_b_excerpt" name="excerpt" rows="2" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none"></textarea>
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Article Content</label>
+                <textarea id="edit_b_content" name="content" rows="6" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none font-mono"></textarea>
+            </div>
+            <div class="flex justify-end gap-3 pt-2">
+                <button type="button" onclick="document.getElementById('editBlogModal').classList.add('hidden')" class="px-4 py-2 border border-slate-200 rounded-xl text-xs font-semibold">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold">Update Story</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function editBlog(post) {
+    document.getElementById('editBlogForm').action = '/admin/blogs/' + post.id + '/update';
+    document.getElementById('edit_b_title').value = post.title || '';
+    document.getElementById('edit_b_category').value = post.category || '';
+    document.getElementById('edit_b_author_name').value = post.author_name || '';
+    document.getElementById('edit_b_featured_image_url').value = post.featured_image_url || '';
+    document.getElementById('edit_b_status').value = post.status || 'DRAFT';
+    document.getElementById('edit_b_excerpt').value = post.excerpt || '';
+    document.getElementById('edit_b_content').value = post.content || '';
+    document.getElementById('editBlogModal').classList.remove('hidden');
+}
+</script>
 <?php $content = ob_get_clean(); require __DIR__ . '/../../layouts/admin.php'; ?>

@@ -37,6 +37,7 @@
                         </span>
                     </td>
                     <td class="px-6 py-4 text-right space-x-2">
+                        <button type="button" onclick="editAward(<?= htmlspecialchars(json_encode($a), ENT_QUOTES, 'UTF-8') ?>)" class="text-indigo-600 hover:text-indigo-800 font-semibold text-xs">Edit</button>
                         <form method="POST" action="/admin/awards/<?= $a['id'] ?>/delete" class="inline" onsubmit="return confirm('Delete this award?');">
                             <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token, ENT_QUOTES, 'UTF-8') ?>">
                             <button type="submit" class="text-rose-600 hover:text-rose-800 font-semibold text-xs">Delete</button>
@@ -93,4 +94,63 @@
         </form>
     </div>
 </div>
+
+<div id="editAwardModal" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-slate-100">
+        <h3 class="text-lg font-bold text-slate-900 mb-4">Edit Award / Record</h3>
+        <form id="editAwardForm" method="POST" action="" class="space-y-4">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token, ENT_QUOTES, 'UTF-8') ?>">
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Title</label>
+                <input type="text" id="edit_award_title" name="title" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Issuer / Authority</label>
+                <input type="text" id="edit_award_issuer" name="issuer" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Year</label>
+                    <input type="number" id="edit_award_year" name="year" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Category</label>
+                    <input type="text" id="edit_award_category" name="category" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+                </div>
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Description</label>
+                <textarea id="edit_award_description" name="description" rows="2" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none"></textarea>
+            </div>
+            <div class="flex items-center gap-4">
+                <label class="flex items-center gap-2 text-xs text-slate-600">
+                    <input type="checkbox" id="edit_award_is_record_book" name="is_record_book" class="rounded border-slate-300 text-indigo-600">
+                    Record Book (Limca/Golden)
+                </label>
+                <label class="flex items-center gap-2 text-xs text-slate-600">
+                    <input type="checkbox" id="edit_award_is_featured" name="is_featured" class="rounded border-slate-300 text-indigo-600">
+                    Featured
+                </label>
+            </div>
+            <div class="flex justify-end gap-3 pt-2">
+                <button type="button" onclick="document.getElementById('editAwardModal').classList.add('hidden')" class="px-4 py-2 border border-slate-200 rounded-xl text-xs font-semibold">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold">Update Award</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function editAward(item) {
+    document.getElementById('editAwardForm').action = '/admin/awards/' + item.id + '/update';
+    document.getElementById('edit_award_title').value = item.title || '';
+    document.getElementById('edit_award_issuer').value = item.issuer || '';
+    document.getElementById('edit_award_year').value = item.year || '';
+    document.getElementById('edit_award_category').value = item.category || '';
+    document.getElementById('edit_award_description').value = item.description || '';
+    document.getElementById('edit_award_is_record_book').checked = parseInt(item.is_record_book) === 1;
+    document.getElementById('edit_award_is_featured').checked = parseInt(item.is_featured) === 1;
+    document.getElementById('editAwardModal').classList.remove('hidden');
+}
+</script>
 <?php $content = ob_get_clean(); require __DIR__ . '/../../layouts/admin.php'; ?>

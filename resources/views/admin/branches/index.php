@@ -30,7 +30,8 @@
                 </div>
             </div>
             <div class="mt-4 pt-3 border-t border-slate-100 flex justify-end space-x-2">
-                <form method="POST" action="/admin/branches/<?= $b['id'] ?>/delete" onsubmit="return confirm('Delete this branch campus?');">
+                <button type="button" onclick="editBranch(<?= htmlspecialchars(json_encode($b), ENT_QUOTES, 'UTF-8') ?>)" class="text-indigo-600 hover:text-indigo-800 font-semibold text-xs">Edit</button>
+                <form method="POST" action="/admin/branches/<?= $b['id'] ?>/delete" onsubmit="return confirm('Delete this branch campus?');" class="inline">
                     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token, ENT_QUOTES, 'UTF-8') ?>">
                     <button type="submit" class="text-rose-600 hover:text-rose-800 font-semibold text-xs">Delete</button>
                 </form>
@@ -88,4 +89,68 @@
         </form>
     </div>
 </div>
+
+<div id="editBranchModal" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl border border-slate-100 max-h-[90vh] overflow-y-auto">
+        <h3 class="text-lg font-bold text-slate-900 mb-4">Edit Branch Campus</h3>
+        <form id="editBranchForm" method="POST" action="" class="space-y-4">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token, ENT_QUOTES, 'UTF-8') ?>">
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Branch Name</label>
+                <input type="text" id="edit_br_name" name="branch_name" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Street Address</label>
+                <input type="text" id="edit_br_address" name="address_line_1" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">City</label>
+                    <input type="text" id="edit_br_city" name="city" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">State</label>
+                    <input type="text" id="edit_br_state" name="state" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Primary Phone</label>
+                    <input type="text" id="edit_br_phone" name="phone_primary" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Email</label>
+                    <input type="email" id="edit_br_email" name="email" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+                </div>
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Timings Info</label>
+                <input type="text" id="edit_br_timing" name="timing_info" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+            </div>
+            <div class="flex items-center gap-2">
+                <input type="checkbox" id="edit_br_is_active" name="is_active" class="rounded border-slate-300 text-indigo-600">
+                <label for="edit_br_is_active" class="text-xs text-slate-600">Active Campus</label>
+            </div>
+            <div class="flex justify-end gap-3 pt-2">
+                <button type="button" onclick="document.getElementById('editBranchModal').classList.add('hidden')" class="px-4 py-2 border border-slate-200 rounded-xl text-xs font-semibold">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold">Update Branch</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function editBranch(item) {
+    document.getElementById('editBranchForm').action = '/admin/branches/' + item.id + '/update';
+    document.getElementById('edit_br_name').value = item.branch_name || '';
+    document.getElementById('edit_br_address').value = item.address_line_1 || '';
+    document.getElementById('edit_br_city').value = item.city || '';
+    document.getElementById('edit_br_state').value = item.state || '';
+    document.getElementById('edit_br_phone').value = item.phone_primary || '';
+    document.getElementById('edit_br_email').value = item.email || '';
+    document.getElementById('edit_br_timing').value = item.timing_info || '';
+    document.getElementById('edit_br_is_active').checked = parseInt(item.is_active) === 1;
+    document.getElementById('editBranchModal').classList.remove('hidden');
+}
+</script>
 <?php $content = ob_get_clean(); require __DIR__ . '/../../layouts/admin.php'; ?>

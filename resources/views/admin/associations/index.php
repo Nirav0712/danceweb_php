@@ -26,10 +26,13 @@
             </div>
             <div class="mt-4 pt-3 border-t border-slate-100 w-full flex justify-between items-center text-[11px]">
                 <span class="<?= $assoc['is_active'] ? 'text-emerald-600' : 'text-slate-400' ?>"><?= $assoc['is_active'] ? 'Active' : 'Hidden' ?></span>
-                <form method="POST" action="/admin/associations/<?= $assoc['id'] ?>/delete" onsubmit="return confirm('Delete this partner?');">
-                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token, ENT_QUOTES, 'UTF-8') ?>">
-                    <button type="submit" class="text-rose-600 hover:text-rose-800 font-semibold">Delete</button>
-                </form>
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="editAssoc(<?= htmlspecialchars(json_encode($assoc), ENT_QUOTES, 'UTF-8') ?>)" class="text-indigo-600 hover:text-indigo-800 font-semibold">Edit</button>
+                    <form method="POST" action="/admin/associations/<?= $assoc['id'] ?>/delete" onsubmit="return confirm('Delete this partner?');" class="inline">
+                        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token, ENT_QUOTES, 'UTF-8') ?>">
+                        <button type="submit" class="text-rose-600 hover:text-rose-800 font-semibold">Delete</button>
+                    </form>
+                </div>
             </div>
         </div>
         <?php endforeach; ?>
@@ -68,4 +71,49 @@
         </form>
     </div>
 </div>
+
+<div id="editAssocModal" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-slate-100">
+        <h3 class="text-lg font-bold text-slate-900 mb-4">Edit Affiliation</h3>
+        <form id="editAssocForm" method="POST" action="" class="space-y-4">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token, ENT_QUOTES, 'UTF-8') ?>">
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Organization Name</label>
+                <input type="text" id="edit_assoc_name" name="name" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Acronym / Short Code</label>
+                <input type="text" id="edit_assoc_acronym" name="acronym" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Logo URL</label>
+                <input type="text" id="edit_assoc_logo_url" name="logo_url" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Website URL</label>
+                <input type="text" id="edit_assoc_website_url" name="website_url" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+            </div>
+            <div class="flex items-center gap-2">
+                <input type="checkbox" id="edit_assoc_is_active" name="is_active" class="rounded border-slate-300 text-indigo-600">
+                <label for="edit_assoc_is_active" class="text-xs text-slate-600">Active Partner</label>
+            </div>
+            <div class="flex justify-end gap-3 pt-2">
+                <button type="button" onclick="document.getElementById('editAssocModal').classList.add('hidden')" class="px-4 py-2 border border-slate-200 rounded-xl text-xs font-semibold">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold">Update Partner</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function editAssoc(item) {
+    document.getElementById('editAssocForm').action = '/admin/associations/' + item.id + '/update';
+    document.getElementById('edit_assoc_name').value = item.name || '';
+    document.getElementById('edit_assoc_acronym').value = item.acronym || '';
+    document.getElementById('edit_assoc_logo_url').value = item.logo_url || '';
+    document.getElementById('edit_assoc_website_url').value = item.website_url || '';
+    document.getElementById('edit_assoc_is_active').checked = parseInt(item.is_active) === 1;
+    document.getElementById('editAssocModal').classList.remove('hidden');
+}
+</script>
 <?php $content = ob_get_clean(); require __DIR__ . '/../../layouts/admin.php'; ?>

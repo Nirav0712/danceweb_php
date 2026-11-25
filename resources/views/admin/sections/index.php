@@ -49,6 +49,7 @@
                         </td>
                         <td class="px-6 py-4 text-slate-500 font-mono"><?= (int)$s['sort_order'] ?></td>
                         <td class="px-6 py-4 text-right space-x-2">
+                            <button type="button" onclick="editSection(<?= htmlspecialchars(json_encode($s), ENT_QUOTES, 'UTF-8') ?>)" class="text-indigo-600 hover:text-indigo-800 font-semibold text-xs">Edit</button>
                             <form method="POST" action="/admin/sections/<?= $s['id'] ?>/delete" class="inline" onsubmit="return confirm('Delete section?');">
                                 <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token, ENT_QUOTES, 'UTF-8') ?>">
                                 <button type="submit" class="text-rose-600 hover:text-rose-800 font-semibold text-xs">Delete</button>
@@ -116,4 +117,61 @@
         </form>
     </div>
 </div>
+
+<div id="editSectionModal" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl border border-slate-100 max-h-[90vh] overflow-y-auto">
+        <h3 class="text-lg font-bold text-slate-900 mb-4">Edit Section</h3>
+        <form id="editSectionForm" method="POST" action="" class="space-y-4">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token, ENT_QUOTES, 'UTF-8') ?>">
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Heading</label>
+                <input type="text" id="edit_sec_heading" name="heading" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Subheading</label>
+                <input type="text" id="edit_sec_subheading" name="subheading" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Content / Body</label>
+                <textarea id="edit_sec_content" name="content" rows="3" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none"></textarea>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Button Text</label>
+                    <input type="text" id="edit_sec_button_text" name="button_text" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Button URL</label>
+                    <input type="text" id="edit_sec_button_url" name="button_url" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+                </div>
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Sort Order</label>
+                <input type="number" id="edit_sec_sort_order" name="sort_order" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+            </div>
+            <div class="flex items-center gap-2">
+                <input type="checkbox" id="edit_sec_is_visible" name="is_visible" class="rounded border-slate-300 text-indigo-600">
+                <label for="edit_sec_is_visible" class="text-xs text-slate-600">Visible</label>
+            </div>
+            <div class="flex justify-end gap-3 pt-2">
+                <button type="button" onclick="document.getElementById('editSectionModal').classList.add('hidden')" class="px-4 py-2 border border-slate-200 rounded-xl text-xs font-semibold">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold">Update Section</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function editSection(item) {
+    document.getElementById('editSectionForm').action = '/admin/sections/' + item.id + '/update';
+    document.getElementById('edit_sec_heading').value = item.heading || '';
+    document.getElementById('edit_sec_subheading').value = item.subheading || '';
+    document.getElementById('edit_sec_content').value = item.content || '';
+    document.getElementById('edit_sec_button_text').value = item.button_text || '';
+    document.getElementById('edit_sec_button_url').value = item.button_url || '';
+    document.getElementById('edit_sec_sort_order').value = item.sort_order || 0;
+    document.getElementById('edit_sec_is_visible').checked = parseInt(item.is_visible) === 1;
+    document.getElementById('editSectionModal').classList.remove('hidden');
+}
+</script>
 <?php $content = ob_get_clean(); require __DIR__ . '/../../layouts/admin.php'; ?>

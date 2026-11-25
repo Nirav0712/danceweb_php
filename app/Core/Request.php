@@ -64,6 +64,19 @@ class Request
         return $this->body[$key] ?? $default;
     }
 
+    public function getBody(): array
+    {
+        return $this->body;
+    }
+
+    public function body(?string $key = null, mixed $default = null): mixed
+    {
+        if ($key === null) {
+            return $this->body;
+        }
+        return $this->body[$key] ?? $default;
+    }
+
     public function all(): array
     {
         return array_merge($this->params, $this->body);

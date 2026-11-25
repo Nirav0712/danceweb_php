@@ -75,11 +75,11 @@ class Router
                 // Execute handler
                 $handler = $route['handler'];
                 if (is_callable($handler)) {
-                    $res = call_user_func($handler, $request);
+                    $res = call_user_func($handler, $request, $params);
                 } elseif (is_array($handler) && count($handler) === 2) {
                     [$class, $method] = $handler;
                     $controller = new $class();
-                    $res = call_user_func([$controller, $method], $request);
+                    $res = call_user_func([$controller, $method], $request, $params);
                 } else {
                     throw new \RuntimeException('Invalid route handler specified.');
                 }

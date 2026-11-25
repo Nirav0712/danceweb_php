@@ -38,6 +38,7 @@
                         <td class="px-6 py-4 text-indigo-600 font-mono text-[11px]"><?= htmlspecialchars($m['url'], ENT_QUOTES, 'UTF-8') ?></td>
                         <td class="px-6 py-4 text-slate-500 font-mono"><?= (int)$m['sort_order'] ?></td>
                         <td class="px-6 py-4 text-right space-x-2">
+                            <button type="button" onclick="editMenu(<?= htmlspecialchars(json_encode($m), ENT_QUOTES, 'UTF-8') ?>)" class="text-indigo-600 hover:text-indigo-800 font-semibold text-xs">Edit</button>
                             <form method="POST" action="/admin/navigation/<?= $m['id'] ?>/delete" class="inline" onsubmit="return confirm('Delete this menu item?');">
                                 <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token, ENT_QUOTES, 'UTF-8') ?>">
                                 <button type="submit" class="text-rose-600 hover:text-rose-800 font-semibold text-xs">Delete</button>
@@ -86,4 +87,52 @@
         </form>
     </div>
 </div>
+
+<div id="editMenuModal" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-slate-100">
+        <h3 class="text-lg font-bold text-slate-900 mb-4">Edit Menu Item</h3>
+        <form id="editMenuForm" method="POST" action="" class="space-y-4">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token, ENT_QUOTES, 'UTF-8') ?>">
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Position</label>
+                <select id="edit_m_position" name="position" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+                    <option value="HEADER">Header Main Navigation</option>
+                    <option value="FOOTER">Footer Links</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Title</label>
+                <input type="text" id="edit_m_title" name="title" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">URL</label>
+                <input type="text" id="edit_m_url" name="url" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Sort Order</label>
+                <input type="number" id="edit_m_sort_order" name="sort_order" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+            </div>
+            <div class="flex items-center gap-2">
+                <input type="checkbox" id="edit_m_is_active" name="is_active" class="rounded border-slate-300 text-indigo-600">
+                <label for="edit_m_is_active" class="text-xs text-slate-600">Active</label>
+            </div>
+            <div class="flex justify-end gap-3 pt-2">
+                <button type="button" onclick="document.getElementById('editMenuModal').classList.add('hidden')" class="px-4 py-2 border border-slate-200 rounded-xl text-xs font-semibold">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold">Update Link</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function editMenu(item) {
+    document.getElementById('editMenuForm').action = '/admin/navigation/' + item.id + '/update';
+    document.getElementById('edit_m_position').value = item.position || 'HEADER';
+    document.getElementById('edit_m_title').value = item.title || '';
+    document.getElementById('edit_m_url').value = item.url || '';
+    document.getElementById('edit_m_sort_order').value = item.sort_order || 0;
+    document.getElementById('edit_m_is_active').checked = parseInt(item.is_active) === 1;
+    document.getElementById('editMenuModal').classList.remove('hidden');
+}
+</script>
 <?php $content = ob_get_clean(); require __DIR__ . '/../../layouts/admin.php'; ?>

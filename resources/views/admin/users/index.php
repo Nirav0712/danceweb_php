@@ -51,6 +51,7 @@
                             <?= $u['last_login_at'] ? htmlspecialchars(date('M j, Y H:i', strtotime($u['last_login_at'])), ENT_QUOTES, 'UTF-8') : 'Never' ?>
                         </td>
                         <td class="px-6 py-4 text-right space-x-2">
+                            <button onclick='editUser(<?= json_encode($u, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>)' class="text-indigo-600 hover:text-indigo-800 font-semibold text-xs">Edit</button>
                             <form method="POST" action="/admin/users/<?= $u['id'] ?>/delete" class="inline" onsubmit="return confirm('Are you sure you want to delete this staff member?');">
                                 <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token, ENT_QUOTES, 'UTF-8') ?>">
                                 <button type="submit" class="text-rose-600 hover:text-rose-800 font-semibold text-xs">Delete</button>
@@ -98,6 +99,58 @@
                 <button type="button" onclick="document.getElementById('createUserModal').classList.add('hidden')" class="px-4 py-2 border border-slate-200 rounded-xl text-xs text-slate-600 font-semibold hover:bg-slate-50">Cancel</button>
                 <button type="submit" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-semibold shadow-xs">Create Staff</button>
             </div>
+        </form>
+    </div>
+</div>
+
+<!-- Edit User Modal -->
+<div id="editUserModal" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-slate-100">
+        <h3 class="text-lg font-bold text-slate-900 mb-4">Edit Staff Member</h3>
+        <form id="editUserForm" method="POST" action="" class="space-y-4">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token, ENT_QUOTES, 'UTF-8') ?>">
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Full Name</label>
+                <input type="text" name="full_name" id="editFullName" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Email</label>
+                <input type="email" id="editEmail" disabled class="w-full px-3 py-2 border border-slate-200 bg-slate-50 text-slate-500 rounded-xl text-xs outline-none">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Role</label>
+                <select name="role" id="editRole" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none">
+                    <option value="EDITOR">EDITOR (Media, Gallery, Stories, Testimonials)</option>
+                    <option value="ADMIN">ADMIN (Full CMS Content & Curriculum)</option>
+                    <option value="SUPER_ADMIN">SUPER_ADMIN (Full Access & Staff Control)</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">New Password <span class="text-slate-400 font-normal">(Leave blank to keep current)</span></label>
+                <input type="password" name="password" placeholder="••••••••" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none">
+            </div>
+            <div class="flex items-center gap-2">
+                <input type="checkbox" name="is_active" id="editIsActive" value="1" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500">
+                <label for="editIsActive" class="text-xs text-slate-600">Active Account</label>
+            </div>
+            <div class="flex justify-end gap-3 pt-2">
+                <button type="button" onclick="document.getElementById('editUserModal').classList.add('hidden')" class="px-4 py-2 border border-slate-200 rounded-xl text-xs text-slate-600 font-semibold hover:bg-slate-50">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-semibold shadow-xs">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function editUser(u) {
+    document.getElementById('editUserForm').action = '/admin/users/' + u.id + '/update';
+    document.getElementById('editFullName').value = u.full_name || '';
+    document.getElementById('editEmail').value = u.email || '';
+    document.getElementById('editRole').value = u.role || 'EDITOR';
+    document.getElementById('editIsActive').checked = (parseInt(u.is_active) === 1 || u.is_active === true);
+    document.getElementById('editUserModal').classList.remove('hidden');
+}
+</script>
         </form>
     </div>
 </div>

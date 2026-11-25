@@ -19,11 +19,24 @@ abstract class BaseAdminController
 
     protected function checkPermission(string $permission): void
     {
+        $this->validateCsrf();
         $role = $this->user['role'] ?? 'GUEST';
         if (!Permissions::can($role, $permission)) {
             http_response_code(403);
             echo View::render('errors.403', ['message' => "Forbidden: You do not have permission '{$permission}'"]);
             exit;
+        }
+    }
+
+    protected function validateCsrf(): void
+    {
+        if (strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
+            $token = $_POST['csrf_token'] ?? $_SERVER['HTTP_X_CSRF_TOKEN'] ?? null;
+            if (!\App\Core\CSRF::validate($token)) {
+                http_response_code(403);
+                echo View::render('errors.403', ['message' => 'CSRF verification failed or token expired. Please refresh and try again.']);
+                exit;
+            }
         }
     }
 

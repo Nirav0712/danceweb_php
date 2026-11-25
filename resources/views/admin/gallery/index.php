@@ -26,10 +26,13 @@
             </div>
             <div class="flex items-center justify-between mt-2 pt-2 border-t border-slate-100 px-1 text-[11px]">
                 <span class="<?= $item['is_featured'] ? 'text-amber-600 font-semibold' : 'text-slate-400' ?>"><?= $item['is_featured'] ? '★ Featured' : '' ?></span>
-                <form method="POST" action="/admin/gallery/<?= $item['id'] ?>/delete" onsubmit="return confirm('Delete this gallery photo?');">
-                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token, ENT_QUOTES, 'UTF-8') ?>">
-                    <button type="submit" class="text-rose-600 hover:text-rose-800 font-semibold">Delete</button>
-                </form>
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="editGallery(<?= htmlspecialchars(json_encode($item), ENT_QUOTES, 'UTF-8') ?>)" class="text-indigo-600 hover:text-indigo-800 font-semibold">Edit</button>
+                    <form method="POST" action="/admin/gallery/<?= $item['id'] ?>/delete" onsubmit="return confirm('Delete this gallery photo?');" class="inline">
+                        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token, ENT_QUOTES, 'UTF-8') ?>">
+                        <button type="submit" class="text-rose-600 hover:text-rose-800 font-semibold">Delete</button>
+                    </form>
+                </div>
             </div>
         </div>
         <?php endforeach; ?>
@@ -75,4 +78,56 @@
         </form>
     </div>
 </div>
+
+<div id="editGalleryModal" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-slate-100">
+        <h3 class="text-lg font-bold text-slate-900 mb-4">Edit Gallery Photo</h3>
+        <form id="editGalleryForm" method="POST" action="" class="space-y-4">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token, ENT_QUOTES, 'UTF-8') ?>">
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Image URL</label>
+                <input type="text" id="edit_image_url" name="image_url" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Title</label>
+                <input type="text" id="edit_title" name="title" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Category</label>
+                <select id="edit_category_id" name="category_id" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+                    <option value="">General</option>
+                    <?php foreach ($categories as $cat): ?>
+                        <option value="<?= $cat['id'] ?>"><?= htmlspecialchars($cat['name'], ENT_QUOTES, 'UTF-8') ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Year</label>
+                    <input type="number" id="edit_event_year" name="event_year" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none">
+                </div>
+                <div class="flex items-center pt-5">
+                    <input type="checkbox" id="edit_is_featured" name="is_featured" class="rounded border-slate-300 text-indigo-600">
+                    <label for="edit_is_featured" class="ml-2 text-xs text-slate-600">Featured</label>
+                </div>
+            </div>
+            <div class="flex justify-end gap-3 pt-2">
+                <button type="button" onclick="document.getElementById('editGalleryModal').classList.add('hidden')" class="px-4 py-2 border border-slate-200 rounded-xl text-xs font-semibold">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold">Update Photo</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function editGallery(item) {
+    document.getElementById('editGalleryForm').action = '/admin/gallery/' + item.id + '/update';
+    document.getElementById('edit_image_url').value = item.image_url || '';
+    document.getElementById('edit_title').value = item.title || '';
+    document.getElementById('edit_category_id').value = item.category_id || '';
+    document.getElementById('edit_event_year').value = item.event_year || '';
+    document.getElementById('edit_is_featured').checked = parseInt(item.is_featured) === 1;
+    document.getElementById('editGalleryModal').classList.remove('hidden');
+}
+</script>
 <?php $content = ob_get_clean(); require __DIR__ . '/../../layouts/admin.php'; ?>
