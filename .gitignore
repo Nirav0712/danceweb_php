@@ -1,0 +1,54 @@
+# ==============================================================================
+# DYNAMICE CHILDREN ACADEMY — PHP REPOSITORY .gitignore
+# ==============================================================================
+
+# 1. Environment Secrets & Local Configuration
+.env
+.env.local
+.env.*.local
+*.env
+
+# 2. Database Dumps & SQL Backups
+*.sql
+*.sql.gz
+*.sqlite
+*.sqlite3
+*.db
+/backups/
+
+# 3. Deployment Artifacts & Archives
+/dist-hostinger/
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.rar
+
+# 4. Storage & Application Logs
+/storage/logs/*.log
+storage/logs/*.log
+*.log
+
+# 5. OS & IDE Generated Files
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
+
+# 6. Composer & Package Manager (if used)
+/vendor/
+composer.phar
+
+# 7. Local Media Uploads (Preserve directory structure, ignore user uploads in VCS)
+/public/uploads/*
+!/public/uploads/.htaccess
+!/public/uploads/.gitkeep
+
+# Ensure .env.example is always tracked
+!.env.example

@@ -1,0 +1,333 @@
+<?php
+
+namespace App\Controllers;
+
+use App\Core\Request;
+use App\Core\Response;
+use App\Core\View;
+use App\Core\Database;
+use App\Core\CSRF;
+use App\Services\ContentService;
+
+class PublicController
+{
+    public function home(Request $request): Response
+    {
+        // 1. Fetch categories
+        $categories = Database::fetchAll("SELECT * FROM dance_categories ORDER BY sort_order ASC LIMIT 6");
+
+        // 2. Fetch dance forms
+        $danceForms = Database::fetchAll("SELECT * FROM dance_forms ORDER BY sort_order ASC LIMIT 8");
+
+        // 3. Fetch awards
+        $awards = Database::fetchAll("SELECT * FROM awards ORDER BY sort_order ASC LIMIT 6");
+
+        // 4. Fetch featured gallery items
+        $gallery = Database::fetchAll("SELECT * FROM gallery_items WHERE is_featured = 1 ORDER BY sort_order ASC LIMIT 8");
+
+        // 5. Fetch tour flags
+        $tourFlags = Database::fetchAll("SELECT * FROM tour_flags WHERE is_active = 1 ORDER BY sort_order ASC LIMIT 16");
+
+        // 6. Fetch testimonials
+        $testimonials = Database::fetchAll("SELECT * FROM testimonials WHERE is_active = 1 ORDER BY sort_order ASC LIMIT 4");
+
+        // 7. Fetch sections
+        $sections = Database::fetchAll("SELECT * FROM sections WHERE page_id = (SELECT id FROM pages WHERE slug = 'home' LIMIT 1) ORDER BY sort_order ASC");
+
+        return (new Response())->html(View::render('public.home', [
+            'title' => 'Dynamice Children Academy — Premier Dance Institute Gujarat',
+            'metaTitle' => 'Dynamice Children Academy — Indian Folk & Classical Dance Academy',
+            'metaDescription' => 'Discover the joy of Indian folk, classical, and contemporary dance with Dynamice Children Academy in Nikol and Bapunagar, Ahmedabad.',
+            'categories' => $categories,
+            'danceForms' => $danceForms,
+            'awards' => $awards,
+            'gallery' => $gallery,
+            'tourFlags' => $tourFlags,
+            'testimonials' => $testimonials,
+            'sections' => $sections,
+        ]));
+    }
+
+    public function about(Request $request): Response
+    {
+        $associations = Database::fetchAll("SELECT * FROM associations ORDER BY sort_order ASC");
+        $page = Database::fetchOne("SELECT * FROM pages WHERE slug = 'about' LIMIT 1");
+
+        return (new Response())->html(View::render('public.about', [
+            'title' => 'About Us — Dynamice Children Academy',
+            'metaTitle' => 'About Academy & Founder Director Shri Tirthraj Trivedi',
+            'metaDescription' => 'Learn about the legacy of Dynamice Children Academy, founded in 1998 to train generations of children in authentic Indian cultural dance.',
+            'associations' => $associations,
+            'page' => $page,
+        ]));
+    }
+
+    public function gallery(Request $request): Response
+    {
+        $selectedCat = (int) $request->query('category', 0);
+        $categories = Database::fetchAll("SELECT * FROM dance_categories ORDER BY sort_order ASC");
+
+        if ($selectedCat > 0) {
+            $items = Database::fetchAll("SELECT * FROM gallery_items WHERE category_id = :cat ORDER BY sort_order ASC", ['cat' => $selectedCat]);
+        } else {
+            $items = Database::fetchAll("SELECT * FROM gallery_items ORDER BY sort_order ASC LIMIT 60");
+        }
+
+        return (new Response())->html(View::render('public.gallery', [
+            'title' => 'Photo & Event Gallery — Dynamice Children Academy',
+            'metaTitle' => 'Photo Gallery of State, National & World Dance Performances',
+            'metaDescription' => 'Browse vibrant stage performances, international tours, competition wins, and traditional festival dance photos.',
+            'categories' => $categories,
+            'items' => $items,
+            'selectedCat' => $selectedCat,
+        ]));
+    }
+
+    public function awards(Request $request): Response
+    {
+        $awards = Database::fetchAll("SELECT * FROM awards ORDER BY sort_order ASC");
+
+        return (new Response())->html(View::render('public.awards', [
+            'title' => 'Awards & World Records — Dynamice Children Academy',
+            'metaTitle' => 'Limca Book & Golden Book of World Records Awards',
+            'metaDescription' => 'Prestigious honors, world records, and state trophies achieved by academy students across 25+ years of cultural dance excellence.',
+            'awards' => $awards,
+        ]));
+    }
+
+    public function associations(Request $request): Response
+    {
+        $associations = Database::fetchAll("SELECT * FROM associations ORDER BY sort_order ASC");
+
+        return (new Response())->html(View::render('public.associations', [
+            'title' => 'Affiliations & Accreditations — Dynamice Children Academy',
+            'metaTitle' => 'Cultural Affiliations & International Partnerships',
+            'metaDescription' => 'Recognized by national cultural ministries and international folk dance organizations worldwide.',
+            'associations' => $associations,
+        ]));
+    }
+
+    public function nationalJourney(Request $request): Response
+    {
+        $events = Database::fetchAll("SELECT * FROM journey_events WHERE event_type = 'NATIONAL' ORDER BY sort_order ASC");
+
+        return (new Response())->html(View::render('public.journey_national', [
+            'title' => 'National Journey — Cultural Festival Tours in India',
+            'metaTitle' => 'National Dance Tours Across Indian States & Union Territories',
+            'metaDescription' => 'Performances at Youth Festivals, National Folk Dance Conventions, and State Cultural Celebrations across India.',
+            'events' => $events,
+        ]));
+    }
+
+    public function internationalJourney(Request $request): Response
+    {
+        $events = Database::fetchAll("SELECT * FROM journey_events WHERE event_type = 'INTERNATIONAL' ORDER BY sort_order ASC");
+
+        return (new Response())->html(View::render('public.journey_intl', [
+            'title' => 'International Journey — World Cultural Tours',
+            'metaTitle' => 'International Folk Dance Tours — Turkey, Europe & Beyond',
+            'metaDescription' => 'Representing India at the Golden Carnation International Folk Dance Competition and world cultural festivals.',
+            'events' => $events,
+        ]));
+    }
+
+    public function nationalNews(Request $request): Response
+    {
+        $news = Database::fetchAll("SELECT * FROM news_items WHERE news_scope = 'NATIONAL' ORDER BY sort_order ASC");
+
+        return (new Response())->html(View::render('public.news_national', [
+            'title' => 'National Press Coverage — Dynamice Children Academy',
+            'metaTitle' => 'Newspaper Clippings & Press Coverage in Gujarat and India',
+            'metaDescription' => 'Print media reviews and festival press coverage from Sandesh, Divya Bhaskar, Gujarat Samachar, and national dailies.',
+            'news' => $news,
+        ]));
+    }
+
+    public function internationalNews(Request $request): Response
+    {
+        $news = Database::fetchAll("SELECT * FROM news_items WHERE news_scope = 'INTERNATIONAL' ORDER BY sort_order ASC");
+
+        return (new Response())->html(View::render('public.news_intl', [
+            'title' => 'International Press Coverage — Dynamice Children Academy',
+            'metaTitle' => 'Global Press Features & International Media Coverage',
+            'metaDescription' => 'International newspapers and cultural festival bulletins covering our young dancers overseas.',
+            'news' => $news,
+        ]));
+    }
+
+    public function blogs(Request $request): Response
+    {
+        $blogs = Database::fetchAll("SELECT * FROM blog_posts WHERE status = 'PUBLISHED' ORDER BY published_at DESC");
+
+        return (new Response())->html(View::render('public.blogs', [
+            'title' => 'Dance Stories & Articles — Dynamice Children Academy',
+            'metaTitle' => 'Dance Education, Folk Traditions & Cultural Heritage Stories',
+            'metaDescription' => 'Read expert insights on dance benefits for child development, traditional Garba history, and academy tour journals.',
+            'blogs' => $blogs,
+        ]));
+    }
+
+    public function blogDetail(Request $request): Response
+    {
+        $slug = $request->param('slug');
+        $blog = Database::fetchOne("SELECT * FROM blog_posts WHERE slug = :slug AND status = 'PUBLISHED' LIMIT 1", ['slug' => $slug]);
+
+        if (!$blog) {
+            $resp = new Response();
+            $resp->status(404);
+            return $resp->html(View::render('errors.404', ['title' => 'Story Not Found', 'uri' => "/blogs/{$slug}"]), 404);
+        }
+
+        $recentBlogs = Database::fetchAll("SELECT id, slug, title, published_at FROM blog_posts WHERE id != :id AND status = 'PUBLISHED' ORDER BY published_at DESC LIMIT 4", ['id' => $blog['id']]);
+
+        return (new Response())->html(View::render('public.blog_detail', [
+            'title' => "{$blog['title']} — Dance Stories",
+            'metaTitle' => $blog['meta_title'] ?: $blog['title'],
+            'metaDescription' => $blog['meta_description'] ?: substr(strip_tags($blog['excerpt'] ?? $blog['content']), 0, 160),
+            'blog' => $blog,
+            'recentBlogs' => $recentBlogs,
+        ]));
+    }
+
+    public function contact(Request $request): Response
+    {
+        $branches = ContentService::getBranches();
+        $settings = ContentService::getSettings();
+
+        return (new Response())->html(View::render('public.contact', [
+            'title' => 'Contact Us & Campus Locations — Dynamice Children Academy',
+            'metaTitle' => 'Join Dance Batches in Nikol & Bapunagar, Ahmedabad',
+            'metaDescription' => 'Connect with our dance academy admissions team. Visit our studios at Vaikunth Complex Nikol or Centre Point Bapunagar.',
+            'branches' => $branches,
+            'settings' => $settings,
+            'csrf_token' => CSRF::getToken(),
+        ]));
+    }
+
+    public function submitEnquiry(Request $request): Response
+    {
+        $token = $request->post('csrf_token');
+        if (!CSRF::validate($token)) {
+            return (new Response())->json(['success' => false, 'message' => 'Invalid or expired security token.'], 400);
+        }
+
+        $studentName = trim((string) $request->post('student_name'));
+        $parentName = trim((string) $request->post('parent_name'));
+        $phone = trim((string) $request->post('phone'));
+        $email = trim((string) $request->post('email'));
+        $message = trim((string) $request->post('message'));
+        $branch = trim((string) $request->post('preferred_branch', 'Nikol'));
+
+        if (empty($studentName) || empty($phone)) {
+            return (new Response())->json(['success' => false, 'message' => 'Student name and phone number are required.'], 422);
+        }
+
+        $combinedName = !empty($parentName) ? "{$studentName} (Parent: {$parentName})" : $studentName;
+        $subject = 'Student Admission Enquiry';
+
+        try {
+            Database::query(
+                "INSERT INTO enquiries (name, email, phone, subject, message, preferred_branch, status, created_at, updated_at) 
+                 VALUES (:name, :email, :phone, :subject, :msg, :branch, 'NEW', NOW(), NOW())",
+                [
+                    'name' => $combinedName,
+                    'email' => $email ?: 'not_provided@academy.com',
+                    'phone' => $phone,
+                    'subject' => $subject,
+                    'msg' => $message ?: 'Admission enquiry submitted via website form.',
+                    'branch' => $branch,
+                ]
+            );
+            return (new Response())->json(['success' => true, 'message' => 'Thank you! Your enquiry has been submitted. Our team will contact you shortly.']);
+        } catch (\Throwable $e) {
+            return (new Response())->json(['success' => false, 'message' => 'Database error recording enquiry: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function subscribeNewsletter(Request $request): Response
+    {
+        $email = trim((string) $request->post('email'));
+        if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return (new Response())->json(['success' => false, 'message' => 'Please provide a valid email address.'], 422);
+        }
+
+        try {
+            $existing = Database::fetchOne("SELECT id FROM newsletter_subscribers WHERE email = :email LIMIT 1", ['email' => $email]);
+            if ($existing) {
+                return (new Response())->json(['success' => true, 'message' => 'You are already subscribed to our newsletter!']);
+            }
+
+            Database::query(
+                "INSERT INTO newsletter_subscribers (email, is_subscribed, subscribed_at) VALUES (:email, 1, NOW())",
+                ['email' => $email]
+            );
+            return (new Response())->json(['success' => true, 'message' => 'Successfully subscribed to academy updates!']);
+        } catch (\Throwable $e) {
+            return (new Response())->json(['success' => false, 'message' => 'Failed to subscribe: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function sitemapXml(Request $request): Response
+    {
+        $routes = [
+            '/',
+            '/about',
+            '/gallery',
+            '/awards',
+            '/associations',
+            '/journey/national',
+            '/journey/international',
+            '/news/national',
+            '/news/international',
+            '/blogs',
+            '/contact',
+        ];
+
+        // Fetch published blog slugs
+        try {
+            $blogs = Database::fetchAll("SELECT slug, updated_at FROM blog_posts WHERE status = 'PUBLISHED'");
+        } catch (\Throwable $e) {
+            $blogs = [];
+        }
+
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+        $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
+
+        foreach ($routes as $route) {
+            $xml .= "  <url>\n";
+            $xml .= "    <loc>https://dynamicechildrenacademy.com" . htmlspecialchars($route, ENT_QUOTES, 'UTF-8') . "</loc>\n";
+            $xml .= "    <changefreq>weekly</changefreq>\n";
+            $xml .= "    <priority>" . ($route === '/' ? '1.0' : '0.8') . "</priority>\n";
+            $xml .= "  </url>\n";
+        }
+
+        foreach ($blogs as $b) {
+            $date = date('Y-m-d', strtotime($b['updated_at'] ?? 'now'));
+            $xml .= "  <url>\n";
+            $xml .= "    <loc>https://dynamicechildrenacademy.com/blogs/" . htmlspecialchars($b['slug'], ENT_QUOTES, 'UTF-8') . "</loc>\n";
+            $xml .= "    <lastmod>{$date}</lastmod>\n";
+            $xml .= "    <changefreq>monthly</changefreq>\n";
+            $xml .= "    <priority>0.7</priority>\n";
+            $xml .= "  </url>\n";
+        }
+
+        $xml .= '</urlset>';
+
+        $res = new Response();
+        $res->header('Content-Type', 'application/xml; charset=utf-8');
+        return $res->html($xml);
+    }
+
+    public function robotsTxt(Request $request): Response
+    {
+        $txt = "User-agent: *\n";
+        $txt .= "Allow: /\n";
+        $txt .= "Disallow: /admin\n";
+        $txt .= "Disallow: /admin/\n\n";
+        $txt .= "Sitemap: https://dynamicechildrenacademy.com/seo/sitemap.xml\n";
+
+        $res = new Response();
+        $res->header('Content-Type', 'text/plain; charset=utf-8');
+        return $res->html($txt);
+    }
+}

@@ -1,0 +1,28 @@
+# Prevent execution of any scripts uploaded to uploads directory
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php7.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php8.c>
+    php_flag engine off
+</IfModule>
+
+# Disable script execution via Handler
+RemoveHandler .php .phtml .php3 .php4 .php5 .php7 .php8 .phps .cgi .pl .py .sh
+RemoveType .php .phtml .php3 .php4 .php5 .php7 .php8 .phps .cgi .pl .py .sh
+
+# Only allow safe image file types
+<FilesMatch "\.(?i:jpg|jpeg|png|gif|webp|svg|ico)$">
+    Order allow,deny
+    Allow from all
+</FilesMatch>
+
+# Deny access to all other file types
+<FilesMatch "\.(?i:php|phtml|php3|php4|php5|php7|php8|phps|cgi|pl|py|sh|bash|exe|bat|cmd|env|sql|json|lock)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+Options -Indexes
