@@ -10,8 +10,8 @@ class AuditLogsController extends BaseAdminController
     public function index(Request $request): Response
     {
         $this->checkPermission('audit_logs:view');
-        $entity = trim($request->getParam('entity') ?? '');
-        $action = trim($request->getParam('action') ?? '');
+        $entity = trim((string)($request->query('entity') ?? $request->getParam('entity') ?? ''));
+        $action = trim((string)($request->query('action') ?? $request->getParam('action') ?? ''));
 
         $sql = 'SELECT a.*, u.email as user_email, u.full_name as user_name FROM audit_logs a LEFT JOIN users u ON a.user_id = u.id WHERE 1=1';
         $params = [];

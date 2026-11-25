@@ -79,6 +79,16 @@ class Request
         return $this->routeParams[$key] ?? $default;
     }
 
+    public function getParam(string $key, mixed $default = null): mixed
+    {
+        return $this->params[$key] ?? $this->body[$key] ?? $this->routeParams[$key] ?? $default;
+    }
+
+    public function input(string $key, mixed $default = null): mixed
+    {
+        return $this->body[$key] ?? $this->params[$key] ?? $this->routeParams[$key] ?? $default;
+    }
+
     public function ip(): string
     {
         return $this->server['HTTP_X_FORWARDED_FOR'] ?? $this->server['REMOTE_ADDR'] ?? '127.0.0.1';

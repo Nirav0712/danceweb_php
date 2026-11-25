@@ -10,7 +10,7 @@ class SectionsController extends BaseAdminController
     public function index(Request $request): Response
     {
         $this->checkPermission('sections:manage');
-        $pageId = (int)($request->getParam('page_id') ?? 0);
+        $pageId = (int)($request->query('page_id') ?? $request->getParam('page_id') ?? 0);
 
         if ($pageId > 0) {
             $sections = Database::fetchAll(
