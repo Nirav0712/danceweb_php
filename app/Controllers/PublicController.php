@@ -26,16 +26,23 @@ class PublicController
         // 4. Fetch featured gallery items
         $gallery = Database::fetchAll("SELECT * FROM gallery_items WHERE is_featured = 1 ORDER BY sort_order ASC LIMIT 8");
 
-        // 4b. Fetch hero images directly from hero_slides table managed in Admin Panel
+        // 4b. Fetch hero images: safely check hero_slides table, fallback to gallery_items and defaults
         $heroImages = [];
-        $cmsHeroSlides = Database::fetchAll("SELECT title, image_url FROM hero_slides WHERE is_active = 1 ORDER BY sort_order ASC, id ASC");
-        foreach ($cmsHeroSlides as $slide) {
-            if (!empty($slide['image_url'])) {
-                $heroImages[] = [
-                    'url' => $slide['image_url'],
-                    'title' => $slide['title'] ?? 'Dynamic Children Academy Performance',
-                ];
+        try {
+            $cmsHeroSlides = Database::fetchAll("SELECT title, image_url FROM hero_slides WHERE is_active = 1 ORDER BY sort_order ASC, id ASC");
+            if (!empty($cmsHeroSlides)) {
+                foreach ($cmsHeroSlides as $slide) {
+                    if (!empty($slide['image_url'])) {
+                        $heroImages[] = [
+                            'url' => $slide['image_url'],
+                            'title' => $slide['title'] ?? 'Dynamic Children Academy Performance',
+                        ];
+                    }
+                }
             }
+        } catch (\Throwable $e) {
+            // Table might not exist yet on remote hostinger before migration
+            $heroImages = [];
         }
 
         // If no active slides in hero_slides, fallback to featured gallery and default assets
