@@ -7,6 +7,7 @@ use App\Controllers\PublicController;
 use App\Controllers\Admin\UsersController;
 use App\Controllers\Admin\PagesController;
 use App\Controllers\Admin\SectionsController;
+use App\Controllers\Admin\HeroController;
 use App\Controllers\Admin\MenusController;
 use App\Controllers\Admin\MediaController;
 use App\Controllers\Admin\DanceCategoriesController;
@@ -125,6 +126,13 @@ $router->get('/admin/sections', [SectionsController::class, 'index'], [$auth, $a
 $router->post('/admin/sections', [SectionsController::class, 'store'], [$auth, $adminOrSuper]);
 $router->post('/admin/sections/{id}/update', [SectionsController::class, 'update'], [$auth, $adminOrSuper]);
 $router->post('/admin/sections/{id}/delete', [SectionsController::class, 'delete'], [$auth, $adminOrSuper]);
+
+// Module 03b: Homepage Hero Section & Banners Management
+$router->get('/admin/hero', [HeroController::class, 'index'], [$auth, $adminOrSuper]);
+$router->post('/admin/hero/heading', [HeroController::class, 'updateHeading'], [$auth, $adminOrSuper]);
+$router->post('/admin/hero/slides', [HeroController::class, 'storeSlide'], [$auth, $adminOrSuper]);
+$router->post('/admin/hero/slides/{id}/update', [HeroController::class, 'updateSlide'], [$auth, $adminOrSuper]);
+$router->post('/admin/hero/slides/{id}/delete', [HeroController::class, 'deleteSlide'], [$auth, $adminOrSuper]);
 
 // Module 04: Navigation Menus
 $router->get('/admin/navigation', [MenusController::class, 'index'], [$auth, $adminOrSuper]);

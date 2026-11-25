@@ -26,18 +26,32 @@ class PublicController
         // 4. Fetch featured gallery items
         $gallery = Database::fetchAll("SELECT * FROM gallery_items WHERE is_featured = 1 ORDER BY sort_order ASC LIMIT 8");
 
-        // 4b. Fetch hero images (combine hero section images, featured gallery items, and curated high-res assets)
+        // 4b. Fetch hero images directly from hero_slides table managed in Admin Panel
         $heroImages = [];
-        $heroGallery = Database::fetchAll("SELECT title, image_url FROM gallery_items ORDER BY is_featured DESC, sort_order ASC LIMIT 12");
-        foreach ($heroGallery as $item) {
-            if (!empty($item['image_url'])) {
+        $cmsHeroSlides = Database::fetchAll("SELECT title, image_url FROM hero_slides WHERE is_active = 1 ORDER BY sort_order ASC, id ASC");
+        foreach ($cmsHeroSlides as $slide) {
+            if (!empty($slide['image_url'])) {
                 $heroImages[] = [
-                    'url' => $item['image_url'],
-                    'title' => $item['title'] ?? 'Dynamic Children Academy Performance',
+                    'url' => $slide['image_url'],
+                    'title' => $slide['title'] ?? 'Dynamic Children Academy Performance',
                 ];
             }
         }
-        // Ensure robust default high-quality images from media library if gallery has few entries
+
+        // If no active slides in hero_slides, fallback to featured gallery and default assets
+        if (empty($heroImages)) {
+            $heroGallery = Database::fetchAll("SELECT title, image_url FROM gallery_items ORDER BY is_featured DESC, sort_order ASC LIMIT 8");
+            foreach ($heroGallery as $item) {
+                if (!empty($item['image_url'])) {
+                    $heroImages[] = [
+                        'url' => $item['image_url'],
+                        'title' => $item['title'] ?? 'Dynamic Children Academy Performance',
+                    ];
+                }
+            }
+        }
+
+        // Ensure robust fallback high-quality images from media library if empty
         $defaultHeroAssets = [
             ['url' => '/assets/banners/homebanner.jpg', 'title' => 'Academy World Record Performance'],
             ['url' => '/assets/about/academy_group.jpg', 'title' => 'Cultural Dance Troupe'],
@@ -46,14 +60,8 @@ class PublicController
             ['url' => '/assets/gallery/1.jpg', 'title' => 'Folk Dance Troupe'],
             ['url' => '/assets/gallery/2.jpg', 'title' => 'Classical Garba & Raas'],
         ];
-        foreach ($defaultHeroAssets as $def) {
-            $exists = false;
-            foreach ($heroImages as $h) {
-                if ($h['url'] === $def['url']) { $exists = true; break; }
-            }
-            if (!$exists) {
-                $heroImages[] = $def;
-            }
+        if (empty($heroImages)) {
+            $heroImages = $defaultHeroAssets;
         }
 
         // 5. Fetch tour flags

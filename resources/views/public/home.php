@@ -58,10 +58,32 @@ ob_start();
 
 <!-- Heading Immediately Below Hero -->
 <section class="bg-white py-8 sm:py-12 border-b border-slate-100">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-2">
+        <?php
+        $rawHeading = trim($sections['hero']['heading'] ?? 'Culture Is a Way of Life');
+        // If the heading is "Culture Is a Way of Life", style "Way of Life" in amber
+        if (stripos($rawHeading, 'Culture Is a Way of Life') !== false) {
+            $formattedHeading = 'Culture Is a <span class="text-amber-500 font-extrabold">Way of Life</span>';
+        } else {
+            // General case: preserve custom heading entered in admin panel
+            $parts = explode(' ', $rawHeading);
+            if (count($parts) > 2) {
+                $lastTwo = array_slice($parts, -2);
+                $initial = array_slice($parts, 0, -2);
+                $formattedHeading = htmlspecialchars(implode(' ', $initial), ENT_QUOTES, 'UTF-8') . ' <span class="text-amber-500 font-extrabold">' . htmlspecialchars(implode(' ', $lastTwo), ENT_QUOTES, 'UTF-8') . '</span>';
+            } else {
+                $formattedHeading = htmlspecialchars($rawHeading, ENT_QUOTES, 'UTF-8');
+            }
+        }
+        ?>
         <h2 class="font-serif text-2xl sm:text-[26px] font-bold text-slate-800 tracking-tight leading-snug">
-            Culture Is a <span class="text-amber-500 font-extrabold">Way of Life</span>
+            <?= $formattedHeading ?>
         </h2>
+        <?php if (!empty($sections['hero']['subheading'])): ?>
+        <p class="text-xs sm:text-sm text-slate-500 max-w-2xl mx-auto">
+            <?= htmlspecialchars($sections['hero']['subheading'], ENT_QUOTES, 'UTF-8') ?>
+        </p>
+        <?php endif; ?>
     </div>
 </section>
 

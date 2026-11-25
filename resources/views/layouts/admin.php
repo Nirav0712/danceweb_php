@@ -10,6 +10,7 @@ $navSections = [
         ['label' => 'Dashboard', 'url' => '/admin', 'icon' => 'layout-dashboard', 'permission' => 'dashboard:view'],
     ],
     'Content & Pages' => [
+        ['label' => 'Hero Banner & Heading', 'url' => '/admin/hero', 'icon' => 'sparkles', 'permission' => 'sections:manage'],
         ['label' => 'Website Pages', 'url' => '/admin/pages', 'icon' => 'file-text', 'permission' => 'pages:view'],
         ['label' => 'Page Sections', 'url' => '/admin/sections', 'icon' => 'layers', 'permission' => 'sections:manage'],
         ['label' => 'Navigation Menus', 'url' => '/admin/navigation', 'icon' => 'menu', 'permission' => 'menus:manage'],
