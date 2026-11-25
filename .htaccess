@@ -1,10 +1,66 @@
-# Prevent direct access to all files in the app root directory
-Order Deny,Allow
-Deny from all
+# ==============================================================================
+# Dynamic Children Academy — Root .htaccess (Apache & LiteSpeed Compatible)
+# ==============================================================================
 
-# Allow public directory routing when accessed through Apache rewrite
+# 1. Directory Index
+DirectoryIndex index.php
+
+# 2. Block Directory Browsing
+Options -Indexes
+
+# 3. Security: Block Direct HTTP Access to Sensitive Files and Directories
+# Works across Apache 2.4+ and LiteSpeed Web Server
+<IfModule mod_authz_core.c>
+    # Apache 2.4+
+    <FilesMatch "^\.(env|git|htaccess|htpasswd|ini|log|sh|sql)$">
+        Require all denied
+    </FilesMatch>
+    <FilesMatch "(composer\.(json|lock)|\.gitignore|README\.md)$">
+        Require all denied
+    </FilesMatch>
+</IfModule>
+
+<IfModule !mod_authz_core.c>
+    # Apache 2.2 fallback
+    <FilesMatch "^\.(env|git|htaccess|htpasswd|ini|log|sh|sql)$">
+        Order allow,deny
+        Deny from all
+    </FilesMatch>
+    <FilesMatch "(composer\.(json|lock)|\.gitignore|README\.md)$">
+        Order allow,deny
+        Deny from all
+    </FilesMatch>
+</IfModule>
+
+# Block access to internal source directories
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteBase /
+
+    # Block direct requests to internal directories
+    RewriteRule ^(app|config|database|resources|routes|scripts|storage|tests)(\/|$) - [F,L,NC]
+    RewriteRule ^(\.env|\.git|composer\.) - [F,L,NC]
+
+    # Serve static assets directly from public/ if requested directly
+    RewriteCond %{REQUEST_URI} ^/public/ [NC]
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # Map asset requests (e.g. /assets/..., /favicon.ico, /logodance.png, /uploads/...) to public/
+    RewriteCond %{DOCUMENT_ROOT}/public%{REQUEST_URI} -f
     RewriteRule ^(.*)$ public/$1 [L]
+
+    # Front Controller routing: send all non-file/non-directory requests to index.php
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^ index.php [L,QSA]
+</IfModule>
+
+# Security Headers
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
 </IfModule>

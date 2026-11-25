@@ -1,9 +1,16 @@
-<IfModule mod_rewrite.c>
-    <IfModule mod_negotiation.c>
-        Options -MultiViews -Indexes
-    </IfModule>
+# ==============================================================================
+# Dynamic Children Academy — Public .htaccess (Apache & LiteSpeed Compatible)
+# ==============================================================================
 
+DirectoryIndex index.php
+
+<IfModule mod_negotiation.c>
+    Options -MultiViews -Indexes
+</IfModule>
+
+<IfModule mod_rewrite.c>
     RewriteEngine On
+    RewriteBase /
 
     # Prevent direct access to sensitive files
     RewriteRule ^(\.env|\.git|composer\.|storage\/logs) - [F,L,NC]
@@ -20,7 +27,7 @@
     # Send Requests To Front Controller...
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^ index.php [L]
+    RewriteRule ^ index.php [L,QSA]
 </IfModule>
 
 # Security Headers
