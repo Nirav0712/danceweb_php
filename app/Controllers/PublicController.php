@@ -448,13 +448,14 @@ class PublicController
 
     public function awards(Request $request): Response
     {
-        $awards = Database::fetchAll("SELECT * FROM awards ORDER BY sort_order ASC");
+        $awards = Database::fetchAll("SELECT * FROM awards ORDER BY sort_order ASC, year DESC, id ASC");
         $page = Database::fetchOne("SELECT * FROM pages WHERE slug = 'award' LIMIT 1");
+        $section = Database::fetchOne("SELECT * FROM sections WHERE section_key = 'awards' LIMIT 1");
 
         $seo = SeoService::resolve('/awards', [
             'title' => $page['title'] ?? 'Awards & World Records — Dynamice Children Academy',
-            'metaTitle' => $page['meta_title'] ?? 'Limca Book & Golden Book of World Records Awards',
-            'metaDescription' => $page['meta_description'] ?? 'Prestigious honors, world records, and state trophies achieved by academy students across 25+ years of cultural dance excellence.',
+            'metaTitle' => $page['meta_title'] ?? 'Awards & World Records | Dynamice Children Academy',
+            'metaDescription' => $page['meta_description'] ?? 'Certified milestones honoring our child artists, Director Tirthraj Trivedi, and our mission to elevate Indian folk heritage.',
         ]);
 
         return (new Response())->html(View::render('public.awards', [
@@ -463,6 +464,8 @@ class PublicController
             'metaTitle' => $seo['metaTitle'],
             'metaDescription' => $seo['metaDescription'],
             'canonicalUrl' => $seo['canonicalUrl'],
+            'page' => $page,
+            'section' => $section,
             'awards' => $awards,
         ]));
     }

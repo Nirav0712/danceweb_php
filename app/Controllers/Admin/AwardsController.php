@@ -69,6 +69,13 @@ class AwardsController extends BaseAdminController
         }
 
         $this->logAudit('UPDATE', 'SectionHeading', 'awards', ['heading' => $heading]);
+
+        // Also update dedicated /award page title & subtitle
+        Database::query(
+            "UPDATE pages SET title = :title, subtitle = :subtitle, updated_at = NOW() WHERE slug = 'award'",
+            ['title' => $heading, 'subtitle' => $subheading]
+        );
+
         return $this->redirect('/admin/awards', 'Section heading and subtitle updated successfully.');
     }
 
