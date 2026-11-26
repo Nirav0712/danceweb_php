@@ -57,6 +57,9 @@ $router->get('/privacy-policy', function($req) {
 $router->get('/terms', function($req) {
     return (new \App\Controllers\PublicController())->customPage($req, ['slug' => 'terms']);
 });
+$router->get('/refund-policy', function($req) {
+    return (new \App\Controllers\PublicController())->customPage($req, ['slug' => 'refund-policy']);
+});
 $router->get('/faq', function($req) {
     return (new \App\Controllers\PublicController())->customPage($req, ['slug' => 'faq']);
 });

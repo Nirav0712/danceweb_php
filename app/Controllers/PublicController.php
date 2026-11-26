@@ -706,9 +706,33 @@ class PublicController
         $page = Database::fetchOne("SELECT * FROM pages WHERE slug = :slug AND is_published = 1 LIMIT 1", ['slug' => $slug]);
 
         if (!$page) {
-            $resp = new Response();
-            $resp->status(404);
-            return $resp->html(View::render('errors.404', ['title' => 'Page Not Found', 'uri' => "/page/{$slug}"]), 404);
+            $defaultTitles = [
+                'privacy-policy' => 'Privacy Policy — Dynamice Children Academy',
+                'terms' => 'Terms of Service — Dynamice Children Academy',
+                'refund-policy' => 'Refund & Cancellation Policy — Dynamice Children Academy',
+                'faq' => 'Frequently Asked Questions — Dynamice Children Academy',
+            ];
+            if (isset($defaultTitles[$slug])) {
+                $page = [
+                    'id' => 0,
+                    'slug' => $slug,
+                    'title' => $defaultTitles[$slug],
+                    'subtitle' => 'Official guidelines and academy terms for parents, students, and guardians.',
+                    'content' => '',
+                    'banner_image_url' => null,
+                ];
+                $sections = [
+                    [
+                        'heading' => $defaultTitles[$slug],
+                        'subheading' => 'Dynamice Children Academy • Regd. Trust & Cultural Organization',
+                        'content' => 'Welcome to Dynamice Children Academy. We are dedicated to providing a safe, nurturing, and culturally enriching environment for all our young dance learners and families. For any questions regarding admissions, batch fees, or policies, please contact our administrative desk at info@dynamicechildrenacademy.com or call +91 91738 78750.',
+                    ]
+                ];
+            } else {
+                $resp = new Response();
+                $resp->status(404);
+                return $resp->html(View::render('errors.404', ['title' => 'Page Not Found', 'uri' => "/page/{$slug}"]), 404);
+            }
         }
 
         $sections = Database::fetchAll("SELECT * FROM sections WHERE page_id = :pid AND is_visible = 1 ORDER BY sort_order ASC", ['pid' => $page['id']]);
