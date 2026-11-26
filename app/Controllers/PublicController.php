@@ -72,7 +72,7 @@ class PublicController
         }
 
         // 5. Fetch tour flags
-        $tourFlags = Database::fetchAll("SELECT * FROM tour_flags WHERE is_active = 1 ORDER BY sort_order ASC LIMIT 16");
+        $tourFlags = Database::fetchAll("SELECT * FROM tour_flags WHERE is_active = 1 ORDER BY sort_order ASC, year DESC");
 
         // 6. Fetch testimonials
         $testimonials = Database::fetchAll("SELECT * FROM testimonials WHERE is_active = 1 ORDER BY sort_order ASC LIMIT 4");
@@ -173,7 +173,8 @@ class PublicController
                 'subItemsHeader' => 'Drama & Public Speaking Modules',
                 'subItems' => [
                     ['name' => 'Voice Modulation', 'detail' => 'Pitch control, speech clarity, vocal projection & breath control.', 'image' => '/assets/homepage/services/drama.jpg'],
-                    ['name' => 'Storytelling & Bhav', 'detail' => 'Expressive facial navarasas, character roleplay & dramatic monologue.', 'image' => '/assets/gallery/1.jpg'],
+                    ['name' => 'Storytelling & Bhav', 'detail' => 'Expressive facial navarasas, character roleplay & dramatic mon
+                    ologue.', 'image' => '/assets/gallery/1.jpg'],
                     ['name' => 'Stage Presence', 'detail' => 'Conquering stage fear, commanding posture & authentic audience connection.', 'image' => '/assets/gallery/2.jpg'],
                     ['name' => 'Roleplay & Improv', 'detail' => 'Quick theatrical thinking, unscripted responses & emotional empathy.', 'image' => '/assets/gallery/3.jpg'],
                     ['name' => 'Theatre Screenings', 'detail' => 'Observing theatrical staging, dialogue pacing & live production backstage.', 'image' => '/assets/gallery/4.jpg'],

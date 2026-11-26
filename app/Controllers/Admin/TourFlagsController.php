@@ -4,6 +4,7 @@ namespace App\Controllers\Admin;
 use App\Core\Request;
 use App\Core\Response;
 use App\Core\Database;
+use App\Services\UploadService;
 
 class TourFlagsController extends BaseAdminController
 {
@@ -11,10 +12,44 @@ class TourFlagsController extends BaseAdminController
     {
         $this->checkPermission('journey:manage');
         $flags = Database::fetchAll('SELECT * FROM tour_flags ORDER BY sort_order ASC, year DESC');
+
+        $section = Database::fetchOne("SELECT * FROM sections WHERE section_key = 'tour_flags' LIMIT 1");
+        if (!$section) {
+            $section = [
+                'heading' => 'Participated International Festivals in last 12 years All Over world',
+                'subheading' => 'Click any country flag to view live performance photos & festival achievements.',
+            ];
+        }
+
         return $this->render('admin.tour_flags.index', [
             'title' => 'Tour Flags Carousel — Dynamice CMS',
             'flags' => $flags,
+            'section' => $section,
         ]);
+    }
+
+    public function updateHeading(Request $request): Response
+    {
+        $this->checkPermission('journey:manage');
+        $data = $request->getBody();
+        $heading = trim($data['heading'] ?? 'Participated International Festivals in last 12 years All Over world');
+        $subheading = trim($data['subheading'] ?? 'Click any country flag to view live performance photos & festival achievements.');
+
+        $existing = Database::fetchOne("SELECT id FROM sections WHERE section_key = 'tour_flags' LIMIT 1");
+        if ($existing) {
+            Database::query(
+                "UPDATE sections SET heading = :heading, subheading = :subheading, updated_at = NOW() WHERE section_key = 'tour_flags'",
+                ['heading' => $heading, 'subheading' => $subheading]
+            );
+        } else {
+            Database::query(
+                "INSERT INTO sections (page_id, section_key, heading, subheading, sort_order, is_visible, created_at, updated_at) VALUES (1, 'tour_flags', :heading, :subheading, 4, 1, NOW(), NOW())",
+                ['heading' => $heading, 'subheading' => $subheading]
+            );
+        }
+
+        $this->logAudit('UPDATE', 'SectionHeading', 'tour_flags', ['heading' => $heading]);
+        return $this->redirect('/admin/tour-flags', 'Section heading and subtitle updated successfully.');
     }
 
     public function store(Request $request): Response
@@ -27,8 +62,18 @@ class TourFlagsController extends BaseAdminController
         $flagUrl = trim($data['flag_url'] ?? '');
         $year = (int)($data['year'] ?? date('Y'));
 
+        // Handle file upload if present
+        if (!empty($_FILES['flag_file']['name'])) {
+            $uploadResult = UploadService::handleUpload($_FILES['flag_file'], 'flags');
+            if ($uploadResult['success']) {
+                $flagUrl = $uploadResult['url'];
+            } else {
+                return $this->redirect('/admin/tour-flags', null, $uploadResult['error'] ?? 'Flag upload failed.');
+            }
+        }
+
         if (empty($country) || empty($flagUrl)) {
-            return $this->redirect('/admin/tour-flags', null, 'Country name and Flag URL are required.');
+            return $this->redirect('/admin/tour-flags', null, 'Country name and Flag image (or URL) are required.');
         }
 
         Database::query(
@@ -59,6 +104,16 @@ class TourFlagsController extends BaseAdminController
         $id = (int)($params['id'] ?? 0);
         $data = $request->getBody();
 
+        $flagUrl = trim($data['flag_url'] ?? '');
+
+        // Handle file upload replacement
+        if (!empty($_FILES['flag_file']['name'])) {
+            $uploadResult = UploadService::handleUpload($_FILES['flag_file'], 'flags');
+            if ($uploadResult['success']) {
+                $flagUrl = $uploadResult['url'];
+            }
+        }
+
         Database::query(
             'UPDATE tour_flags SET country_name = :country_name, country_code = :country_code, flag_url = :flag_url,
                     journey_type = :journey_type, city = :city, year = :year, festival_name = :festival_name,
@@ -67,7 +122,7 @@ class TourFlagsController extends BaseAdminController
             [
                 'country_name' => trim($data['country_name'] ?? ''),
                 'country_code' => trim($data['country_code'] ?? ''),
-                'flag_url' => trim($data['flag_url'] ?? ''),
+                'flag_url' => $flagUrl,
                 'journey_type' => in_array($data['journey_type'] ?? '', ['NATIONAL', 'INTERNATIONAL']) ? $data['journey_type'] : 'INTERNATIONAL',
                 'city' => $data['city'] ?? null,
                 'year' => (int)($data['year'] ?? date('Y')),

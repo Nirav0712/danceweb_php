@@ -271,5 +271,6 @@ $router->get('/admin/audit-logs', [AuditLogsController::class, 'index'], [$auth,
 // Supplemental Module: Tour Flags Carousel
 $router->get('/admin/tour-flags', [TourFlagsController::class, 'index'], [$auth, $adminOrSuper]);
 $router->post('/admin/tour-flags', [TourFlagsController::class, 'store'], [$auth, $adminOrSuper]);
+$router->post('/admin/tour-flags/heading', [TourFlagsController::class, 'updateHeading'], [$auth, $adminOrSuper]);
 $router->post('/admin/tour-flags/{id}/update', [TourFlagsController::class, 'update'], [$auth, $adminOrSuper]);
 $router->post('/admin/tour-flags/{id}/delete', [TourFlagsController::class, 'delete'], [$auth, $adminOrSuper]);

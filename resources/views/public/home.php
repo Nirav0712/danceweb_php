@@ -357,23 +357,126 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-<!-- World Tour Flags Carousel -->
+<!-- Participated International Festivals / Tour Flags Carousel (SS 1 Reference Design) -->
 <?php if (!empty($tourFlags)): ?>
-<section class="py-16 bg-slate-900 text-white overflow-hidden">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8 text-center">
-        <span class="text-xs font-bold text-amber-400 uppercase tracking-widest">Global Footprint</span>
-        <h2 class="font-serif text-2xl sm:text-3xl font-bold text-white mt-1">Countries Our Dancers Have Toured</h2>
-    </div>
-    <div class="flex items-center gap-6 overflow-x-auto py-4 px-4 no-scrollbar">
-        <?php foreach ($tourFlags as $flag): ?>
-            <div class="flex-shrink-0 bg-slate-800/80 border border-slate-700 p-4 rounded-xl text-center w-36 space-y-2">
-                <img src="<?= htmlspecialchars($flag['flag_image_url'] ?? '', ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars($flag['country_name'] ?? '', ENT_QUOTES, 'UTF-8') ?>" class="w-12 h-8 mx-auto object-cover rounded shadow-xs" loading="lazy">
-                <span class="font-semibold text-xs text-white block truncate"><?= htmlspecialchars($flag['country_name'] ?? '', ENT_QUOTES, 'UTF-8') ?></span>
-                <span class="text-[10px] text-amber-400 font-medium block"><?= htmlspecialchars($flag['tour_year'] ?? '', ENT_QUOTES, 'UTF-8') ?></span>
+<section id="tour-flags-showcase" class="py-14 sm:py-20 bg-[#c9175d] text-white relative overflow-hidden w-full shadow-md">
+    <div class="w-full px-3 sm:px-6 lg:px-8 xl:px-12 relative z-10">
+        <!-- Centered Heading & Subtitle (CMS-Managed) -->
+        <div class="text-center max-w-4xl mx-auto mb-8 sm:mb-12 px-4 space-y-2">
+            <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] font-extrabold text-white tracking-tight leading-snug drop-shadow-sm">
+                <?= htmlspecialchars($sections['tour_flags']['heading'] ?? 'Participated International Festivals in last 12 years All Over world', ENT_QUOTES, 'UTF-8') ?>
+            </h2>
+            <p class="text-xs sm:text-sm text-pink-100 font-medium max-w-xl mx-auto leading-relaxed">
+                <?= htmlspecialchars($sections['tour_flags']['subheading'] ?? 'Click any country flag to view live performance photos & festival achievements.', ENT_QUOTES, 'UTF-8') ?>
+            </p>
+        </div>
+
+        <!-- Flag Slider Carousel with Arrows -->
+        <div class="relative w-full" id="tour-flags-slider-wrapper">
+            <!-- Left Arrow Button -->
+            <button
+                type="button"
+                id="tour-flags-prev-btn"
+                class="absolute -left-2 sm:left-1 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/50 hover:bg-black/80 text-white backdrop-blur-md border border-white/50 shadow-xl flex items-center justify-center transition-all hover:scale-110 cursor-pointer focus:outline-none"
+                aria-label="Previous Flag"
+            >
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/>
+                </svg>
+            </button>
+
+            <!-- Right Arrow Button -->
+            <button
+                type="button"
+                id="tour-flags-next-btn"
+                class="absolute -right-2 sm:right-1 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/50 hover:bg-black/80 text-white backdrop-blur-md border border-white/50 shadow-xl flex items-center justify-center transition-all hover:scale-110 cursor-pointer focus:outline-none"
+                aria-label="Next Flag"
+            >
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+                </svg>
+            </button>
+
+            <!-- Scrolling Flags Track (No ugly browser scrollbar) -->
+            <div
+                id="tour-flags-track"
+                class="flex items-center gap-4 sm:gap-6 overflow-x-auto py-5 px-6 sm:px-10 scroll-smooth"
+                style="scrollbar-width: none; -ms-overflow-style: none;"
+            >
+                <?php foreach ($tourFlags as $flag):
+                    $redirectUrl = !empty($flag['target_url']) ? $flag['target_url'] : (
+                        ($flag['journey_type'] ?? '') === 'NATIONAL'
+                            ? '/journey/national'
+                            : '/journey/international?country=' . urlencode(strtolower($flag['country_code'] ?? ''))
+                    );
+                    $flagImg = !empty($flag['flag_url']) ? $flag['flag_url'] : '/assets/international/' . strtolower($flag['country_code'] ?? 'in') . '.png';
+                ?>
+                <a
+                    href="<?= htmlspecialchars($redirectUrl, ENT_QUOTES, 'UTF-8') ?>"
+                    title="<?= htmlspecialchars($flag['country_name'] ?? '', ENT_QUOTES, 'UTF-8') ?> — Click to view stage photos"
+                    class="group relative flex-none w-[130px] sm:w-[155px] md:w-[175px] aspect-[4/3] rounded-xl sm:rounded-2xl overflow-hidden bg-white p-1 shadow-lg hover:shadow-2xl hover:scale-110 transition-all duration-300 border-2 border-white/95 cursor-pointer block"
+                >
+                    <img
+                        src="<?= htmlspecialchars($flagImg, ENT_QUOTES, 'UTF-8') ?>"
+                        alt="<?= htmlspecialchars($flag['country_name'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
+                        class="w-full h-full object-cover rounded-lg sm:rounded-xl"
+                        loading="lazy"
+                        onerror="this.src='/assets/international/in.png';"
+                    >
+
+                    <!-- Subtle sheen glare -->
+                    <div class="absolute inset-0 bg-gradient-to-tr from-black/15 via-transparent to-white/30 pointer-events-none rounded-lg sm:rounded-xl"></div>
+
+                    <!-- Tooltip on Hover showing Country Name -->
+                    <div class="absolute inset-x-0 bottom-0 py-1 bg-black/85 backdrop-blur-xs text-[10px] sm:text-[11px] font-bold text-white text-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 truncate px-1">
+                        <?= htmlspecialchars($flag['country_name'] ?? '', ENT_QUOTES, 'UTF-8') ?>
+                    </div>
+                </a>
+                <?php endforeach; ?>
             </div>
-        <?php endforeach; ?>
+        </div>
     </div>
 </section>
+
+<!-- Vanilla JS for Tour Flags Slider (Smooth scroll, arrows, auto-loop, pause on hover) -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const track = document.getElementById('tour-flags-track');
+    const prevBtn = document.getElementById('tour-flags-prev-btn');
+    const nextBtn = document.getElementById('tour-flags-next-btn');
+    const wrapper = document.getElementById('tour-flags-slider-wrapper');
+    if (!track) return;
+
+    let isPaused = false;
+
+    if (prevBtn) {
+        prevBtn.addEventListener('click', function () {
+            track.scrollBy({ left: -260, behavior: 'smooth' });
+        });
+    }
+
+    if (nextBtn) {
+        nextBtn.addEventListener('click', function () {
+            track.scrollBy({ left: 260, behavior: 'smooth' });
+        });
+    }
+
+    if (wrapper) {
+        wrapper.addEventListener('mouseenter', function () { isPaused = true; });
+        wrapper.addEventListener('mouseleave', function () { isPaused = false; });
+    }
+
+    // Auto-scroll loop
+    setInterval(function () {
+        if (isPaused || !track) return;
+        if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 10) {
+            track.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+            track.scrollBy({ left: 200, behavior: 'smooth' });
+        }
+    }, 2600);
+});
+</script>
 <?php endif; ?>
 
 <!-- Featured Stage Gallery -->
