@@ -173,17 +173,3 @@ function editFlag(item) {
 }
 </script>
 <?php $content = ob_get_clean(); require __DIR__ . '/../../layouts/admin.php'; ?>
-
-<script>
-function editFlag(item) {
-    document.getElementById('editFlagForm').action = '/admin/tour-flags/' + item.id + '/update';
-    document.getElementById('edit_fl_country_name').value = item.country_name || '';
-    document.getElementById('edit_fl_flag_url').value = item.flag_url || '';
-    document.getElementById('edit_fl_year').value = item.year || '';
-    document.getElementById('edit_fl_country_code').value = item.country_code || '';
-    document.getElementById('edit_fl_target_url').value = item.target_url || '';
-    document.getElementById('edit_fl_is_active').checked = parseInt(item.is_active) === 1;
-    document.getElementById('editFlagModal').classList.remove('hidden');
-}
-</script>
-<?php $content = ob_get_clean(); require __DIR__ . '/../../layouts/admin.php'; ?>

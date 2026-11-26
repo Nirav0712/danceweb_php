@@ -22,7 +22,11 @@ class DashboardController
             'news' => 0,
             'awards' => 0,
             'enquiries' => 0,
+            'categories' => 0,
+            'branches' => 0,
+            'testimonials' => 0,
         ];
+        $recentEnquiries = [];
 
         try {
             $metrics['pages'] = (int) (Database::fetchOne('SELECT COUNT(*) as c FROM pages')['c'] ?? 0);
@@ -31,6 +35,11 @@ class DashboardController
             $metrics['news'] = (int) (Database::fetchOne('SELECT COUNT(*) as c FROM news_items')['c'] ?? 0);
             $metrics['awards'] = (int) (Database::fetchOne('SELECT COUNT(*) as c FROM awards')['c'] ?? 0);
             $metrics['enquiries'] = (int) (Database::fetchOne('SELECT COUNT(*) as c FROM enquiries')['c'] ?? 0);
+            $metrics['categories'] = (int) (Database::fetchOne('SELECT COUNT(*) as c FROM dance_categories')['c'] ?? 0);
+            $metrics['branches'] = (int) (Database::fetchOne('SELECT COUNT(*) as c FROM branches')['c'] ?? 0);
+            $metrics['testimonials'] = (int) (Database::fetchOne('SELECT COUNT(*) as c FROM testimonials')['c'] ?? 0);
+
+            $recentEnquiries = Database::fetchAll('SELECT * FROM enquiries ORDER BY id DESC LIMIT 5');
         } catch (\Throwable $e) {
             // Graceful fallback if database tables are in migration
         }
@@ -39,6 +48,7 @@ class DashboardController
             'title' => 'Admin Dashboard — Dynamice Children Academy',
             'user' => $user,
             'metrics' => $metrics,
+            'recentEnquiries' => $recentEnquiries,
         ]));
     }
 }
