@@ -88,18 +88,20 @@ assertCondition(strpos($html, 'href="mailto:dynamicechildrenacademy@gmail.com"')
 assertCondition(strpos($html, 'https://www.instagram.com/dynamice_children_academy/') !== false, "Footer contains social Instagram link");
 assertCondition(strpos($html, 'https://www.youtube.com/@dynamicechildrenacademy') !== false, "Footer contains social YouTube link");
 
-// Column 7: Subscribe Box
-assertCondition(strpos($html, 'Subscribe</h3>') !== false, "Footer contains Subscribe heading");
-assertCondition(strpos($html, 'Get updates on new courses') !== false, "Footer contains 'Get updates on new courses' text");
-assertCondition(strpos($html, 'placeholder="Your email address"') !== false, "Footer contains email input matching screenshot");
-assertCondition(strpos($html, 'footerNewsletterForm') !== false, "Footer contains newsletter form");
+// Upper Row Subscribe Symbol & Modal Popup
+assertCondition(strpos($html, 'openNewsletterModal()') !== false, "Footer upper row contains Subscribe symbol trigger button");
+assertCondition(strpos($html, 'id="newsletterModal"') !== false, "Footer contains newsletter modal popup element");
+assertCondition(strpos($html, 'Subscribe</h3>') !== false, "Newsletter modal contains Subscribe heading");
+assertCondition(strpos($html, 'Get updates on new courses') !== false, "Newsletter modal contains 'Get updates on new courses' text");
+assertCondition(strpos($html, 'placeholder="Your email address"') !== false, "Newsletter modal contains email input");
+assertCondition(strpos($html, 'footerNewsletterForm') !== false, "Newsletter modal contains ajax subscription form");
 
 // Bottom Bar
 assertCondition(strpos($html, 'Dynamice Children Academy. All rights reserved.') !== false, "Footer contains copyright line");
 assertCondition(strpos($html, 'Made with') !== false && strpos($html, 'by Dynamice Team') !== false, "Footer contains 'Made with ❤️ by Dynamice Team'");
 assertCondition(strpos($html, 'href="/privacy-policy"') !== false, "Footer contains Privacy Policy link");
 assertCondition(strpos($html, 'href="/terms"') !== false, "Footer contains Terms of Service link");
-assertCondition(strpos($html, 'href="/refund-policy"') !== false, "Footer contains Refund Policy link");
+assertCondition(strpos($html, 'href="/refund-policy"') === false, "Footer bottom bar has Refund Policy removed as requested");
 
 // Container Padding & Iridescent Line
 assertCondition(strpos($html, 'w-full px-3 sm:px-6 lg:px-8 xl:px-12') !== false, "Footer uses exact responsive padding matching website sections");

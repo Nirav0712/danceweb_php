@@ -79,8 +79,8 @@ $settings = \App\Services\ContentService::getSettings();
                 </ul>
             </div>
 
-            <!-- Column 3: DANCE FORMS (1.5 cols) -->
-            <div class="lg:col-span-1 space-y-3.5">
+            <!-- Column 3: DANCE FORMS (2 cols) -->
+            <div class="lg:col-span-2 space-y-3.5">
                 <h3 class="text-white font-extrabold text-xs tracking-wider uppercase">DANCE FORMS</h3>
                 <ul class="space-y-2 text-xs">
                     <li>
@@ -122,7 +122,7 @@ $settings = \App\Services\ContentService::getSettings();
                 </ul>
             </div>
 
-            <!-- Column 4: CLASS TIMINGS (1.5 cols) -->
+            <!-- Column 4: CLASS TIMINGS (1 col) -->
             <div class="lg:col-span-1 space-y-3.5">
                 <h3 class="text-white font-extrabold text-xs tracking-wider uppercase">CLASS TIMINGS</h3>
                 <div class="space-y-3 text-xs">
@@ -165,7 +165,7 @@ $settings = \App\Services\ContentService::getSettings();
                         <span class="truncate">dynamicechildrenacademy@gmail.com</span>
                     </a>
 
-                    <!-- Social Icons Row (Facebook, Instagram, Twitter, YouTube) -->
+                    <!-- Social Icons Row with Subscribe Newsletter Symbol -->
                     <div class="flex items-center gap-2 pt-2">
                         <a href="https://www.facebook.com" target="_blank" rel="noopener" class="w-7 h-7 rounded-lg bg-white/5 border border-white/10 hover:border-pink-500 hover:bg-pink-600 hover:text-white flex items-center justify-center text-slate-400 transition-all" title="Facebook">
                             <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M9 8H6v4h3v12h5V12h3.642L18 8h-4V6.333C14 5.374 14.5 5 15.5 5H18V0h-3.808C10.596 0 9 1.583 9 4.615V8z"/></svg>
@@ -179,6 +179,11 @@ $settings = \App\Services\ContentService::getSettings();
                         <a href="https://www.youtube.com/@dynamicechildrenacademy" target="_blank" rel="noopener" class="w-7 h-7 rounded-lg bg-white/5 border border-white/10 hover:border-pink-500 hover:bg-pink-600 hover:text-white flex items-center justify-center text-slate-400 transition-all" title="YouTube">
                             <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
                         </a>
+                        <!-- Newsletter Subscribe Symbol Button -->
+                        <button type="button" onclick="openNewsletterModal()" class="w-7 h-7 rounded-lg bg-rose-600 hover:bg-rose-500 hover:scale-110 active:scale-95 text-white flex items-center justify-center shadow-md shadow-rose-600/40 transition-all cursor-pointer relative group" title="Subscribe to Academy Updates">
+                            <svg class="w-3.5 h-3.5 transform -rotate-45 -mr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                            <span class="absolute -top-7 left-1/2 -translate-x-1/2 px-1.5 py-0.5 bg-slate-900 border border-white/10 text-white text-[10px] font-medium rounded shadow-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-20">Subscribe</span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -211,7 +216,7 @@ $settings = \App\Services\ContentService::getSettings();
                         <span class="truncate">dynamicechildrenacademy@gmail.com</span>
                     </a>
 
-                    <!-- Social Icons Row (Facebook, Instagram, Twitter, YouTube) -->
+                    <!-- Social Icons Row with Subscribe Newsletter Symbol -->
                     <div class="flex items-center gap-2 pt-2">
                         <a href="https://www.facebook.com" target="_blank" rel="noopener" class="w-7 h-7 rounded-lg bg-white/5 border border-white/10 hover:border-pink-500 hover:bg-pink-600 hover:text-white flex items-center justify-center text-slate-400 transition-all" title="Facebook">
                             <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M9 8H6v4h3v12h5V12h3.642L18 8h-4V6.333C14 5.374 14.5 5 15.5 5H18V0h-3.808C10.596 0 9 1.583 9 4.615V8z"/></svg>
@@ -225,34 +230,13 @@ $settings = \App\Services\ContentService::getSettings();
                         <a href="https://www.youtube.com/@dynamicechildrenacademy" target="_blank" rel="noopener" class="w-7 h-7 rounded-lg bg-white/5 border border-white/10 hover:border-pink-500 hover:bg-pink-600 hover:text-white flex items-center justify-center text-slate-400 transition-all" title="YouTube">
                             <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
                         </a>
+                        <!-- Newsletter Subscribe Symbol Button -->
+                        <button type="button" onclick="openNewsletterModal()" class="w-7 h-7 rounded-lg bg-rose-600 hover:bg-rose-500 hover:scale-110 active:scale-95 text-white flex items-center justify-center shadow-md shadow-rose-600/40 transition-all cursor-pointer relative group" title="Subscribe to Academy Updates">
+                            <svg class="w-3.5 h-3.5 transform -rotate-45 -mr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                            <span class="absolute -top-7 left-1/2 -translate-x-1/2 px-1.5 py-0.5 bg-slate-900 border border-white/10 text-white text-[10px] font-medium rounded shadow-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-20">Subscribe</span>
+                        </button>
                     </div>
                 </div>
-            </div>
-
-            <!-- Column 7: Subscribe Box (2 cols) -->
-            <div class="sm:col-span-2 md:col-span-3 lg:col-span-2 space-y-3.5 bg-white/5 p-4 rounded-2xl border border-white/10">
-                <!-- Red Circular Plane Icon + Subscribe Title -->
-                <div class="flex items-center gap-2">
-                    <span class="w-7 h-7 rounded-full bg-rose-600 text-white flex items-center justify-center shrink-0 shadow-md shadow-rose-600/30">
-                        <svg class="w-3.5 h-3.5 transform -rotate-45 -mr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
-                    </span>
-                    <h3 class="text-white font-extrabold text-sm">Subscribe</h3>
-                </div>
-
-                <p class="text-slate-400 text-xs">Get updates on new courses</p>
-
-                <!-- Subscribe Form -->
-                <form id="footerNewsletterForm" action="/api/newsletter/subscribe" method="POST" class="space-y-2.5">
-                    <?= \App\Helpers\Security::csrfField() ?>
-                    <div>
-                        <input type="email" name="email" id="footerSubEmail" required placeholder="Your email address" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700/80 text-white placeholder-slate-500 text-xs outline-none focus:border-rose-500 transition">
-                    </div>
-                    <button type="submit" id="footerSubBtn" class="w-full py-2.5 px-4 bg-gradient-to-r from-rose-600 via-pink-600 to-rose-600 hover:opacity-95 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-md shadow-rose-600/20 transition-all">
-                        <span>Subscribe</span>
-                        <span class="text-sm leading-none">→</span>
-                    </button>
-                    <div id="footerSubMsg" class="hidden text-[11px] p-2 rounded-lg"></div>
-                </form>
             </div>
 
         </div>
@@ -269,20 +253,109 @@ $settings = \App\Services\ContentService::getSettings();
                 Made with <span class="text-rose-500 inline-block animate-pulse">❤️</span> by Dynamice Team
             </p>
 
-            <!-- Right: Policy Links -->
+            <!-- Right: Policy Links (Privacy Policy & Terms of Service) -->
             <div class="flex items-center gap-4 text-xs">
                 <a href="/privacy-policy" class="hover:text-slate-300 transition-colors">Privacy Policy</a>
                 <span class="text-slate-700">•</span>
                 <a href="/terms" class="hover:text-slate-300 transition-colors">Terms of Service</a>
-                <span class="text-slate-700">•</span>
-                <a href="/refund-policy" class="hover:text-slate-300 transition-colors">Refund Policy</a>
             </div>
         </div>
     </div>
 </footer>
 
-<!-- Newsletter Ajax Script -->
+<!-- =========================================================================
+     NEWSLETTER SUBSCRIPTION MODAL POPUP
+     Opened via the newsletter symbol in the upper row
+     ========================================================================= -->
+<div id="newsletterModal" class="fixed inset-0 z-50 hidden transition-all duration-300" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <!-- Backdrop Blur & Overlay -->
+    <div class="fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity" onclick="closeNewsletterModal()"></div>
+
+    <!-- Modal Dialog Center -->
+    <div class="fixed inset-0 z-10 flex items-center justify-center p-4 sm:p-6">
+        <div class="relative w-full max-w-md bg-[#0f172a] border border-slate-700/80 rounded-3xl shadow-2xl overflow-hidden transform transition-all scale-95 opacity-0 duration-300" id="newsletterModalCard">
+            
+            <!-- Top Iridescent Rainbow Line -->
+            <div class="h-1.5 w-full bg-gradient-to-r from-pink-500 via-amber-400 via-emerald-400 via-cyan-400 to-purple-500"></div>
+
+            <!-- Ambient Glow Effect -->
+            <div class="absolute -top-16 -right-16 w-48 h-48 bg-rose-500/15 rounded-full blur-2xl pointer-events-none"></div>
+
+            <!-- Close Button -->
+            <button type="button" onclick="closeNewsletterModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition-all cursor-pointer z-10" aria-label="Close modal">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+
+            <div class="p-6 sm:p-8 space-y-5 relative z-10">
+                <!-- Red Circular Plane Icon + Subscribe Title -->
+                <div class="flex items-center gap-3">
+                    <span class="w-10 h-10 rounded-full bg-rose-600 text-white flex items-center justify-center shrink-0 shadow-lg shadow-rose-600/40">
+                        <svg class="w-5 h-5 transform -rotate-45 -mr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                    </span>
+                    <div>
+                        <h3 class="text-white font-black text-lg sm:text-xl tracking-tight" id="modal-title">Subscribe</h3>
+                        <p class="text-slate-400 text-xs mt-0.5">Get updates on new courses</p>
+                    </div>
+                </div>
+
+                <p class="text-slate-300 text-xs leading-relaxed">
+                    Be the first to receive updates on upcoming dance batches, festival tours, workshop admissions, and cultural performances.
+                </p>
+
+                <!-- Subscribe Form -->
+                <form id="footerNewsletterForm" action="/api/newsletter/subscribe" method="POST" class="space-y-3 pt-1">
+                    <?= \App\Helpers\Security::csrfField() ?>
+                    <div>
+                        <input type="email" name="email" id="footerSubEmail" required placeholder="Your email address" class="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white placeholder-slate-500 text-xs sm:text-sm outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition">
+                    </div>
+                    <button type="submit" id="footerSubBtn" class="w-full py-3 px-5 bg-gradient-to-r from-rose-600 via-pink-600 to-rose-600 hover:opacity-95 text-white font-bold rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-rose-600/30 transition-all cursor-pointer">
+                        <span>Subscribe</span>
+                        <span class="text-base leading-none">→</span>
+                    </button>
+                    <div id="footerSubMsg" class="hidden text-xs p-3 rounded-xl"></div>
+                </form>
+
+                <div class="pt-2 border-t border-slate-800 text-[11px] text-slate-500 flex items-center justify-between">
+                    <span>🔒 No spam, unsubscribe anytime.</span>
+                    <a href="/privacy-policy" class="hover:text-slate-400 underline">Privacy Policy</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Newsletter Modal & Ajax Script -->
 <script>
+function openNewsletterModal() {
+    const modal = document.getElementById('newsletterModal');
+    const card = document.getElementById('newsletterModalCard');
+    if (!modal || !card) return;
+    modal.classList.remove('hidden');
+    setTimeout(() => {
+        card.classList.remove('scale-95', 'opacity-0');
+        card.classList.add('scale-100', 'opacity-100');
+        const emailInput = document.getElementById('footerSubEmail');
+        if (emailInput) emailInput.focus();
+    }, 10);
+}
+
+function closeNewsletterModal() {
+    const modal = document.getElementById('newsletterModal');
+    const card = document.getElementById('newsletterModalCard');
+    if (!modal || !card) return;
+    card.classList.remove('scale-100', 'opacity-100');
+    card.classList.add('scale-95', 'opacity-0');
+    setTimeout(() => {
+        modal.classList.add('hidden');
+    }, 200);
+}
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeNewsletterModal();
+    }
+});
+
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('footerNewsletterForm');
     if (!form) return;
@@ -298,7 +371,7 @@ document.addEventListener('DOMContentLoaded', function() {
         btn.disabled = true;
         const originalBtnHtml = btn.innerHTML;
         btn.innerHTML = '<span>Subscribing...</span>';
-        msg.className = 'hidden text-[11px] p-2 rounded-lg';
+        msg.className = 'hidden text-xs p-3 rounded-xl';
 
         const formData = new FormData(form);
 
@@ -316,11 +389,14 @@ document.addEventListener('DOMContentLoaded', function() {
             msg.classList.remove('hidden');
 
             if (data.success) {
-                msg.className = 'text-[11px] p-2 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20';
+                msg.className = 'text-xs p-3 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20';
                 msg.textContent = data.message || 'Thank you! You are now subscribed to our academy updates.';
                 emailInput.value = '';
+                setTimeout(() => {
+                    closeNewsletterModal();
+                }, 3000);
             } else {
-                msg.className = 'text-[11px] p-2 rounded-lg bg-rose-500/10 text-rose-400 border border-rose-500/20';
+                msg.className = 'text-xs p-3 rounded-xl bg-rose-500/10 text-rose-400 border border-rose-500/20';
                 msg.textContent = data.message || 'Error subscribing. Please try again.';
             }
         })
@@ -328,7 +404,7 @@ document.addEventListener('DOMContentLoaded', function() {
             btn.disabled = false;
             btn.innerHTML = originalBtnHtml;
             msg.classList.remove('hidden');
-            msg.className = 'text-[11px] p-2 rounded-lg bg-rose-500/10 text-rose-400 border border-rose-500/20';
+            msg.className = 'text-xs p-3 rounded-xl bg-rose-500/10 text-rose-400 border border-rose-500/20';
             msg.textContent = 'Server or network error. Please try again later.';
         });
     });
