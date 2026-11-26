@@ -166,6 +166,7 @@ $router->post('/admin/gallery/{id}/delete', [GalleryController::class, 'delete']
 // Module 09: Awards & Records
 $router->get('/admin/awards', [AwardsController::class, 'index'], [$auth, $adminOrSuper]);
 $router->post('/admin/awards', [AwardsController::class, 'store'], [$auth, $adminOrSuper]);
+$router->post('/admin/awards/heading', [AwardsController::class, 'updateHeading'], [$auth, $adminOrSuper]);
 $router->post('/admin/awards/{id}/update', [AwardsController::class, 'update'], [$auth, $adminOrSuper]);
 $router->post('/admin/awards/{id}/delete', [AwardsController::class, 'delete'], [$auth, $adminOrSuper]);
 

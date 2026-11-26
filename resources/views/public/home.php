@@ -479,31 +479,375 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 <?php endif; ?>
 
-<!-- Featured Stage Gallery -->
-<section class="py-20 bg-slate-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-12">
+<!-- Awards & World Records Showcase (SS 1 Reference Design) -->
+<?php
+$awardsHeading = $sections['awards']['heading'] ?? 'Awards & World Records';
+$awardsSubheading = $sections['awards']['subheading'] ?? 'Honored by international record books and national councils for exceptional choreography, preservation of Indian dance, and child talent.';
+$awardsBadge = !empty($sections['awards']['content']) ? $sections['awards']['content'] : 'PRESTIGIOUS ACCREDITATIONS & HONORS';
+$awardsBtnText = $sections['awards']['button_text'] ?? 'View All Records & Honors';
+$awardsBtnUrl = $sections['awards']['button_url'] ?? '/awards';
+?>
+<section id="awards-showcase-section" class="py-16 sm:py-24 bg-slate-950 text-white relative overflow-hidden select-none w-full" aria-label="Awards and World Records Slider">
+    <!-- Ambient background glows -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute -top-24 left-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-[120px]"></div>
+        <div class="absolute -bottom-24 right-1/4 w-96 h-96 bg-pink-500/10 rounded-full blur-[120px]"></div>
+    </div>
+
+    <div class="w-full px-3 sm:px-6 lg:px-8 xl:px-12 relative z-10">
+        <!-- Section Header -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 sm:mb-12 gap-6 border-b border-gray-800/80 pb-6">
             <div>
-                <span class="text-xs font-bold text-amber-600 uppercase tracking-widest">Visual Chronicle</span>
-                <h2 class="font-serif text-3xl sm:text-4xl font-bold text-slate-900 mt-1">Glimpses of Performances</h2>
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-bold uppercase tracking-wider mb-2">
+                    <svg class="w-3.5 h-3.5 text-amber-400 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    </svg>
+                    <span><?= htmlspecialchars($awardsBadge, ENT_QUOTES, 'UTF-8') ?></span>
+                </div>
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white mt-1">
+                    <?= htmlspecialchars($awardsHeading, ENT_QUOTES, 'UTF-8') ?>
+                </h2>
+                <p class="text-xs sm:text-sm text-gray-400 mt-2 max-w-xl leading-relaxed">
+                    <?= htmlspecialchars($awardsSubheading, ENT_QUOTES, 'UTF-8') ?>
+                </p>
             </div>
-            <a href="/gallery" class="text-amber-600 hover:text-amber-700 font-semibold text-xs flex items-center gap-1">
-                <span>View Full 140+ Photo Gallery</span>
-                <span>→</span>
-            </a>
+
+            <!-- Navigation Controls & View All Link -->
+            <div class="flex items-center gap-4 shrink-0">
+                <a
+                    href="<?= htmlspecialchars($awardsBtnUrl, ENT_QUOTES, 'UTF-8') ?>"
+                    class="hidden sm:inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-pink-400 hover:text-white transition-colors mr-2"
+                >
+                    <span><?= htmlspecialchars($awardsBtnText, ENT_QUOTES, 'UTF-8') ?></span>
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                    </svg>
+                </a>
+
+                <!-- Slider Navigation Arrows -->
+                <div class="flex items-center gap-2">
+                    <button
+                        type="button"
+                        id="awards-prev-btn"
+                        class="p-2.5 sm:p-3 rounded-full bg-gray-900 hover:bg-pink-600 text-white border border-gray-800 hover:border-pink-500 transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed hover:scale-105 active:scale-95 shadow-lg cursor-pointer"
+                        aria-label="Previous awards slide"
+                    >
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/>
+                        </svg>
+                    </button>
+
+                    <button
+                        type="button"
+                        id="awards-next-btn"
+                        class="p-2.5 sm:p-3 rounded-full bg-gray-900 hover:bg-pink-600 text-white border border-gray-800 hover:border-pink-500 transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed hover:scale-105 active:scale-95 shadow-lg cursor-pointer"
+                        aria-label="Next awards slide"
+                    >
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+
+                    <!-- Pause / Play Button -->
+                    <button
+                        type="button"
+                        id="awards-pause-btn"
+                        class="p-2.5 sm:p-3 rounded-full bg-gray-900/80 hover:bg-white/20 text-gray-300 hover:text-white border border-gray-800 transition-colors cursor-pointer"
+                        title="Pause / Resume auto-slider"
+                        aria-label="Pause / Resume auto-slider"
+                    >
+                        <svg id="awards-pause-icon" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                        </svg>
+                        <svg id="awards-play-icon" class="w-4 h-4 hidden" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
         </div>
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-            <?php foreach ($gallery as $item): ?>
-                <div class="group relative rounded-xl overflow-hidden aspect-square bg-slate-200 shadow-xs">
-                    <img src="<?= htmlspecialchars($item['image_url'] ?? '', ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars($item['title'] ?? 'Performance Photo', ENT_QUOTES, 'UTF-8') ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy">
-                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity p-4 flex flex-col justify-end text-white">
-                        <span class="font-semibold text-xs truncate"><?= htmlspecialchars($item['title'] ?? '', ENT_QUOTES, 'UTF-8') ?></span>
+
+        <!-- 4-Card Slide Window Container -->
+        <div class="relative overflow-hidden w-full py-2" id="awards-slider-window">
+            <div
+                id="awards-slider-track"
+                class="flex transition-transform duration-500 ease-out"
+                style="transform: translateX(0%);"
+            >
+                <?php foreach ($awards as $award): ?>
+                <div class="awards-slide-item flex-none px-2.5 sm:px-3" style="width: 25%;">
+                    <div class="h-full bg-gray-900/95 border border-gray-800 hover:border-pink-500/60 rounded-2xl sm:rounded-3xl p-5 sm:p-6 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-pink-500/10 group relative overflow-hidden">
+                        <!-- Top rainbow accent border on hover -->
+                        <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-amber-400 via-pink-500 to-rose-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+                        <!-- Top Badges Row -->
+                        <div>
+                            <div class="flex items-center justify-between gap-2 mb-4">
+                                <?php if (!empty($award['is_record_book'])): ?>
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[11px] font-extrabold uppercase tracking-wider shadow-xs">
+                                        <span>🏆</span>
+                                        <span>World Record</span>
+                                    </span>
+                                <?php else: ?>
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-pink-500/20 text-pink-300 border border-pink-500/40 text-[11px] font-extrabold uppercase tracking-wider shadow-xs">
+                                        <span>🏅</span>
+                                        <span>National Honor</span>
+                                    </span>
+                                <?php endif; ?>
+
+                                <span class="text-xs font-bold text-gray-300 bg-white/10 px-2.5 py-0.5 rounded-full border border-white/10 shrink-0">
+                                    <?= (int)$award['year'] ?>
+                                </span>
+                            </div>
+
+                            <!-- Certificate Image Preview -->
+                            <div class="relative aspect-[16/10] w-full rounded-xl overflow-hidden bg-black/60 border border-white/10 mb-4 group-hover:border-pink-500/40 transition-colors">
+                                <img
+                                    src="<?= htmlspecialchars($award['certificate_image_url'] ?: '/assets/awards/01.jpg', ENT_QUOTES, 'UTF-8') ?>"
+                                    alt="<?= htmlspecialchars($award['title'] ?? 'Award Certificate', ENT_QUOTES, 'UTF-8') ?>"
+                                    class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                                    loading="lazy"
+                                    onerror="this.src='/assets/awards/01.jpg';"
+                                >
+                                <div class="absolute inset-0 bg-gradient-to-t from-gray-950/80 via-transparent to-transparent pointer-events-none"></div>
+                            </div>
+
+                            <!-- Award Title -->
+                            <h3 class="text-base sm:text-lg font-bold text-white group-hover:text-pink-300 transition-colors leading-snug line-clamp-2 mb-2">
+                                <?= htmlspecialchars($award['title'] ?? '', ENT_QUOTES, 'UTF-8') ?>
+                            </h3>
+
+                            <!-- Issuer / Authority -->
+                            <p class="text-xs font-medium text-gray-400 flex items-center gap-1.5 mb-3">
+                                <span class="text-pink-400 font-bold shrink-0">🏅</span>
+                                <span class="truncate"><?= htmlspecialchars($award['issuer'] ?? '', ENT_QUOTES, 'UTF-8') ?></span>
+                            </p>
+
+                            <!-- Description -->
+                            <p class="text-xs text-gray-300/90 leading-relaxed line-clamp-3 font-normal">
+                                <?= htmlspecialchars($award['description'] ?: 'Inscribed for historic mass child classical dance recital and world-class choreography synchronization.', ENT_QUOTES, 'UTF-8') ?>
+                            </p>
+                        </div>
+
+                        <!-- Card Bottom CTA -->
+                        <div class="pt-5 mt-5 border-t border-gray-800/80 flex items-center justify-between text-xs">
+                            <a
+                                href="<?= htmlspecialchars($awardsBtnUrl, ENT_QUOTES, 'UTF-8') ?>"
+                                class="inline-flex items-center gap-1.5 font-bold text-pink-400 group-hover:text-white transition-colors"
+                            >
+                                <span>Explore Archive</span>
+                                <span class="transition-transform group-hover:translate-x-1">→</span>
+                            </a>
+
+                            <span class="text-[11px] text-gray-400 font-mono">
+                                #<?= (int)$award['id'] ?>
+                            </span>
+                        </div>
                     </div>
                 </div>
-            <?php endforeach; ?>
+                <?php endforeach; ?>
+            </div>
+        </div>
+
+        <!-- Bottom Pagination Dots & Counter -->
+        <div class="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <!-- Indicator dots -->
+            <div id="awards-dots-container" class="flex items-center gap-1.5">
+                <!-- Injected via JavaScript -->
+            </div>
+
+            <div class="text-xs text-gray-400 font-medium">
+                Showing <strong id="awards-showing-count">4</strong> of <strong><?= count($awards) ?></strong> records &amp; honors
+            </div>
+
+            <a
+                href="<?= htmlspecialchars($awardsBtnUrl, ENT_QUOTES, 'UTF-8') ?>"
+                class="sm:hidden inline-flex items-center gap-2 text-xs font-semibold text-pink-400 hover:text-white transition-colors"
+            >
+                <span><?= htmlspecialchars($awardsBtnText, ENT_QUOTES, 'UTF-8') ?></span>
+                <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                </svg>
+            </a>
         </div>
     </div>
 </section>
+
+<!-- Vanilla JS for Awards & World Records Carousel Slider -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const track = document.getElementById('awards-slider-track');
+    const prevBtn = document.getElementById('awards-prev-btn');
+    const nextBtn = document.getElementById('awards-next-btn');
+    const pauseBtn = document.getElementById('awards-pause-btn');
+    const pauseIcon = document.getElementById('awards-pause-icon');
+    const playIcon = document.getElementById('awards-play-icon');
+    const dotsContainer = document.getElementById('awards-dots-container');
+    const showingCount = document.getElementById('awards-showing-count');
+    const section = document.getElementById('awards-showcase-section');
+    const slides = document.querySelectorAll('.awards-slide-item');
+    const totalSlides = slides.length;
+
+    if (!track || totalSlides === 0) return;
+
+    let currentIndex = 0;
+    let itemsPerView = 4;
+    let isPaused = false;
+    let autoSlideTimer = null;
+
+    function calculateItemsPerView() {
+        const width = window.innerWidth;
+        if (width >= 1024) {
+            itemsPerView = 4;
+        } else if (width >= 640) {
+            itemsPerView = 2;
+        } else {
+            itemsPerView = 1;
+        }
+
+        // Update width style of each slide
+        slides.forEach(slide => {
+            slide.style.width = (100 / itemsPerView) + '%';
+        });
+
+        const maxIndex = Math.max(0, totalSlides - itemsPerView);
+        if (currentIndex > maxIndex) {
+            currentIndex = maxIndex;
+        }
+
+        renderDots();
+        updateSlider();
+    }
+
+    function getMaxIndex() {
+        return Math.max(0, totalSlides - itemsPerView);
+    }
+
+    function renderDots() {
+        if (!dotsContainer) return;
+        dotsContainer.innerHTML = '';
+        const maxIndex = getMaxIndex();
+
+        for (let i = 0; i <= maxIndex; i++) {
+            const dot = document.createElement('button');
+            dot.type = 'button';
+            dot.className = (i === currentIndex)
+                ? 'h-2 w-8 rounded-full bg-pink-500 shadow-md shadow-pink-500/50 transition-all duration-300 cursor-pointer'
+                : 'h-2 w-2 rounded-full bg-gray-700 hover:bg-gray-500 transition-all duration-300 cursor-pointer';
+            dot.setAttribute('aria-label', 'Go to slide page ' + (i + 1));
+            dot.addEventListener('click', function () {
+                currentIndex = i;
+                updateSlider();
+            });
+            dotsContainer.appendChild(dot);
+        }
+    }
+
+    function updateSlider() {
+        const maxIndex = getMaxIndex();
+        if (currentIndex < 0) currentIndex = 0;
+        if (currentIndex > maxIndex) currentIndex = maxIndex;
+
+        const shiftPercentage = currentIndex * (100 / itemsPerView);
+        track.style.transform = 'translateX(-' + shiftPercentage + '%)';
+
+        // Update dots
+        if (dotsContainer) {
+            const dots = dotsContainer.querySelectorAll('button');
+            dots.forEach((dot, idx) => {
+                if (idx === currentIndex) {
+                    dot.className = 'h-2 w-8 rounded-full bg-pink-500 shadow-md shadow-pink-500/50 transition-all duration-300 cursor-pointer';
+                } else {
+                    dot.className = 'h-2 w-2 rounded-full bg-gray-700 hover:bg-gray-500 transition-all duration-300 cursor-pointer';
+                }
+            });
+        }
+
+        // Update showing count
+        if (showingCount) {
+            showingCount.textContent = Math.min(itemsPerView, totalSlides);
+        }
+
+        // Update disabled state on buttons if needed
+        if (prevBtn) prevBtn.disabled = (totalSlides <= itemsPerView);
+        if (nextBtn) nextBtn.disabled = (totalSlides <= itemsPerView);
+    }
+
+    function nextSlide() {
+        const maxIndex = getMaxIndex();
+        if (maxIndex <= 0) return;
+        currentIndex = (currentIndex >= maxIndex) ? 0 : currentIndex + 1;
+        updateSlider();
+    }
+
+    function prevSlide() {
+        const maxIndex = getMaxIndex();
+        if (maxIndex <= 0) return;
+        currentIndex = (currentIndex <= 0) ? maxIndex : currentIndex - 1;
+        updateSlider();
+    }
+
+    function startAutoSlide() {
+        stopAutoSlide();
+        autoSlideTimer = setInterval(function () {
+            if (!isPaused) {
+                nextSlide();
+            }
+        }, 4200);
+    }
+
+    function stopAutoSlide() {
+        if (autoSlideTimer) {
+            clearInterval(autoSlideTimer);
+            autoSlideTimer = null;
+        }
+    }
+
+    // Event listeners
+    if (prevBtn) {
+        prevBtn.addEventListener('click', function () {
+            prevSlide();
+        });
+    }
+
+    if (nextBtn) {
+        nextBtn.addEventListener('click', function () {
+            nextSlide();
+        });
+    }
+
+    if (pauseBtn) {
+        pauseBtn.addEventListener('click', function () {
+            isPaused = !isPaused;
+            if (isPaused) {
+                pauseIcon.classList.add('hidden');
+                playIcon.classList.remove('hidden');
+                pauseBtn.title = 'Resume auto-slider';
+            } else {
+                pauseIcon.classList.remove('hidden');
+                playIcon.classList.add('hidden');
+                pauseBtn.title = 'Pause auto-slider';
+            }
+        });
+    }
+
+    if (section) {
+        section.addEventListener('mouseenter', function () {
+            isPaused = true;
+        });
+        section.addEventListener('mouseleave', function () {
+            if (!pauseBtn || pauseIcon.classList.contains('hidden') === false) {
+                isPaused = false;
+            }
+        });
+    }
+
+    // Initialize
+    calculateItemsPerView();
+    window.addEventListener('resize', calculateItemsPerView);
+    startAutoSlide();
+});
+</script>
 
 <!-- Testimonials & Reviews -->
 <?php if (!empty($testimonials)): ?>
