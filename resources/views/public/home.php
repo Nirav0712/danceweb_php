@@ -112,141 +112,173 @@ ob_start();
 </section>
 
 <!-- Academy Curriculum & Visual Archive (Services, Disciplines & Stage Moments) -->
-<section id="curriculum-disciplines" class="py-12 sm:py-20 bg-slate-50 border-t border-b border-slate-200/60">
-    <div class="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6">
+<section id="curriculum-disciplines" class="py-12 sm:py-20 bg-slate-50 border-t border-b border-slate-200/60 w-full overflow-hidden">
+    <div class="w-full px-3 sm:px-6 lg:px-8 xl:px-12 relative z-10">
         <!-- Section Header -->
-        <div class="text-center max-w-3xl mx-auto mb-8 sm:mb-12 space-y-3">
-            <span class="inline-block text-xs font-bold tracking-widest uppercase px-3 py-1 bg-amber-100 text-amber-800 rounded-full">
-                ACADEMY CURRICULUM & VISUAL ARCHIVE
-            </span>
-            <h2 class="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 tracking-tight">
+        <div class="text-center max-w-4xl mx-auto mb-10 space-y-3">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/90 border border-slate-200/80 shadow-xs text-xs font-black uppercase tracking-widest text-slate-800">
+                <span class="text-amber-500">✦</span>
+                <span>ACADEMY CURRICULUM & VISUAL ARCHIVE</span>
+            </div>
+            <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-tight">
                 Services, Disciplines & Stage Moments
             </h2>
-            <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+            <p class="text-sm sm:text-base text-slate-600 font-medium max-w-2xl mx-auto">
                 Explore our structured child-centric pedagogy, diverse genres, and authentic stage recitals.
             </p>
         </div>
 
-        <!-- 7 Category Pill Tabs -->
-        <div class="mb-8 sm:mb-10">
-            <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5" role="tablist" aria-label="Curriculum & Discipline Categories" id="discipline-tablist">
+        <!-- 7 Category Selector Tabs -->
+        <div class="w-full flex items-center justify-center pb-6">
+            <div class="flex items-center justify-center flex-wrap gap-2 sm:gap-3 p-2 rounded-full bg-white/95 border-2 border-slate-200/80 shadow-lg max-w-full" role="tablist" aria-label="Curriculum & Discipline Categories" id="discipline-tablist">
                 <?php
-                $tabColors = [
-                    'service' => ['active' => 'bg-rose-600 text-white shadow-rose-200 border-rose-600', 'hover' => 'hover:border-rose-300 hover:text-rose-600'],
-                    'dance' => ['active' => 'bg-emerald-600 text-white shadow-emerald-200 border-emerald-600', 'hover' => 'hover:border-emerald-300 hover:text-emerald-600'],
-                    'gymnastics' => ['active' => 'bg-amber-600 text-white shadow-amber-200 border-amber-600', 'hover' => 'hover:border-amber-300 hover:text-amber-600'],
-                    'drama' => ['active' => 'bg-sky-600 text-white shadow-sky-200 border-sky-600', 'hover' => 'hover:border-sky-300 hover:text-sky-600'],
-                    'modeling' => ['active' => 'bg-pink-600 text-white shadow-pink-200 border-pink-600', 'hover' => 'hover:border-pink-300 hover:text-pink-600'],
-                    'drawing' => ['active' => 'bg-indigo-600 text-white shadow-indigo-200 border-indigo-600', 'hover' => 'hover:border-indigo-300 hover:text-indigo-600'],
-                    'spiritual' => ['active' => 'bg-violet-600 text-white shadow-violet-200 border-violet-600', 'hover' => 'hover:border-violet-300 hover:text-violet-600'],
-                ];
-                $tabIndex = 0;
+                $activeTabKey = 'dance'; // Default to dance tab as shown in user screenshot
                 foreach ($disciplines as $key => $d):
-                    $isActive = ($tabIndex === 0);
-                    $color = $tabColors[$key] ?? ['active' => 'bg-slate-900 text-white shadow-slate-200 border-slate-900', 'hover' => 'hover:border-slate-400 hover:text-slate-900'];
+                    $isSelected = ($key === $activeTabKey);
                 ?>
                 <button
                     type="button"
                     role="tab"
                     id="tab-btn-<?= htmlspecialchars($key, ENT_QUOTES, 'UTF-8') ?>"
                     data-discipline="<?= htmlspecialchars($key, ENT_QUOTES, 'UTF-8') ?>"
-                    data-active-class="<?= htmlspecialchars($color['active'], ENT_QUOTES, 'UTF-8') ?>"
+                    data-pill-color="<?= htmlspecialchars($d['pillColor'], ENT_QUOTES, 'UTF-8') ?>"
+                    data-active-bg="<?= htmlspecialchars($d['activeBg'], ENT_QUOTES, 'UTF-8') ?>"
                     aria-controls="panel-<?= htmlspecialchars($key, ENT_QUOTES, 'UTF-8') ?>"
-                    aria-selected="<?= $isActive ? 'true' : 'false' ?>"
-                    tabindex="<?= $isActive ? '0' : '-1' ?>"
-                    class="discipline-tab-btn px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold tracking-wide uppercase transition-all duration-200 border shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 <?= $isActive ? $color['active'] . ' shadow-md' : 'bg-white text-slate-700 border-slate-200 ' . $color['hover'] ?>"
+                    aria-selected="<?= $isSelected ? 'true' : 'false' ?>"
+                    tabindex="<?= $isSelected ? '0' : '-1' ?>"
+                    class="discipline-tab-btn px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-black tracking-wider transition-all duration-300 transform active:scale-95 <?= $isSelected ? 'bg-gradient-to-r ' . $d['activeBg'] . ' text-white shadow-xl scale-105 border-2 border-white ring-2 ring-white/60' : $d['pillColor'] . ' opacity-85 hover:opacity-100 hover:scale-102 border border-white/70 shadow-xs' ?>"
                 >
                     <?= htmlspecialchars($d['tabLabel'], ENT_QUOTES, 'UTF-8') ?>
                 </button>
-                <?php
-                    $tabIndex++;
-                endforeach;
-                ?>
+                <?php endforeach; ?>
             </div>
         </div>
 
         <!-- Dynamic Category Content Panels -->
-        <div class="relative max-w-6xl mx-auto" id="discipline-panels-container">
+        <div class="w-full" id="discipline-panels-container">
             <?php
-            $panelIndex = 0;
             foreach ($disciplines as $key => $d):
-                $isPanelActive = ($panelIndex === 0);
+                $isPanelActive = ($key === $activeTabKey);
             ?>
             <div
                 id="panel-<?= htmlspecialchars($key, ENT_QUOTES, 'UTF-8') ?>"
                 role="tabpanel"
                 aria-labelledby="tab-btn-<?= htmlspecialchars($key, ENT_QUOTES, 'UTF-8') ?>"
-                class="discipline-panel <?= $isPanelActive ? '' : 'hidden' ?> bg-white rounded-3xl shadow-xl shadow-slate-200/60 border border-slate-100 overflow-hidden transition-opacity duration-300"
+                class="discipline-panel <?= $isPanelActive ? '' : 'hidden' ?> w-full bg-white rounded-3xl border border-slate-200/90 shadow-2xl overflow-hidden relative transition-opacity duration-300"
             >
-                <!-- Color Accent Bar -->
-                <div class="h-2 w-full bg-gradient-to-r <?= htmlspecialchars($d['accentGradient'], ENT_QUOTES, 'UTF-8') ?>"></div>
+                <!-- Top Iridescent Accent Strip -->
+                <div class="absolute top-0 inset-x-0 h-2.5 bg-gradient-to-r <?= htmlspecialchars($d['activeBg'], ENT_QUOTES, 'UTF-8') ?> shadow-sm z-20"></div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center p-5 sm:p-7 lg:p-8">
-                    <!-- Left Column: Content -->
-                    <div class="lg:col-span-7 space-y-5">
-                        <div class="space-y-1.5">
-                            <span class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-600">
-                                <span>✦</span>
-                                <span><?= htmlspecialchars($d['subtitle'], ENT_QUOTES, 'UTF-8') ?></span>
-                            </span>
-                            <h3 class="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-900 leading-tight">
-                                <?= htmlspecialchars($d['title'], ENT_QUOTES, 'UTF-8') ?>
-                            </h3>
+                <!-- TOP HALF: 50/50 Split (Left: Content, Right: Edge-to-Edge Flush Image) -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 items-stretch min-h-[460px] lg:min-h-[520px]">
+                    <!-- Left Side: Generous Padding, Title & Exact Paragraphs -->
+                    <div class="p-8 sm:p-12 lg:p-14 xl:p-16 flex flex-col justify-center space-y-5 bg-white">
+                        <h3 class="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-tight">
+                            <?= htmlspecialchars($d['title'], ENT_QUOTES, 'UTF-8') ?>
+                        </h3>
+
+                        <!-- Exact paragraphs -->
+                        <div class="text-xs sm:text-sm lg:text-[15px] text-slate-700 leading-relaxed space-y-4 font-normal">
+                            <?php foreach ($d['paragraphs'] as $p): ?>
+                                <p><?= htmlspecialchars($p, ENT_QUOTES, 'UTF-8') ?></p>
+                            <?php endforeach; ?>
                         </div>
 
-                        <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
-                            <?= htmlspecialchars($d['description'], ENT_QUOTES, 'UTF-8') ?>
-                        </p>
-
-                        <!-- Feature Badges -->
-                        <?php if (!empty($d['badges'])): ?>
+                        <!-- Enroll CTA Button -->
                         <div class="pt-2">
-                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2">Curriculum Highlights:</span>
-                            <div class="flex flex-wrap gap-2">
-                                <?php foreach ($d['badges'] as $badge): ?>
-                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-slate-50 text-slate-700 border border-slate-200/80">
-                                    ✓ <?= htmlspecialchars($badge, ENT_QUOTES, 'UTF-8') ?>
-                                </span>
-                                <?php endforeach; ?>
-                            </div>
-                        </div>
-                        <?php endif; ?>
-
-                        <!-- CTA Button -->
-                        <div class="pt-3">
                             <a
-                                href="<?= htmlspecialchars($d['ctaUrl'], ENT_QUOTES, 'UTF-8') ?>"
-                                class="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm text-white shadow-md transition-all duration-200 hover:scale-[1.02] hover:shadow-lg active:scale-[0.98] bg-gradient-to-r <?= htmlspecialchars($d['accentGradient'], ENT_QUOTES, 'UTF-8') ?>"
+                                href="/contact?service=<?= urlencode($key) ?>"
+                                class="inline-flex items-center gap-2 px-8 py-3.5 rounded-full text-xs sm:text-sm font-black uppercase tracking-wider text-white bg-gradient-to-r <?= htmlspecialchars($d['activeBg'], ENT_QUOTES, 'UTF-8') ?> shadow-lg hover:shadow-xl transition-all hover:scale-102"
                             >
-                                <span><?= htmlspecialchars($d['ctaText'], ENT_QUOTES, 'UTF-8') ?></span>
-                                <svg class="w-4 h-4 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                                <span>Enroll for Free Trial Session</span>
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
                                 </svg>
                             </a>
                         </div>
                     </div>
 
-                    <!-- Right Column: Visual Stage Image -->
-                    <div class="lg:col-span-5">
-                        <div class="relative w-full aspect-[4/3] sm:aspect-[16/11] lg:aspect-square rounded-2xl overflow-hidden shadow-lg border border-slate-100 bg-slate-100 group">
-                            <img
-                                src="<?= htmlspecialchars($d['image'], ENT_QUOTES, 'UTF-8') ?>"
-                                alt="<?= htmlspecialchars($d['title'], ENT_QUOTES, 'UTF-8') ?>"
-                                class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                                loading="lazy"
-                            >
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-                            <div class="absolute bottom-3 left-3 right-3 text-white text-xs font-semibold px-3 py-1.5 rounded-lg bg-black/60 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none text-center">
-                                <?= htmlspecialchars($d['tabLabel'], ENT_QUOTES, 'UTF-8') ?> • Dynamic Children Academy
+                    <!-- Right Side: Flush Full-Bleed Image (Touches top, bottom, right edge) -->
+                    <div class="relative w-full h-[360px] sm:h-[440px] lg:h-full min-h-[360px] lg:min-h-full overflow-hidden bg-slate-100">
+                        <img
+                            src="<?= htmlspecialchars($d['image'], ENT_QUOTES, 'UTF-8') ?>"
+                            alt="<?= htmlspecialchars($d['title'], ENT_QUOTES, 'UTF-8') ?>"
+                            class="w-full h-full object-cover"
+                            loading="lazy"
+                        >
+                    </div>
+                </div>
+
+                <!-- BOTTOM HALF: Full-Width 6-Item Grid Underneath -->
+                <div class="border-t border-slate-200/60 p-6 sm:p-10 lg:p-12 xl:p-14 bg-slate-50/50 relative z-10 w-full">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+                        <div>
+                            <div class="inline-flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-pink-600 mb-1">
+                                <svg class="w-4 h-4 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                </svg>
+                                <span><?= htmlspecialchars($d['title'], ENT_QUOTES, 'UTF-8') ?> Visual Showcase</span>
+                            </div>
+                            <h4 class="text-xl sm:text-2xl lg:text-3xl font-black text-slate-900 tracking-tight">
+                                <?= htmlspecialchars($d['subItemsHeader'], ENT_QUOTES, 'UTF-8') ?>
+                            </h4>
+                        </div>
+
+                        <!-- Explore Full Academy Gallery Link -->
+                        <a
+                            href="/gallery"
+                            class="inline-flex items-center gap-2 text-xs sm:text-sm font-black uppercase tracking-wider text-amber-600 hover:text-amber-700 transition-colors"
+                        >
+                            <span>Explore Full Academy Gallery →</span>
+                        </a>
+                    </div>
+
+                    <!-- 6 Sub-Items Grid: 1 Image for each item, spreading across full width -->
+                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-5 xl:gap-6 w-full">
+                        <?php foreach ($d['subItems'] as $idx => $item): ?>
+                        <div class="group/card rounded-2xl bg-white border border-slate-200/80 p-3 sm:p-3.5 shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between">
+                            <div>
+                                <!-- Item Image -->
+                                <div class="relative aspect-square rounded-xl overflow-hidden bg-slate-100 border border-slate-100 mb-3 group/img">
+                                    <img
+                                        src="<?= htmlspecialchars($item['image'], ENT_QUOTES, 'UTF-8') ?>"
+                                        alt="<?= htmlspecialchars($item['name'], ENT_QUOTES, 'UTF-8') ?>"
+                                        loading="lazy"
+                                        class="w-full h-full object-cover transition-transform duration-500 group-hover/card:scale-110"
+                                    >
+                                    <div class="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-slate-900/70 text-[9px] font-black text-white">
+                                        #<?= $idx + 1 ?>
+                                    </div>
+                                </div>
+
+                                <!-- Title -->
+                                <h5 class="text-xs sm:text-sm font-black text-slate-900 leading-snug line-clamp-1 mb-1">
+                                    <?= htmlspecialchars($item['name'], ENT_QUOTES, 'UTF-8') ?>
+                                </h5>
+
+                                <!-- Detail -->
+                                <p class="text-[11px] sm:text-xs text-slate-600 leading-relaxed line-clamp-2">
+                                    <?= htmlspecialchars($item['detail'], ENT_QUOTES, 'UTF-8') ?>
+                                </p>
+                            </div>
+
+                            <!-- More button -->
+                            <div class="pt-3 mt-3 border-t border-slate-100">
+                                <a
+                                    href="/gallery"
+                                    class="inline-flex items-center gap-1 text-[11px] font-bold text-pink-600 hover:text-pink-700 transition-colors"
+                                >
+                                    <span>More</span>
+                                    <span>→</span>
+                                </a>
                             </div>
                         </div>
+                        <?php endforeach; ?>
                     </div>
                 </div>
             </div>
-            <?php
-                $panelIndex++;
-            endforeach;
-            ?>
+            <?php endforeach; ?>
         </div>
     </div>
 </section>
@@ -269,18 +301,17 @@ document.addEventListener('DOMContentLoaded', function () {
             btn.setAttribute('aria-selected', isMatch ? 'true' : 'false');
             btn.setAttribute('tabindex', isMatch ? '0' : '-1');
 
-            const activeClass = btn.getAttribute('data-active-class');
-            if (activeClass) {
-                activeClass.split(' ').forEach(cls => {
-                    if (cls) btn.classList.toggle(cls, isMatch);
-                });
-            }
+            const pillColor = btn.getAttribute('data-pill-color') || '';
+            const activeBg = btn.getAttribute('data-active-bg') || '';
 
-            btn.classList.toggle('bg-white', !isMatch);
-            btn.classList.toggle('text-slate-700', !isMatch);
-            btn.classList.toggle('border-slate-200', !isMatch);
-            btn.classList.toggle('shadow-md', isMatch);
-            btn.classList.toggle('shadow-sm', !isMatch);
+            // Clean active / inactive classes
+            btn.className = 'discipline-tab-btn px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-black tracking-wider transition-all duration-300 transform active:scale-95 ';
+
+            if (isMatch) {
+                btn.className += 'bg-gradient-to-r ' + activeBg + ' text-white shadow-xl scale-105 border-2 border-white ring-2 ring-white/60';
+            } else {
+                btn.className += pillColor + ' opacity-85 hover:opacity-100 hover:scale-102 border border-white/70 shadow-xs';
+            }
         });
 
         panels.forEach(panel => {
@@ -302,7 +333,6 @@ document.addEventListener('DOMContentLoaded', function () {
             selectTab(this);
         });
 
-        // Keyboard navigation (Left/Right arrow keys, Home, End)
         tab.addEventListener('keydown', function (e) {
             let newIndex = null;
             if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
