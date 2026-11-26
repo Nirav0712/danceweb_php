@@ -30,7 +30,7 @@ $currentUri = $_SERVER['REQUEST_URI'] ?? '/';
 
 <!-- Main Navigation Header -->
 <header class="bg-white/95 backdrop-blur-md sticky top-0 z-50 border-b border-slate-200/80 shadow-xs w-full">
-    <div class="w-full px-6 sm:px-10 lg:px-14 xl:px-20">
+    <div class="w-full px-8 sm:px-14 md:px-16 lg:px-20 xl:px-28 2xl:px-36">
         <div class="flex items-center justify-between h-20">
             <!-- Brand Logo (Only Logo) -->
             <a href="/" class="flex items-center group">
