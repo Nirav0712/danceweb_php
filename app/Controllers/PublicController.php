@@ -490,13 +490,22 @@ class PublicController
 
     public function nationalJourney(Request $request): Response
     {
-        $events = Database::fetchAll("SELECT * FROM journey_events WHERE event_type = 'NATIONAL' ORDER BY sort_order ASC");
+        $events = Database::fetchAll("SELECT * FROM journey_events WHERE event_type = 'NATIONAL' ORDER BY year DESC, sort_order ASC, id DESC");
         $page = Database::fetchOne("SELECT * FROM pages WHERE slug = 'journey-national' LIMIT 1");
 
+        $rawSections = [];
+        if (!empty($page['id'])) {
+            $rawSections = Database::fetchAll("SELECT * FROM sections WHERE page_id = :page_id", ['page_id' => $page['id']]);
+        }
+        $sections = [];
+        foreach ($rawSections as $sec) {
+            $sections[$sec['section_key']] = $sec;
+        }
+
         $seo = SeoService::resolve('/journey/national', [
-            'title' => $page['title'] ?? 'National Journey — Cultural Festival Tours in India',
-            'metaTitle' => $page['meta_title'] ?? 'National Dance Tours Across Indian States & Union Territories',
-            'metaDescription' => $page['meta_description'] ?? 'Performances at Youth Festivals, National Folk Dance Conventions, and State Cultural Celebrations across India.',
+            'title' => $page['title'] ?? 'Our National Journey',
+            'metaTitle' => $page['meta_title'] ?? 'Our National Journey — Cultural Festival Tours in India',
+            'metaDescription' => $page['meta_description'] ?? 'Showcasing the vibrant folk heritage of Gujarat on premier national stages, Rashtriya Lok Utsavs, and state festivals.',
         ]);
 
         return (new Response())->html(View::render('public.journey_national', [
@@ -505,6 +514,8 @@ class PublicController
             'metaTitle' => $seo['metaTitle'],
             'metaDescription' => $seo['metaDescription'],
             'canonicalUrl' => $seo['canonicalUrl'],
+            'page' => $page,
+            'sections' => $sections,
             'events' => $events,
         ]));
     }

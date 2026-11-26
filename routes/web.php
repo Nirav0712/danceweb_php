@@ -188,6 +188,9 @@ $router->get('/admin/journey/national', function($req) {
 $router->post('/admin/journey/national', function($req) {
     return (new JourneyEventsController('NATIONAL'))->store($req);
 }, [$auth, $adminOrSuper]);
+$router->post('/admin/journey/national/settings', function($req) {
+    return (new JourneyEventsController('NATIONAL'))->updateSettings($req);
+}, [$auth, $adminOrSuper]);
 $router->post('/admin/journey/national/{id}/update', function($req, $p) {
     return (new JourneyEventsController('NATIONAL'))->update($req, $p);
 }, [$auth, $adminOrSuper]);
@@ -201,6 +204,9 @@ $router->get('/admin/journey/international', function($req) {
 }, [$auth, $adminOrSuper]);
 $router->post('/admin/journey/international', function($req) {
     return (new JourneyEventsController('INTERNATIONAL'))->store($req);
+}, [$auth, $adminOrSuper]);
+$router->post('/admin/journey/international/settings', function($req) {
+    return (new JourneyEventsController('INTERNATIONAL'))->updateSettings($req);
 }, [$auth, $adminOrSuper]);
 $router->post('/admin/journey/international/{id}/update', function($req, $p) {
     return (new JourneyEventsController('INTERNATIONAL'))->update($req, $p);
