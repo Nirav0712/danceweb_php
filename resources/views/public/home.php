@@ -111,39 +111,219 @@ ob_start();
     </div>
 </section>
 
-<!-- Director Address & Vision -->
-<section class="py-20 bg-slate-50">
+<!-- Academy Curriculum & Visual Archive (Services, Disciplines & Stage Moments) -->
+<section id="curriculum-disciplines" class="py-16 sm:py-24 bg-slate-50 border-t border-b border-slate-200/60">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            <div class="lg:col-span-5 relative">
-                <div class="rounded-3xl overflow-hidden shadow-xl border border-slate-200">
-                    <img src="<?= htmlspecialchars($sections['about_intro']['image_url'] ?? '/assets/about/director.jpg', ENT_QUOTES, 'UTF-8') ?>" alt="Director Shri Tirthraj Trivedi" class="w-full h-auto object-cover" loading="lazy">
-                </div>
-                <div class="absolute -bottom-6 -right-6 bg-white p-5 rounded-2xl shadow-lg border border-slate-100 hidden sm:block max-w-xs">
-                    <span class="text-xs font-bold text-slate-900 block"><?= htmlspecialchars($settings['director_name'] ?? 'Shri Tirthraj Trivedi', ENT_QUOTES, 'UTF-8') ?></span>
-                    <span class="text-[11px] text-amber-600 font-semibold block">Founder Director & Choreographer</span>
+        <!-- Section Header -->
+        <div class="text-center max-w-3xl mx-auto mb-10 sm:mb-14 space-y-3">
+            <span class="inline-block text-xs font-bold tracking-widest uppercase px-3 py-1 bg-amber-100 text-amber-800 rounded-full">
+                ACADEMY CURRICULUM & VISUAL ARCHIVE
+            </span>
+            <h2 class="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 tracking-tight">
+                Services, Disciplines & Stage Moments
+            </h2>
+            <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                Explore our structured child-centric pedagogy, diverse genres, and authentic stage recitals.
+            </p>
+        </div>
+
+        <!-- 7 Category Pill Tabs -->
+        <div class="mb-10 sm:mb-12">
+            <div class="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3" role="tablist" aria-label="Curriculum & Discipline Categories" id="discipline-tablist">
+                <?php
+                $tabColors = [
+                    'service' => ['active' => 'bg-rose-600 text-white shadow-rose-200 border-rose-600', 'hover' => 'hover:border-rose-300 hover:text-rose-600'],
+                    'dance' => ['active' => 'bg-emerald-600 text-white shadow-emerald-200 border-emerald-600', 'hover' => 'hover:border-emerald-300 hover:text-emerald-600'],
+                    'gymnastics' => ['active' => 'bg-amber-600 text-white shadow-amber-200 border-amber-600', 'hover' => 'hover:border-amber-300 hover:text-amber-600'],
+                    'drama' => ['active' => 'bg-sky-600 text-white shadow-sky-200 border-sky-600', 'hover' => 'hover:border-sky-300 hover:text-sky-600'],
+                    'modeling' => ['active' => 'bg-pink-600 text-white shadow-pink-200 border-pink-600', 'hover' => 'hover:border-pink-300 hover:text-pink-600'],
+                    'drawing' => ['active' => 'bg-indigo-600 text-white shadow-indigo-200 border-indigo-600', 'hover' => 'hover:border-indigo-300 hover:text-indigo-600'],
+                    'spiritual' => ['active' => 'bg-violet-600 text-white shadow-violet-200 border-violet-600', 'hover' => 'hover:border-violet-300 hover:text-violet-600'],
+                ];
+                $tabIndex = 0;
+                foreach ($disciplines as $key => $d):
+                    $isActive = ($tabIndex === 0);
+                    $color = $tabColors[$key] ?? ['active' => 'bg-slate-900 text-white shadow-slate-200 border-slate-900', 'hover' => 'hover:border-slate-400 hover:text-slate-900'];
+                ?>
+                <button
+                    type="button"
+                    role="tab"
+                    id="tab-btn-<?= htmlspecialchars($key, ENT_QUOTES, 'UTF-8') ?>"
+                    data-discipline="<?= htmlspecialchars($key, ENT_QUOTES, 'UTF-8') ?>"
+                    data-active-class="<?= htmlspecialchars($color['active'], ENT_QUOTES, 'UTF-8') ?>"
+                    aria-controls="panel-<?= htmlspecialchars($key, ENT_QUOTES, 'UTF-8') ?>"
+                    aria-selected="<?= $isActive ? 'true' : 'false' ?>"
+                    tabindex="<?= $isActive ? '0' : '-1' ?>"
+                    class="discipline-tab-btn px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold tracking-wide uppercase transition-all duration-200 border shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 <?= $isActive ? $color['active'] . ' shadow-md' : 'bg-white text-slate-700 border-slate-200 ' . $color['hover'] ?>"
+                >
+                    <?= htmlspecialchars($d['tabLabel'], ENT_QUOTES, 'UTF-8') ?>
+                </button>
+                <?php
+                    $tabIndex++;
+                endforeach;
+                ?>
+            </div>
+        </div>
+
+        <!-- Dynamic Category Content Panels -->
+        <div class="relative max-w-5xl mx-auto" id="discipline-panels-container">
+            <?php
+            $panelIndex = 0;
+            foreach ($disciplines as $key => $d):
+                $isPanelActive = ($panelIndex === 0);
+            ?>
+            <div
+                id="panel-<?= htmlspecialchars($key, ENT_QUOTES, 'UTF-8') ?>"
+                role="tabpanel"
+                aria-labelledby="tab-btn-<?= htmlspecialchars($key, ENT_QUOTES, 'UTF-8') ?>"
+                class="discipline-panel <?= $isPanelActive ? '' : 'hidden' ?> bg-white rounded-3xl shadow-xl shadow-slate-200/60 border border-slate-100 overflow-hidden transition-opacity duration-300"
+            >
+                <!-- Color Accent Bar -->
+                <div class="h-2 w-full bg-gradient-to-r <?= htmlspecialchars($d['accentGradient'], ENT_QUOTES, 'UTF-8') ?>"></div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center p-6 sm:p-10 lg:p-12">
+                    <!-- Left Column: Content -->
+                    <div class="lg:col-span-7 space-y-5">
+                        <div class="space-y-1.5">
+                            <span class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-600">
+                                <span>✦</span>
+                                <span><?= htmlspecialchars($d['subtitle'], ENT_QUOTES, 'UTF-8') ?></span>
+                            </span>
+                            <h3 class="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-900 leading-tight">
+                                <?= htmlspecialchars($d['title'], ENT_QUOTES, 'UTF-8') ?>
+                            </h3>
+                        </div>
+
+                        <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                            <?= htmlspecialchars($d['description'], ENT_QUOTES, 'UTF-8') ?>
+                        </p>
+
+                        <!-- Feature Badges -->
+                        <?php if (!empty($d['badges'])): ?>
+                        <div class="pt-2">
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2">Curriculum Highlights:</span>
+                            <div class="flex flex-wrap gap-2">
+                                <?php foreach ($d['badges'] as $badge): ?>
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-slate-50 text-slate-700 border border-slate-200/80">
+                                    ✓ <?= htmlspecialchars($badge, ENT_QUOTES, 'UTF-8') ?>
+                                </span>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                        <?php endif; ?>
+
+                        <!-- CTA Button -->
+                        <div class="pt-3">
+                            <a
+                                href="<?= htmlspecialchars($d['ctaUrl'], ENT_QUOTES, 'UTF-8') ?>"
+                                class="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm text-white shadow-md transition-all duration-200 hover:scale-[1.02] hover:shadow-lg active:scale-[0.98] bg-gradient-to-r <?= htmlspecialchars($d['accentGradient'], ENT_QUOTES, 'UTF-8') ?>"
+                            >
+                                <span><?= htmlspecialchars($d['ctaText'], ENT_QUOTES, 'UTF-8') ?></span>
+                                <svg class="w-4 h-4 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Visual Stage Image -->
+                    <div class="lg:col-span-5">
+                        <div class="relative w-full aspect-[4/3] sm:aspect-[16/11] lg:aspect-square rounded-2xl overflow-hidden shadow-lg border border-slate-100 bg-slate-100 group">
+                            <img
+                                src="<?= htmlspecialchars($d['image'], ENT_QUOTES, 'UTF-8') ?>"
+                                alt="<?= htmlspecialchars($d['title'], ENT_QUOTES, 'UTF-8') ?>"
+                                class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                                loading="lazy"
+                            >
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                            <div class="absolute bottom-3 left-3 right-3 text-white text-xs font-semibold px-3 py-1.5 rounded-lg bg-black/60 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none text-center">
+                                <?= htmlspecialchars($d['tabLabel'], ENT_QUOTES, 'UTF-8') ?> • Dynamic Children Academy
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="lg:col-span-7 space-y-6">
-                <div class="inline-flex items-center gap-2 text-xs font-bold text-amber-600 uppercase tracking-widest">
-                    <span><?= htmlspecialchars($sections['about_intro']['subheading'] ?? 'Message from the Founder', ENT_QUOTES, 'UTF-8') ?></span>
-                </div>
-                <h2 class="font-serif text-3xl sm:text-4xl font-bold text-slate-900 leading-snug">
-                    "<?= htmlspecialchars($sections['about_intro']['heading'] ?? 'Dance is not merely movement; it is the heartbeat of cultural heritage.', ENT_QUOTES, 'UTF-8') ?>"
-                </h2>
-                <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
-                    <?= htmlspecialchars($sections['about_intro']['content'] ?? 'For over two decades, Dynamice Children Academy has fostered discipline, poise, and cultural self-expression in thousands of young girls and boys. Our mission is to take the authentic folk rhythms of Gujarat and India to the world\'s most prestigious stages.', ENT_QUOTES, 'UTF-8') ?>
-                </p>
-                <div class="pt-4 flex items-center gap-4">
-                    <a href="<?= htmlspecialchars($sections['about_intro']['button_url'] ?? '/about', ENT_QUOTES, 'UTF-8') ?>" class="inline-flex items-center gap-2 text-amber-600 hover:text-amber-700 font-bold text-sm">
-                        <span><?= htmlspecialchars($sections['about_intro']['button_text'] ?? 'Read Director\'s Full Profile', ENT_QUOTES, 'UTF-8') ?></span>
-                        <span>→</span>
-                    </a>
-                </div>
-            </div>
+            <?php
+                $panelIndex++;
+            endforeach;
+            ?>
         </div>
     </div>
 </section>
+
+<!-- Vanilla JS for Interactive Disciplines Tabs -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const tablist = document.getElementById('discipline-tablist');
+    if (!tablist) return;
+
+    const tabs = Array.from(tablist.querySelectorAll('.discipline-tab-btn'));
+    const panels = Array.from(document.querySelectorAll('.discipline-panel'));
+
+    function selectTab(selectedBtn) {
+        const targetKey = selectedBtn.getAttribute('data-discipline');
+        if (!targetKey) return;
+
+        tabs.forEach(btn => {
+            const isMatch = btn === selectedBtn;
+            btn.setAttribute('aria-selected', isMatch ? 'true' : 'false');
+            btn.setAttribute('tabindex', isMatch ? '0' : '-1');
+
+            const activeClass = btn.getAttribute('data-active-class');
+            if (activeClass) {
+                activeClass.split(' ').forEach(cls => {
+                    if (cls) btn.classList.toggle(cls, isMatch);
+                });
+            }
+
+            btn.classList.toggle('bg-white', !isMatch);
+            btn.classList.toggle('text-slate-700', !isMatch);
+            btn.classList.toggle('border-slate-200', !isMatch);
+            btn.classList.toggle('shadow-md', isMatch);
+            btn.classList.toggle('shadow-sm', !isMatch);
+        });
+
+        panels.forEach(panel => {
+            const isPanelMatch = panel.id === 'panel-' + targetKey;
+            if (isPanelMatch) {
+                panel.classList.remove('hidden');
+                panel.style.opacity = '0';
+                setTimeout(() => {
+                    panel.style.opacity = '1';
+                }, 20);
+            } else {
+                panel.classList.add('hidden');
+            }
+        });
+    }
+
+    tabs.forEach((tab, index) => {
+        tab.addEventListener('click', function () {
+            selectTab(this);
+        });
+
+        // Keyboard navigation (Left/Right arrow keys, Home, End)
+        tab.addEventListener('keydown', function (e) {
+            let newIndex = null;
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                newIndex = (index + 1) % tabs.length;
+            } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                newIndex = (index - 1 + tabs.length) % tabs.length;
+            } else if (e.key === 'Home') {
+                newIndex = 0;
+            } else if (e.key === 'End') {
+                newIndex = tabs.length - 1;
+            }
+
+            if (newIndex !== null) {
+                e.preventDefault();
+                tabs[newIndex].focus();
+                selectTab(tabs[newIndex]);
+            }
+        });
+    });
+});
+</script>
 
 <!-- Dance Categories & Curriculum -->
 <section class="py-20 bg-white">
