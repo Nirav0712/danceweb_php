@@ -601,11 +601,12 @@ class PublicController
     {
         $blogs = Database::fetchAll("SELECT * FROM blog_posts WHERE status = 'PUBLISHED' ORDER BY published_at DESC");
         $page = Database::fetchOne("SELECT * FROM pages WHERE slug = 'blog' LIMIT 1");
+        $section = Database::fetchOne("SELECT * FROM sections WHERE section_key = 'blog_header' LIMIT 1");
 
         $seo = SeoService::resolve('/blogs', [
-            'title' => $page['title'] ?? 'Dance Stories & Articles — Dynamice Children Academy',
-            'metaTitle' => $page['meta_title'] ?? 'Dance Education, Folk Traditions & Cultural Heritage Stories',
-            'metaDescription' => $page['meta_description'] ?? 'Read expert insights on dance benefits for child development, traditional Garba history, and academy tour journals.',
+            'title' => $page['title'] ?? ($section['heading'] ?? 'Dance Stories & Insights — Dynamice Children Academy'),
+            'metaTitle' => $page['meta_title'] ?? 'Dance Stories & Insights | Dynamice Children Academy',
+            'metaDescription' => $page['meta_description'] ?? 'Reflections on pedagogy, Indian performing arts traditions, and artistic growth for young learners.',
         ]);
 
         return (new Response())->html(View::render('public.blogs', [
@@ -615,6 +616,8 @@ class PublicController
             'metaDescription' => $seo['metaDescription'],
             'canonicalUrl' => $seo['canonicalUrl'],
             'blogs' => $blogs,
+            'page' => $page,
+            'section' => $section,
         ]));
     }
 

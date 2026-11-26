@@ -48,6 +48,7 @@ $router->get('/news/international', [PublicController::class, 'internationalNews
 $router->get('/blogs', [PublicController::class, 'blogs']);
 $router->get('/blog', [PublicController::class, 'blogs']); // Legacy synonym
 $router->get('/blogs/{slug}', [PublicController::class, 'blogDetail']);
+$router->get('/blog/{slug}', [PublicController::class, 'blogDetail']);
 $router->get('/contact', [PublicController::class, 'contact']);
 $router->get('/page/{slug}', [PublicController::class, 'customPage']);
 $router->get('/privacy-policy', function($req) {
@@ -246,6 +247,7 @@ $router->post('/admin/news/international/{id}/delete', function($req, $p) {
 // Module 15: Dance Stories (Blog)
 $router->get('/admin/blogs', [BlogsController::class, 'index'], [$auth, $editorAccess]);
 $router->post('/admin/blogs', [BlogsController::class, 'store'], [$auth, $editorAccess]);
+$router->post('/admin/blogs/settings', [BlogsController::class, 'updateSettings'], [$auth, $editorAccess]);
 $router->post('/admin/blogs/{id}/update', [BlogsController::class, 'update'], [$auth, $editorAccess]);
 $router->post('/admin/blogs/{id}/delete', [BlogsController::class, 'delete'], [$auth, $editorAccess]);
 
