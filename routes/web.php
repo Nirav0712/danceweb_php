@@ -241,6 +241,7 @@ $router->post('/admin/blogs/{id}/delete', [BlogsController::class, 'delete'], [$
 // Module 16: Testimonials
 $router->get('/admin/testimonials', [TestimonialsController::class, 'index'], [$auth, $editorAccess]);
 $router->post('/admin/testimonials', [TestimonialsController::class, 'store'], [$auth, $editorAccess]);
+$router->post('/admin/testimonials/heading', [TestimonialsController::class, 'updateHeading'], [$auth, $editorAccess]);
 $router->post('/admin/testimonials/{id}/update', [TestimonialsController::class, 'update'], [$auth, $editorAccess]);
 $router->post('/admin/testimonials/{id}/delete', [TestimonialsController::class, 'delete'], [$auth, $editorAccess]);
 

@@ -174,8 +174,15 @@ class PublicController
         // 5. Fetch tour flags
         $tourFlags = Database::fetchAll("SELECT * FROM tour_flags WHERE is_active = 1 ORDER BY sort_order ASC, year DESC");
 
-        // 6. Fetch testimonials
-        $testimonials = Database::fetchAll("SELECT * FROM testimonials WHERE is_active = 1 ORDER BY sort_order ASC LIMIT 4");
+        // 6. Fetch testimonials (3x2 6-card showcase matching SS 1 reference)
+        try {
+            $testimonials = Database::fetchAll("SELECT * FROM testimonials WHERE is_active = 1 ORDER BY sort_order ASC, id ASC LIMIT 6");
+            if (empty($testimonials) || count($testimonials) < 6) {
+                $testimonials = Database::fetchAll("SELECT * FROM testimonials ORDER BY sort_order ASC, id ASC LIMIT 6");
+            }
+        } catch (\Throwable $e) {
+            $testimonials = [];
+        }
 
         // 7. Fetch sections and index by section_key
         $rawSections = Database::fetchAll("SELECT * FROM sections WHERE is_visible = 1 AND page_id = (SELECT id FROM pages WHERE slug = 'home' LIMIT 1) ORDER BY sort_order ASC");

@@ -849,26 +849,71 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 
-<!-- Testimonials & Reviews -->
-<?php if (!empty($testimonials)): ?>
-<section class="py-20 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center max-w-2xl mx-auto mb-16 space-y-3">
-            <span class="text-xs font-bold text-amber-600 uppercase tracking-widest">Voices of Appreciation</span>
-            <h2 class="font-serif text-3xl sm:text-4xl font-bold text-slate-900">What Parents & Students Say</h2>
+<!-- Words From Our Families / Parent Reflections (SS 1 Reference Design) -->
+<?php if (!empty($testimonials)):
+$testHeading = $sections['testimonials']['heading'] ?? 'Words From Our Families';
+$testSubheading = $sections['testimonials']['subheading'] ?? '';
+$testBadge = !empty($sections['testimonials']['content']) ? $sections['testimonials']['content'] : 'PARENT REFLECTIONS';
+?>
+<section id="parent-reflections-section" class="py-16 sm:py-24 bg-[#fafbfc] relative overflow-hidden select-none w-full">
+    <!-- Ambient Dreamy Glows matching SS 1 -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute -top-24 right-1/12 w-[480px] h-[480px] bg-amber-200/30 rounded-full blur-[140px]"></div>
+        <div class="absolute -bottom-24 left-1/12 w-[480px] h-[480px] bg-purple-200/30 rounded-full blur-[140px]"></div>
+    </div>
+
+    <!-- Padding exactly matching Services, Disciplines & Stage Moments section -->
+    <div class="w-full px-3 sm:px-6 lg:px-8 xl:px-12 relative z-10">
+        <!-- Section Header -->
+        <div class="text-center max-w-3xl mx-auto mb-10 sm:mb-14 space-y-2">
+            <div class="inline-flex items-center gap-1.5 px-4 py-1 rounded-full bg-white border border-slate-200/90 text-[10px] sm:text-[11px] font-bold text-slate-600 uppercase tracking-widest shadow-xs">
+                <span><?= htmlspecialchars($testBadge, ENT_QUOTES, 'UTF-8') ?></span>
+            </div>
+            <h2 class="text-3xl sm:text-4xl lg:text-[42px] font-extrabold text-slate-900 tracking-tight leading-snug">
+                <?= htmlspecialchars($testHeading, ENT_QUOTES, 'UTF-8') ?>
+            </h2>
+            <?php if (!empty($testSubheading)): ?>
+            <p class="text-xs sm:text-sm text-slate-500 max-w-xl mx-auto leading-relaxed">
+                <?= htmlspecialchars($testSubheading, ENT_QUOTES, 'UTF-8') ?>
+            </p>
+            <?php endif; ?>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+        <!-- 3-Column Testimonial Cards Grid (3x2 6 Cards matching SS 1) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-7">
             <?php foreach ($testimonials as $t): ?>
-                <div class="bg-slate-50 p-8 rounded-2xl border border-slate-200/80 space-y-4">
-                    <div class="flex items-center gap-1 text-amber-400">
-                        <?php for ($i = 0; $i < (int) ($t['rating'] ?? 5); $i++): ?>★<?php endfor; ?>
+                <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-100 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.06)] hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between relative group">
+                    <div>
+                        <!-- Pink Quote Mark Icon in Top-Left -->
+                        <div class="mb-3">
+                            <svg class="w-7 h-7 text-pink-400 opacity-90" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+                            </svg>
+                        </div>
+
+                        <!-- Review Text -->
+                        <p class="text-xs sm:text-[13px] text-slate-600 leading-relaxed font-normal mb-6">
+                            "<?= htmlspecialchars($t['review_text'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
+                        </p>
                     </div>
-                    <p class="text-slate-700 text-sm leading-relaxed italic">
-                        "<?= htmlspecialchars($t['review_text'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
-                    </p>
-                    <div class="pt-2 border-t border-slate-200/60">
-                        <span class="font-bold text-slate-900 text-sm block"><?= htmlspecialchars($t['person_name'] ?? 'Parent', ENT_QUOTES, 'UTF-8') ?></span>
-                        <span class="text-xs text-slate-500 block"><?= htmlspecialchars($t['relation_or_role'] ?? 'Student', ENT_QUOTES, 'UTF-8') ?></span>
+
+                    <!-- Bottom Row: Person Details on Left, 5 Stars on Right -->
+                    <div class="pt-4 border-t border-slate-100 flex items-end justify-between gap-3 mt-auto">
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-xs sm:text-sm leading-snug">
+                                <?= htmlspecialchars($t['person_name'] ?? 'Parent', ENT_QUOTES, 'UTF-8') ?>
+                            </h4>
+                            <span class="text-[11px] text-slate-400 font-medium block mt-0.5">
+                                <?= htmlspecialchars($t['relation_or_role'] ?? 'Student', ENT_QUOTES, 'UTF-8') ?>
+                            </span>
+                        </div>
+                        <div class="flex items-center gap-0.5 text-amber-400 shrink-0 select-none">
+                            <?php
+                            $rating = (int)($t['rating'] ?? 5);
+                            for ($i = 0; $i < $rating; $i++): ?>
+                                <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                            <?php endfor; ?>
+                        </div>
                     </div>
                 </div>
             <?php endforeach; ?>

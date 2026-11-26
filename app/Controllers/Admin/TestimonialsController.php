@@ -10,11 +10,57 @@ class TestimonialsController extends BaseAdminController
     public function index(Request $request): Response
     {
         $this->checkPermission('testimonials:manage');
-        $testimonials = Database::fetchAll('SELECT * FROM testimonials ORDER BY sort_order ASC, id DESC');
+        $testimonials = Database::fetchAll('SELECT * FROM testimonials ORDER BY sort_order ASC, id ASC');
+
+        $section = Database::fetchOne("SELECT * FROM sections WHERE section_key = 'testimonials' LIMIT 1");
+        if (!$section) {
+            $section = [
+                'heading' => 'Words From Our Families',
+                'subheading' => 'Authentic reflections from parents and students experiencing our creative pedagogy.',
+                'content' => 'PARENT REFLECTIONS',
+            ];
+        }
+
         return $this->render('admin.testimonials.index', [
             'title' => 'Testimonials & Reviews — Dynamice CMS',
             'testimonials' => $testimonials,
+            'section' => $section,
         ]);
+    }
+
+    public function updateHeading(Request $request): Response
+    {
+        $this->checkPermission('testimonials:manage');
+        $data = $request->getBody();
+
+        $heading = trim($data['heading'] ?? 'Words From Our Families');
+        $subheading = trim($data['subheading'] ?? 'Authentic reflections from parents and students experiencing our creative pedagogy.');
+        $badge = trim($data['content'] ?? 'PARENT REFLECTIONS');
+
+        $existing = Database::fetchOne("SELECT id FROM sections WHERE section_key = 'testimonials' LIMIT 1");
+        if ($existing) {
+            Database::query(
+                "UPDATE sections SET heading = :heading, subheading = :subheading, content = :badge, updated_at = NOW() WHERE section_key = 'testimonials'",
+                [
+                    'heading' => $heading,
+                    'subheading' => $subheading,
+                    'badge' => $badge,
+                ]
+            );
+        } else {
+            Database::query(
+                "INSERT INTO sections (page_id, section_key, heading, subheading, content, sort_order, is_visible, created_at, updated_at)
+                 VALUES (1, 'testimonials', :heading, :subheading, :badge, 6, 1, NOW(), NOW())",
+                [
+                    'heading' => $heading,
+                    'subheading' => $subheading,
+                    'badge' => $badge,
+                ]
+            );
+        }
+
+        $this->logAudit('UPDATE', 'SectionHeading', 'testimonials', ['heading' => $heading]);
+        return $this->redirect('/admin/testimonials', 'Section heading and badge updated successfully.');
     }
 
     public function store(Request $request): Response
@@ -39,9 +85,9 @@ class TestimonialsController extends BaseAdminController
                 'review_text' => $reviewText,
                 'rating' => max(1, min(5, $rating)),
                 'avatar_image_url' => $data['avatar_image_url'] ?? null,
-                'is_featured' => isset($data['is_featured']) ? 1 : 0,
+                'is_featured' => isset($data['is_featured']) && $data['is_featured'] ? 1 : 0,
                 'sort_order' => (int)($data['sort_order'] ?? 0),
-                'is_active' => isset($data['is_active']) ? 1 : 0,
+                'is_active' => isset($data['is_active']) && $data['is_active'] ? 1 : 0,
             ]
         );
 
@@ -67,9 +113,9 @@ class TestimonialsController extends BaseAdminController
                 'review_text' => trim($data['review_text'] ?? ''),
                 'rating' => max(1, min(5, (int)($data['rating'] ?? 5))),
                 'avatar_image_url' => $data['avatar_image_url'] ?? null,
-                'is_featured' => isset($data['is_featured']) ? 1 : 0,
+                'is_featured' => isset($data['is_featured']) && $data['is_featured'] ? 1 : 0,
                 'sort_order' => (int)($data['sort_order'] ?? 0),
-                'is_active' => isset($data['is_active']) ? 1 : 0,
+                'is_active' => isset($data['is_active']) && $data['is_active'] ? 1 : 0,
                 'id' => $id,
             ]
         );
