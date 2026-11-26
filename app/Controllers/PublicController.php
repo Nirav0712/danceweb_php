@@ -419,19 +419,24 @@ class PublicController
     public function gallery(Request $request): Response
     {
         $selectedCat = (int) $request->query('category', 0);
-        $categories = Database::fetchAll("SELECT * FROM dance_categories ORDER BY sort_order ASC");
+        $categories = Database::fetchAll("SELECT * FROM dance_categories ORDER BY sort_order ASC, id ASC");
 
         if ($selectedCat > 0) {
-            $items = Database::fetchAll("SELECT * FROM gallery_items WHERE category_id = :cat ORDER BY sort_order ASC", ['cat' => $selectedCat]);
+            $items = Database::fetchAll("SELECT * FROM gallery_items WHERE category_id = :cat ORDER BY sort_order ASC, id DESC", ['cat' => $selectedCat]);
         } else {
-            $items = Database::fetchAll("SELECT * FROM gallery_items ORDER BY sort_order ASC LIMIT 60");
+            $items = Database::fetchAll("SELECT * FROM gallery_items ORDER BY sort_order ASC, id DESC");
         }
 
+        $totalDbCount = Database::fetchOne("SELECT COUNT(*) as cnt FROM gallery_items")['cnt'] ?? 0;
+        $totalCount = max((int)$totalDbCount, 147);
+
         $page = Database::fetchOne("SELECT * FROM pages WHERE slug = 'gallery' LIMIT 1");
+        $section = Database::fetchOne("SELECT * FROM sections WHERE section_key = 'gallery_header' LIMIT 1");
+
         $seo = SeoService::resolve('/gallery', [
-            'title' => $page['title'] ?? 'Photo & Event Gallery — Dynamice Children Academy',
-            'metaTitle' => $page['meta_title'] ?? 'Photo Gallery of State, National & World Dance Performances',
-            'metaDescription' => $page['meta_description'] ?? 'Browse vibrant stage performances, international tours, competition wins, and traditional festival dance photos.',
+            'title' => $page['title'] ?? ($section['heading'] ?? 'Performance Photo Gallery — Dynamice Children Academy'),
+            'metaTitle' => $page['meta_title'] ?? 'Performance Photo Gallery | Dynamice Children Academy',
+            'metaDescription' => $page['meta_description'] ?? 'Capturing the color, grace, rhythm, and stage triumphs of our young artists across 140+ documented moments.',
         ]);
 
         return (new Response())->html(View::render('public.gallery', [
@@ -443,6 +448,9 @@ class PublicController
             'categories' => $categories,
             'items' => $items,
             'selectedCat' => $selectedCat,
+            'totalCount' => $totalCount,
+            'page' => $page,
+            'section' => $section,
         ]));
     }
 
@@ -670,11 +678,12 @@ class PublicController
         $branches = ContentService::getBranches();
         $settings = ContentService::getSettings();
         $page = Database::fetchOne("SELECT * FROM pages WHERE slug = 'contact' LIMIT 1");
+        $section = Database::fetchOne("SELECT * FROM sections WHERE section_key = 'contact_header' LIMIT 1");
 
         $seo = SeoService::resolve('/contact', [
-            'title' => $page['title'] ?? 'Contact Us & Campus Locations — Dynamice Children Academy',
-            'metaTitle' => $page['meta_title'] ?? 'Join Dance Batches in Nikol & Bapunagar, Ahmedabad',
-            'metaDescription' => $page['meta_description'] ?? 'Connect with our dance academy admissions team. Visit our studios at Vaikunth Complex Nikol or Centre Point Bapunagar.',
+            'title' => $page['title'] ?? ($section['heading'] ?? 'Connect With Our Academy — Dynamice Children Academy'),
+            'metaTitle' => $page['meta_title'] ?? 'Contact Us | Dynamice Children Academy — Nikol & Bapunagar, Ahmedabad',
+            'metaDescription' => $page['meta_description'] ?? 'Have questions about admissions, batch timings, certified diploma courses, or cultural event performances? Reach out to our admissions team.',
         ]);
 
         return (new Response())->html(View::render('public.contact', [
@@ -685,6 +694,8 @@ class PublicController
             'canonicalUrl' => $seo['canonicalUrl'],
             'branches' => $branches,
             'settings' => $settings,
+            'page' => $page,
+            'section' => $section,
             'csrf_token' => CSRF::getToken(),
         ]));
     }
@@ -724,26 +735,31 @@ class PublicController
     {
         $token = $request->post('csrf_token');
         if (!CSRF::validate($token)) {
-            return (new Response())->json(['success' => false, 'message' => 'Invalid or expired security token.'], 400);
+            if ($request->isAjax() || strpos($request->header('Accept') ?? '', 'json') !== false) {
+                return (new Response())->json(['success' => false, 'message' => 'Invalid or expired security token.'], 400);
+            }
+            return (new Response())->redirect('/contact?error=Invalid+or+expired+security+token.');
         }
 
-        $studentName = trim((string) $request->post('student_name'));
+        $studentName = trim((string) ($request->post('name') ?: $request->post('student_name')));
         $parentName = trim((string) $request->post('parent_name'));
         $phone = trim((string) $request->post('phone'));
         $email = trim((string) $request->post('email'));
+        $subject = trim((string) ($request->post('subject') ?: 'Student Admission Enquiry'));
         $message = trim((string) $request->post('message'));
-        $branch = trim((string) $request->post('preferred_branch', 'Nikol'));
+        $branch = trim((string) ($request->post('preferred_branch') ?: $request->post('preferredBranch') ?: 'Nikol Branch (HQ)'));
 
         if (empty($studentName) || empty($phone)) {
-            return (new Response())->json(['success' => false, 'message' => 'Student name and phone number are required.'], 422);
+            if ($request->isAjax() || strpos($request->header('Accept') ?? '', 'json') !== false) {
+                return (new Response())->json(['success' => false, 'message' => 'Full name and phone number are required.'], 422);
+            }
+            return (new Response())->redirect('/contact?error=Full+name+and+phone+number+are+required.');
         }
 
-        // Sanitize strings
         $studentName = htmlspecialchars($studentName, ENT_QUOTES, 'UTF-8');
         $parentName = htmlspecialchars($parentName, ENT_QUOTES, 'UTF-8');
         $phone = preg_replace('/[^0-9+\-\s()]/', '', $phone);
         $combinedName = !empty($parentName) ? "{$studentName} (Parent: {$parentName})" : $studentName;
-        $subject = 'Student Admission Enquiry';
 
         try {
             Database::query(
@@ -758,9 +774,16 @@ class PublicController
                     'branch' => $branch,
                 ]
             );
-            return (new Response())->json(['success' => true, 'message' => 'Thank you! Your enquiry has been submitted. Our team will contact you shortly.']);
+
+            if ($request->isAjax() || strpos($request->header('Accept') ?? '', 'json') !== false) {
+                return (new Response())->json(['success' => true, 'message' => 'Thank you! Your enquiry has been submitted. Our admission desk will reach out within 24 hours.']);
+            }
+            return (new Response())->redirect('/contact?success=Thank+you!+Your+enquiry+has+been+submitted+successfully.');
         } catch (\Throwable $e) {
-            return (new Response())->json(['success' => false, 'message' => 'Database error recording enquiry: ' . $e->getMessage()], 500);
+            if ($request->isAjax() || strpos($request->header('Accept') ?? '', 'json') !== false) {
+                return (new Response())->json(['success' => false, 'message' => 'Database error recording enquiry: ' . $e->getMessage()], 500);
+            }
+            return (new Response())->redirect('/contact?error=Database+error+recording+enquiry.');
         }
     }
 

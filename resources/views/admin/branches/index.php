@@ -2,17 +2,100 @@
 <div class="space-y-6">
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-            <h1 class="text-2xl font-bold text-slate-900">Campuses & Studio Branches</h1>
-            <p class="text-xs text-slate-500 mt-1">Manage physical academy locations, phones, batch timings, and map embeds</p>
+            <h1 class="text-2xl font-bold text-slate-900">Campuses & Contact Page CMS</h1>
+            <p class="text-xs text-slate-500 mt-1">Manage physical academy locations, hero banner, official inquiries phone/email, and batch timings</p>
         </div>
-        <button onclick="document.getElementById('createBranchModal').classList.remove('hidden')" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-semibold shadow-xs">
-            + Add Campus Branch
-        </button>
+        <div class="flex items-center gap-2">
+            <a href="/contact" target="_blank" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition">
+                <span>View Live Page</span>
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            </a>
+            <button onclick="document.getElementById('createBranchModal').classList.remove('hidden')" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-semibold shadow-xs">
+                + Add Campus Branch
+            </button>
+        </div>
     </div>
 
     <?php if (!empty($flash_success)): ?>
         <div class="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs rounded-xl"><?= htmlspecialchars($flash_success, ENT_QUOTES, 'UTF-8') ?></div>
     <?php endif; ?>
+    <?php if (!empty($flash_error)): ?>
+        <div class="p-4 bg-rose-50 border border-rose-200 text-rose-800 text-xs rounded-xl"><?= htmlspecialchars($flash_error, ENT_QUOTES, 'UTF-8') ?></div>
+    <?php endif; ?>
+
+    <!-- Contact Page Hero & Info CMS Settings Form -->
+    <div class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-xs">
+        <div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
+            <div>
+                <h2 class="text-sm font-bold text-slate-900">Contact Page Header & Headquarter Info CMS</h2>
+                <p class="text-[11px] text-slate-500">Edit the top hero section badge, titles, and main inquiry contact details on <code class="text-indigo-600">/contact</code></p>
+            </div>
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-100 text-emerald-800">
+                Live on Public Site
+            </span>
+        </div>
+
+        <form method="POST" action="/admin/branches/settings" class="space-y-4">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token, ENT_QUOTES, 'UTF-8') ?>">
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Hero Pill Badge</label>
+                    <input type="text" name="badge_label" value="<?= htmlspecialchars($section['content'] ?? 'ADMISSIONS & ENQUIRIES', ENT_QUOTES, 'UTF-8') ?>" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:border-indigo-500">
+                    <p class="text-[10px] text-slate-400 mt-1">e.g. ADMISSIONS &amp; ENQUIRIES</p>
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Page Hero Heading</label>
+                    <input type="text" name="page_title" value="<?= htmlspecialchars($section['heading'] ?? ($page['title'] ?? 'Connect With Our Academy'), ENT_QUOTES, 'UTF-8') ?>" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:border-indigo-500">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Hero Subtitle</label>
+                <textarea name="page_subtitle" rows="2" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:border-indigo-500"><?= htmlspecialchars($section['subheading'] ?? ($page['subtitle'] ?? 'Have questions about admissions, batch timings, certified diploma courses, or cultural event performances? Reach out to our admissions team.'), ENT_QUOTES, 'UTF-8') ?></textarea>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2 border-t border-slate-100">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Direct Inquiries / Admission Phone</label>
+                    <input type="text" name="contact_phone" value="<?= htmlspecialchars($settings['contact_phone'] ?? '+91 99242 81372', ENT_QUOTES, 'UTF-8') ?>" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:border-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Official Academy Email</label>
+                    <input type="email" name="contact_email" value="<?= htmlspecialchars($settings['contact_email'] ?? 'info@dynamicechildrenacademy.com', ENT_QUOTES, 'UTF-8') ?>" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:border-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Academy Operational Hours</label>
+                    <input type="text" name="contact_hours" value="<?= htmlspecialchars($settings['contact_hours'] ?? 'Monday to Saturday: 8:00 AM - 9:00 PM | Sunday: 8:00 AM - 2:00 PM (Special Batches)', ENT_QUOTES, 'UTF-8') ?>" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:border-indigo-500">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">SEO Meta Title</label>
+                    <input type="text" name="meta_title" value="<?= htmlspecialchars($page['meta_title'] ?? 'Contact & Admissions — Dynamice Children Academy', ENT_QUOTES, 'UTF-8') ?>" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:border-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">SEO Meta Description</label>
+                    <input type="text" name="meta_description" value="<?= htmlspecialchars($page['meta_description'] ?? 'Connect with Dynamice Children Academy admissions in Ahmedabad. Inquire about folk dance, Kathak, and Bollywood courses.', ENT_QUOTES, 'UTF-8') ?>" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:border-indigo-500">
+                </div>
+            </div>
+
+            <div class="flex justify-end pt-2">
+                <button type="submit" class="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-semibold transition">
+                    Save Contact Page Settings
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Branches List -->
+    <div class="flex items-center justify-between pt-2">
+        <div>
+            <h2 class="text-base font-bold text-slate-900">Registered Teaching Campuses (<?= count($branches) ?>)</h2>
+            <p class="text-xs text-slate-500">These locations appear on the contact page studio switcher and inquiry dropdown</p>
+        </div>
+    </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <?php foreach ($branches as $b): ?>

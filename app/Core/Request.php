@@ -12,9 +12,9 @@ class Request
     protected array $files;
     protected array $routeParams = [];
 
-    public function __construct()
+    public function __construct(array $query = [], array $body = [], array $server = [])
     {
-        $this->server = $_SERVER;
+        $this->server = !empty($server) ? array_merge($_SERVER, $server) : $_SERVER;
         $this->method = strtoupper($this->server['REQUEST_METHOD'] ?? 'GET');
         
         // Handle method override for forms
@@ -29,8 +29,8 @@ class Request
             $this->uri = rtrim($this->uri, '/');
         }
 
-        $this->params = $_GET;
-        $this->body = $_POST;
+        $this->params = !empty($query) ? $query : $_GET;
+        $this->body = !empty($body) ? $body : $_POST;
         $this->files = $_FILES;
 
         // JSON body support
@@ -105,5 +105,24 @@ class Request
     public function ip(): string
     {
         return $this->server['HTTP_X_FORWARDED_FOR'] ?? $this->server['REMOTE_ADDR'] ?? '127.0.0.1';
+    }
+
+    public function header(string $key, mixed $default = null): mixed
+    {
+        $normalized = 'HTTP_' . strtoupper(str_replace('-', '_', $key));
+        if (isset($this->server[$normalized])) {
+            return $this->server[$normalized];
+        }
+        $direct = strtoupper(str_replace('-', '_', $key));
+        if (isset($this->server[$direct])) {
+            return $this->server[$direct];
+        }
+        return $default;
+    }
+
+    public function isAjax(): bool
+    {
+        return strtolower((string)$this->header('X-Requested-With', '')) === 'xmlhttprequest'
+            || str_contains((string)($this->server['HTTP_ACCEPT'] ?? ''), 'application/json');
     }
 }

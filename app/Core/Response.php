@@ -30,6 +30,11 @@ class Response
         return $this->statusCode;
     }
 
+    public function getStatusCode(): int
+    {
+        return $this->statusCode;
+    }
+
     public function header(string $name, string $value): self
     {
         $this->headers[$name] = $value;

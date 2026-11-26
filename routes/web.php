@@ -166,6 +166,7 @@ $router->post('/admin/dance-forms/{id}/delete', [DanceFormsController::class, 'd
 // Module 08: Photo Gallery
 $router->get('/admin/gallery', [GalleryController::class, 'index'], [$auth, $editorAccess]);
 $router->post('/admin/gallery', [GalleryController::class, 'store'], [$auth, $editorAccess]);
+$router->post('/admin/gallery/settings', [GalleryController::class, 'updateSettings'], [$auth, $editorAccess]);
 $router->post('/admin/gallery/{id}/update', [GalleryController::class, 'update'], [$auth, $editorAccess]);
 $router->post('/admin/gallery/{id}/delete', [GalleryController::class, 'delete'], [$auth, $editorAccess]);
 
@@ -276,9 +277,11 @@ $router->get('/admin/newsletter/export', [NewsletterController::class, 'exportCs
 $router->post('/admin/newsletter/{id}/toggle', [NewsletterController::class, 'toggle'], [$auth, $adminOrSuper]);
 $router->post('/admin/newsletter/{id}/delete', [NewsletterController::class, 'delete'], [$auth, $adminOrSuper]);
 
-// Module 19: Campuses / Branches
+// Module 19: Campuses / Branches & Contact CMS
 $router->get('/admin/branches', [BranchesController::class, 'index'], [$auth, $adminOrSuper]);
+$router->get('/admin/contact', [BranchesController::class, 'index'], [$auth, $adminOrSuper]);
 $router->post('/admin/branches', [BranchesController::class, 'store'], [$auth, $adminOrSuper]);
+$router->post('/admin/branches/settings', [BranchesController::class, 'updateSettings'], [$auth, $adminOrSuper]);
 $router->post('/admin/branches/{id}/update', [BranchesController::class, 'update'], [$auth, $adminOrSuper]);
 $router->post('/admin/branches/{id}/delete', [BranchesController::class, 'delete'], [$auth, $adminOrSuper]);
 
