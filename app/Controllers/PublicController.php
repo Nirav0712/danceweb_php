@@ -581,13 +581,14 @@ class PublicController
 
     public function internationalNews(Request $request): Response
     {
-        $news = Database::fetchAll("SELECT * FROM news_items WHERE news_scope = 'INTERNATIONAL' ORDER BY sort_order ASC");
+        $news = Database::fetchAll("SELECT * FROM news_items WHERE news_scope = 'INTERNATIONAL' ORDER BY sort_order ASC, publish_date DESC");
         $page = Database::fetchOne("SELECT * FROM pages WHERE slug = 'news-international' LIMIT 1");
+        $section = Database::fetchOne("SELECT * FROM sections WHERE section_key = 'news_international_header' LIMIT 1");
 
         $seo = SeoService::resolve('/news/international', [
-            'title' => $page['title'] ?? 'International Press Coverage — Dynamice Children Academy',
-            'metaTitle' => $page['meta_title'] ?? 'Global Press Features & International Media Coverage',
-            'metaDescription' => $page['meta_description'] ?? 'International newspapers and cultural festival bulletins covering our young dancers overseas.',
+            'title' => $page['title'] ?? ($section['heading'] ?? 'International News & Media — Dynamice Children Academy'),
+            'metaTitle' => $page['meta_title'] ?? 'International News & Press Coverage | Dynamice Children Academy',
+            'metaDescription' => $page['meta_description'] ?? 'Press reports and cultural commentary from our foreign festival appearances and international partnerships.',
         ]);
 
         return (new Response())->html(View::render('public.news_intl', [
@@ -597,6 +598,8 @@ class PublicController
             'metaDescription' => $seo['metaDescription'],
             'canonicalUrl' => $seo['canonicalUrl'],
             'news' => $news,
+            'page' => $page,
+            'section' => $section,
         ]));
     }
 
