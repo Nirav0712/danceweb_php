@@ -51,15 +51,9 @@ $router->get('/blogs/{slug}', [PublicController::class, 'blogDetail']);
 $router->get('/blog/{slug}', [PublicController::class, 'blogDetail']);
 $router->get('/contact', [PublicController::class, 'contact']);
 $router->get('/page/{slug}', [PublicController::class, 'customPage']);
-$router->get('/privacy-policy', function($req) {
-    return (new \App\Controllers\PublicController())->customPage($req, ['slug' => 'privacy-policy']);
-});
-$router->get('/terms', function($req) {
-    return (new \App\Controllers\PublicController())->customPage($req, ['slug' => 'terms']);
-});
-$router->get('/refund-policy', function($req) {
-    return (new \App\Controllers\PublicController())->customPage($req, ['slug' => 'refund-policy']);
-});
+$router->get('/privacy-policy', [PublicController::class, 'privacyPolicy']);
+$router->get('/terms', [PublicController::class, 'terms']);
+$router->get('/refund-policy', [PublicController::class, 'refundPolicy']);
 $router->get('/faq', function($req) {
     return (new \App\Controllers\PublicController())->customPage($req, ['slug' => 'faq']);
 });

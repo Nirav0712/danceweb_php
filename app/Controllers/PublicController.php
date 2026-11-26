@@ -755,6 +755,49 @@ class PublicController
         ]));
     }
 
+    public function privacyPolicy(Request $request): Response
+    {
+        $settings = ContentService::getSettings();
+        $seo = SeoService::resolve('/privacy-policy', [
+            'title' => 'Privacy Policy & Student Safety — Dynamice Children Academy',
+            'metaTitle' => 'Privacy Policy & Child Protection | Dynamice Children Academy Ahmedabad',
+            'metaDescription' => 'How Dynamice Children Academy collects, protects, and respects the personal information and media consent of our young students, parents, and community.',
+        ]);
+
+        return (new Response())->html(View::render('public.privacy_policy', [
+            'seo' => $seo,
+            'title' => $seo['title'],
+            'metaTitle' => $seo['metaTitle'],
+            'metaDescription' => $seo['metaDescription'],
+            'canonicalUrl' => $seo['canonicalUrl'],
+            'settings' => $settings,
+        ]));
+    }
+
+    public function terms(Request $request): Response
+    {
+        $settings = ContentService::getSettings();
+        $seo = SeoService::resolve('/terms', [
+            'title' => 'Terms of Service & Studio Code — Dynamice Children Academy',
+            'metaTitle' => 'Terms of Service & Enrolment Guidelines | Dynamice Children Academy',
+            'metaDescription' => 'General rules, admission terms, studio codes of conduct, attendance standards, and fee policies governing student training at Dynamice Children Academy.',
+        ]);
+
+        return (new Response())->html(View::render('public.terms', [
+            'seo' => $seo,
+            'title' => $seo['title'],
+            'metaTitle' => $seo['metaTitle'],
+            'metaDescription' => $seo['metaDescription'],
+            'canonicalUrl' => $seo['canonicalUrl'],
+            'settings' => $settings,
+        ]));
+    }
+
+    public function refundPolicy(Request $request): Response
+    {
+        return $this->terms($request);
+    }
+
     public function submitEnquiry(Request $request): Response
     {
         $token = $request->post('csrf_token');
