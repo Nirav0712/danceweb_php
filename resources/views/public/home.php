@@ -923,7 +923,7 @@ $testBadge = !empty($sections['testimonials']['content']) ? $sections['testimoni
 <?php endif; ?>
 
 <!-- Common Call to Action -->
-<section class="py-16 bg-gradient-to-r from-amber-600 to-amber-500 text-white text-center">
+<!-- <section class="py-16 bg-gradient-to-r from-amber-600 to-amber-500 text-white text-center">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         <h2 class="font-serif text-3xl sm:text-4xl font-bold">Start Your Dance Journey Today</h2>
         <p class="text-amber-100 text-sm max-w-xl mx-auto leading-relaxed">
@@ -935,7 +935,7 @@ $testBadge = !empty($sections['testimonials']['content']) ? $sections['testimoni
             </a>
         </div>
     </div>
-</section>
+</section> -->
 
 <!-- Full-Width Hero Slider JavaScript -->
 <script>
