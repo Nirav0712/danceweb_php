@@ -557,13 +557,14 @@ class PublicController
 
     public function nationalNews(Request $request): Response
     {
-        $news = Database::fetchAll("SELECT * FROM news_items WHERE news_scope = 'NATIONAL' ORDER BY sort_order ASC");
+        $news = Database::fetchAll("SELECT * FROM news_items WHERE news_scope = 'NATIONAL' ORDER BY sort_order ASC, publish_date DESC");
         $page = Database::fetchOne("SELECT * FROM pages WHERE slug = 'news-national' LIMIT 1");
+        $section = Database::fetchOne("SELECT * FROM sections WHERE section_key = 'news_national_header' LIMIT 1");
 
         $seo = SeoService::resolve('/news/national', [
-            'title' => $page['title'] ?? 'National Press Coverage — Dynamice Children Academy',
-            'metaTitle' => $page['meta_title'] ?? 'Newspaper Clippings & Press Coverage in Gujarat and India',
-            'metaDescription' => $page['meta_description'] ?? 'Print media reviews and festival press coverage from Sandesh, Divya Bhaskar, Gujarat Samachar, and national dailies.',
+            'title' => $page['title'] ?? ($section['heading'] ?? 'National News & Media — Dynamice Children Academy'),
+            'metaTitle' => $page['meta_title'] ?? 'National News & Press Coverage | Dynamice Children Academy',
+            'metaDescription' => $page['meta_description'] ?? 'Press clippings and national print media coverage celebrating our performances and world record events.',
         ]);
 
         return (new Response())->html(View::render('public.news_national', [
@@ -573,6 +574,8 @@ class PublicController
             'metaDescription' => $seo['metaDescription'],
             'canonicalUrl' => $seo['canonicalUrl'],
             'news' => $news,
+            'page' => $page,
+            'section' => $section,
         ]));
     }
 

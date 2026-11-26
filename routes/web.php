@@ -223,6 +223,9 @@ $router->get('/admin/news/national', function($req) {
 $router->post('/admin/news/national', function($req) {
     return (new NewsItemsController('NATIONAL'))->store($req);
 }, [$auth, $editorAccess]);
+$router->post('/admin/news/national/settings', function($req) {
+    return (new NewsItemsController('NATIONAL'))->updateSettings($req);
+}, [$auth, $editorAccess]);
 $router->post('/admin/news/national/{id}/update', function($req, $p) {
     return (new NewsItemsController('NATIONAL'))->update($req, $p);
 }, [$auth, $editorAccess]);
@@ -236,6 +239,9 @@ $router->get('/admin/news/international', function($req) {
 }, [$auth, $editorAccess]);
 $router->post('/admin/news/international', function($req) {
     return (new NewsItemsController('INTERNATIONAL'))->store($req);
+}, [$auth, $editorAccess]);
+$router->post('/admin/news/international/settings', function($req) {
+    return (new NewsItemsController('INTERNATIONAL'))->updateSettings($req);
 }, [$auth, $editorAccess]);
 $router->post('/admin/news/international/{id}/update', function($req, $p) {
     return (new NewsItemsController('INTERNATIONAL'))->update($req, $p);
