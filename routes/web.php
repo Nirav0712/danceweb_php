@@ -8,6 +8,7 @@ use App\Controllers\Admin\UsersController;
 use App\Controllers\Admin\PagesController;
 use App\Controllers\Admin\SectionsController;
 use App\Controllers\Admin\HeroController;
+use App\Controllers\Admin\AboutController;
 use App\Controllers\Admin\MenusController;
 use App\Controllers\Admin\MediaController;
 use App\Controllers\Admin\DanceCategoriesController;
@@ -120,6 +121,10 @@ $router->get('/admin/pages', [PagesController::class, 'index'], [$auth, $adminOr
 $router->post('/admin/pages', [PagesController::class, 'store'], [$auth, $adminOrSuper]);
 $router->post('/admin/pages/{id}/update', [PagesController::class, 'update'], [$auth, $adminOrSuper]);
 $router->post('/admin/pages/{id}/delete', [PagesController::class, 'delete'], [$auth, $adminOrSuper]);
+
+// Module 02b: Dedicated About Page Content & Sections
+$router->get('/admin/about', [AboutController::class, 'index'], [$auth, $editorAccess]);
+$router->post('/admin/about', [AboutController::class, 'update'], [$auth, $editorAccess]);
 
 // Module 03: Page Sections
 $router->get('/admin/sections', [SectionsController::class, 'index'], [$auth, $adminOrSuper]);

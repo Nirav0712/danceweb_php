@@ -387,10 +387,20 @@ class PublicController
         $page = Database::fetchOne("SELECT * FROM pages WHERE slug = 'about' LIMIT 1");
         $settings = ContentService::getSettings();
 
+        // Fetch all CMS sections for about page
+        $rawSections = [];
+        if ($page) {
+            $rawSections = Database::fetchAll("SELECT * FROM sections WHERE page_id = :pid ORDER BY sort_order ASC", ['pid' => $page['id']]);
+        }
+        $sections = [];
+        foreach ($rawSections as $sec) {
+            $sections[$sec['section_key']] = $sec;
+        }
+
         $seo = SeoService::resolve('/about', [
             'title' => $page['title'] ?? 'About Us — Dynamice Children Academy',
             'metaTitle' => $page['meta_title'] ?? 'About Academy & Founder Director Shri Tirthraj Trivedi',
-            'metaDescription' => $page['meta_description'] ?? 'Learn about the legacy of Dynamice Children Academy, founded in 1998 to train generations of children in authentic Indian cultural dance.',
+            'metaDescription' => $page['meta_description'] ?? 'Learn about the legacy of Dynamice Children Academy, founded in 2002 to train generations of children in authentic Indian cultural dance.',
         ]);
 
         return (new Response())->html(View::render('public.about', [
@@ -401,6 +411,7 @@ class PublicController
             'canonicalUrl' => $seo['canonicalUrl'],
             'associations' => $associations,
             'page' => $page,
+            'sections' => $sections,
             'settings' => $settings,
         ]));
     }
