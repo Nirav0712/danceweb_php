@@ -8,9 +8,49 @@ use App\Services\UploadService;
 
 class HeroController extends BaseAdminController
 {
+    /**
+     * Ensure the hero_slides database table exists seamlessly without manual SQL execution.
+     */
+    protected function ensureTableExists(): void
+    {
+        try {
+            Database::query("CREATE TABLE IF NOT EXISTS hero_slides (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                title VARCHAR(255) NULL,
+                image_url VARCHAR(500) NOT NULL,
+                sort_order INT DEFAULT 0,
+                is_active TINYINT(1) DEFAULT 1,
+                created_at DATETIME(3) DEFAULT CURRENT_TIMESTAMP(3),
+                updated_at DATETIME(3) DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+
+            // Seed default slides from existing website assets if newly created and empty
+            $count = (int)Database::fetchColumn("SELECT COUNT(*) FROM hero_slides");
+            if ($count === 0) {
+                $initialSlides = [
+                    ['title' => 'Academy World Record Showcase', 'image_url' => '/assets/banners/homebanner.jpg', 'sort_order' => 1],
+                    ['title' => 'Cultural Dance Troupe Performance', 'image_url' => '/assets/about/academy_group.jpg', 'sort_order' => 2],
+                    ['title' => 'Heritage Stage Grand Production', 'image_url' => '/assets/about/founded-2002-stage.jpg', 'sort_order' => 3],
+                    ['title' => 'Artistic Excellence & Rhythmic Mastery', 'image_url' => '/assets/about/dance-teaching-steps.jpg', 'sort_order' => 4],
+                    ['title' => 'Traditional Garba & Raas Heritage', 'image_url' => '/assets/gallery/1.jpg', 'sort_order' => 5],
+                ];
+                foreach ($initialSlides as $s) {
+                    Database::query(
+                        "INSERT INTO hero_slides (title, image_url, sort_order, is_active, created_at, updated_at) VALUES (:title, :image_url, :sort_order, 1, NOW(), NOW())",
+                        $s
+                    );
+                }
+            }
+        } catch (\Throwable $e) {
+            // Silently log error, do not break the whole panel
+            \App\Core\Logger::error("HeroController ensureTableExists error: " . $e->getMessage());
+        }
+    }
+
     public function index(Request $request): Response
     {
         $this->checkPermission('sections:manage');
+        $this->ensureTableExists();
 
         // 1. Fetch hero section content & heading from sections table
         $heroSection = Database::fetchOne("SELECT * FROM sections WHERE section_key = 'hero' LIMIT 1");
@@ -22,8 +62,12 @@ class HeroController extends BaseAdminController
             $heroSection = Database::fetchOne("SELECT * FROM sections WHERE section_key = 'hero' LIMIT 1");
         }
 
-        // 2. Fetch all hero slides
-        $slides = Database::fetchAll("SELECT * FROM hero_slides ORDER BY sort_order ASC, id ASC");
+        // 2. Fetch all hero slides safely
+        try {
+            $slides = Database::fetchAll("SELECT * FROM hero_slides ORDER BY sort_order ASC, id ASC");
+        } catch (\Throwable $e) {
+            $slides = [];
+        }
 
         return $this->render('admin.hero.index', [
             'title' => 'Homepage Hero Section & Slides — Dynamice CMS',
@@ -55,6 +99,7 @@ class HeroController extends BaseAdminController
     public function storeSlide(Request $request): Response
     {
         $this->checkPermission('sections:manage');
+        $this->ensureTableExists();
         $data = $request->getBody();
         $imageUrl = trim($data['image_url'] ?? '');
 
@@ -95,6 +140,7 @@ class HeroController extends BaseAdminController
     public function updateSlide(Request $request, array $params): Response
     {
         $this->checkPermission('sections:manage');
+        $this->ensureTableExists();
         $id = (int)($params['id'] ?? 0);
         $data = $request->getBody();
 
@@ -135,6 +181,7 @@ class HeroController extends BaseAdminController
     public function deleteSlide(Request $request, array $params): Response
     {
         $this->checkPermission('sections:manage');
+        $this->ensureTableExists();
         $id = (int)($params['id'] ?? 0);
 
         Database::query("DELETE FROM hero_slides WHERE id = :id", ['id' => $id]);

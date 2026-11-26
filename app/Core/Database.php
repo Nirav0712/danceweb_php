@@ -88,6 +88,11 @@ class Database
         return $res === false ? null : $res;
     }
 
+    public static function fetchColumn(string $sql, array $params = []): mixed
+    {
+        return static::query($sql, $params)->fetchColumn();
+    }
+
     public static function lastInsertId(): string
     {
         return static::getConnection()->lastInsertId();
