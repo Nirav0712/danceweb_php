@@ -244,26 +244,31 @@ $ctaUrl = $mapData['cta_url'] ?? ($isNational ? '/journey/international' : '/jou
                 <input type="text" name="festival_name" placeholder="e.g. Rashtriya Lok Utsav" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:border-indigo-500">
             </div>
 
-            <div class="grid grid-cols-2 gap-3">
-                <div>
+            <div class="grid grid-cols-3 gap-3">
+                <div class="col-span-2">
                     <label class="block text-xs font-semibold text-slate-700 mb-1">Country *</label>
-                    <input type="text" name="country" value="<?= $isNational ? 'India' : '' ?>" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:border-indigo-500">
+                    <input type="text" name="country" value="<?= $isNational ? 'India' : '' ?>" required placeholder="e.g. <?= $isNational ? 'India' : 'Turkey' ?>" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:border-indigo-500 font-bold">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">City / State</label>
-                    <input type="text" name="city" placeholder="e.g. New Delhi" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:border-indigo-500">
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Country Code</label>
+                    <input type="text" name="country_code" value="<?= $isNational ? 'IN' : '' ?>" maxlength="4" placeholder="e.g. TR" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:border-indigo-500 font-mono uppercase">
                 </div>
             </div>
 
             <div class="grid grid-cols-2 gap-3">
                 <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">City / State</label>
+                    <input type="text" name="city" placeholder="e.g. <?= $isNational ? 'New Delhi' : 'Istanbul' ?>" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:border-indigo-500">
+                </div>
+                <div>
                     <label class="block text-xs font-semibold text-slate-700 mb-1">Year *</label>
                     <input type="number" name="year" value="<?= date('Y') ?>" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:border-indigo-500">
                 </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Artists / Participants Count</label>
-                    <input type="number" name="participants_count" placeholder="e.g. 40" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:border-indigo-500">
-                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Artists / Participants Count</label>
+                <input type="number" name="participants_count" placeholder="e.g. 40" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:border-indigo-500">
             </div>
 
             <div>
@@ -314,26 +319,31 @@ $ctaUrl = $mapData['cta_url'] ?? ($isNational ? '/journey/international' : '/jou
                 <input type="text" id="edit_j_festival_name" name="festival_name" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:border-indigo-500">
             </div>
 
-            <div class="grid grid-cols-2 gap-3">
-                <div>
+            <div class="grid grid-cols-3 gap-3">
+                <div class="col-span-2">
                     <label class="block text-xs font-semibold text-slate-700 mb-1">Country *</label>
-                    <input type="text" id="edit_j_country" name="country" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:border-indigo-500">
+                    <input type="text" id="edit_j_country" name="country" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:border-indigo-500 font-bold">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">City / State</label>
-                    <input type="text" id="edit_j_city" name="city" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:border-indigo-500">
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Country Code</label>
+                    <input type="text" id="edit_j_country_code" name="country_code" maxlength="4" placeholder="e.g. TR" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:border-indigo-500 font-mono uppercase">
                 </div>
             </div>
 
             <div class="grid grid-cols-2 gap-3">
                 <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">City / State</label>
+                    <input type="text" id="edit_j_city" name="city" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:border-indigo-500">
+                </div>
+                <div>
                     <label class="block text-xs font-semibold text-slate-700 mb-1">Year *</label>
                     <input type="number" id="edit_j_year" name="year" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:border-indigo-500">
                 </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Artists / Participants Count</label>
-                    <input type="number" id="edit_j_participants_count" name="participants_count" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:border-indigo-500">
-                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Artists / Participants Count</label>
+                <input type="number" id="edit_j_participants_count" name="participants_count" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:border-indigo-500">
             </div>
 
             <div>
@@ -373,6 +383,7 @@ function editJourney(item, actionUrl) {
     document.getElementById('edit_j_title').value = item.title || '';
     document.getElementById('edit_j_festival_name').value = item.festival_name || '';
     document.getElementById('edit_j_country').value = item.country || '';
+    document.getElementById('edit_j_country_code').value = item.country_code || '';
     document.getElementById('edit_j_city').value = item.city || '';
     document.getElementById('edit_j_year').value = item.year || new Date().getFullYear();
     document.getElementById('edit_j_participants_count').value = item.participants_count || '';

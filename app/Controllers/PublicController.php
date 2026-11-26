@@ -522,13 +522,22 @@ class PublicController
 
     public function internationalJourney(Request $request): Response
     {
-        $events = Database::fetchAll("SELECT * FROM journey_events WHERE event_type = 'INTERNATIONAL' ORDER BY sort_order ASC");
+        $events = Database::fetchAll("SELECT * FROM journey_events WHERE event_type = 'INTERNATIONAL' ORDER BY year DESC, sort_order ASC, id DESC");
         $page = Database::fetchOne("SELECT * FROM pages WHERE slug = 'journey-international' LIMIT 1");
 
+        $rawSections = [];
+        if (!empty($page['id'])) {
+            $rawSections = Database::fetchAll("SELECT * FROM sections WHERE page_id = :page_id", ['page_id' => $page['id']]);
+        }
+        $sections = [];
+        foreach ($rawSections as $sec) {
+            $sections[$sec['section_key']] = $sec;
+        }
+
         $seo = SeoService::resolve('/journey/international', [
-            'title' => $page['title'] ?? 'International Journey — World Cultural Tours',
-            'metaTitle' => $page['meta_title'] ?? 'International Folk Dance Tours — Turkey, Europe & Beyond',
-            'metaDescription' => $page['meta_description'] ?? 'Representing India at the Golden Carnation International Folk Dance Competition and world cultural festivals.',
+            'title' => $page['title'] ?? 'International Journey',
+            'metaTitle' => $page['meta_title'] ?? 'International Journey — Global Representation Across 15+ Nations',
+            'metaDescription' => $page['meta_description'] ?? 'Participated in international folklore festivals in the last 12 years all over the world, representing Indian heritage with UNESCO partner affiliations.',
         ]);
 
         return (new Response())->html(View::render('public.journey_intl', [
@@ -537,6 +546,8 @@ class PublicController
             'metaTitle' => $seo['metaTitle'],
             'metaDescription' => $seo['metaDescription'],
             'canonicalUrl' => $seo['canonicalUrl'],
+            'page' => $page,
+            'sections' => $sections,
             'events' => $events,
         ]));
     }
