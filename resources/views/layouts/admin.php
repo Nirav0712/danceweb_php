@@ -18,9 +18,7 @@ $navSections = [
         ['label' => 'Navigation Menus', 'url' => '/admin/navigation', 'icon' => 'menu', 'permission' => 'menus:manage'],
         ['label' => 'Media Library', 'url' => '/admin/media', 'icon' => 'image', 'permission' => 'media:view'],
     ],
-    'Curriculum & Records' => [
-        ['label' => 'Dance Categories', 'url' => '/admin/dance-categories', 'icon' => 'sparkles', 'permission' => 'dance_forms:manage'],
-        ['label' => 'Dance Forms', 'url' => '/admin/dance-forms', 'icon' => 'book-open', 'permission' => 'dance_forms:manage'],
+    'Gallery & Records' => [
         ['label' => 'Photo Gallery', 'url' => '/admin/gallery', 'icon' => 'image', 'permission' => 'gallery:view'],
         ['label' => 'Awards & Records', 'url' => '/admin/awards', 'icon' => 'award', 'permission' => 'awards:manage'],
         ['label' => 'Affiliations', 'url' => '/admin/associations', 'icon' => 'heart-handshake', 'permission' => 'associations:manage'],

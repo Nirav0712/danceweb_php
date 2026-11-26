@@ -355,33 +355,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 
-<!-- Dance Categories & Curriculum -->
-<section class="py-20 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center max-w-2xl mx-auto mb-16 space-y-3">
-            <span class="text-xs font-bold text-amber-600 uppercase tracking-widest">Training Curriculum</span>
-            <h2 class="font-serif text-3xl sm:text-4xl font-bold text-slate-900">Disciplines We Teach</h2>
-            <p class="text-slate-500 text-sm">From traditional Raas-Garba to classical foundations and contemporary fusion.</p>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            <?php foreach ($categories as $cat): ?>
-                <div class="group bg-slate-50 rounded-2xl border border-slate-200/80 overflow-hidden hover:shadow-lg transition-all transform hover:-translate-y-1">
-                    <div class="h-48 overflow-hidden bg-slate-200">
-                        <img src="<?= htmlspecialchars($cat['cover_image_url'] ?? '/assets/homepage/default_cat.jpg', ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars($cat['name'], ENT_QUOTES, 'UTF-8') ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
-                    </div>
-                    <div class="p-6 space-y-3">
-                        <h3 class="font-serif font-bold text-lg text-slate-900 group-hover:text-amber-600 transition-colors">
-                            <?= htmlspecialchars($cat['name'], ENT_QUOTES, 'UTF-8') ?>
-                        </h3>
-                        <p class="text-slate-600 text-xs leading-relaxed">
-                            <?= htmlspecialchars($cat['description'] ?? 'Comprehensive training modules structured for beginner and advanced students.', ENT_QUOTES, 'UTF-8') ?>
-                        </p>
-                    </div>
-                </div>
-            <?php endforeach; ?>
-        </div>
-    </div>
-</section>
+
 
 <!-- World Tour Flags Carousel -->
 <?php if (!empty($tourFlags)): ?>
