@@ -32,13 +32,9 @@ $currentUri = $_SERVER['REQUEST_URI'] ?? '/';
 <header class="bg-white/95 backdrop-blur-md sticky top-0 z-50 border-b border-slate-200/80 shadow-xs w-full">
     <div class="w-full px-3 sm:px-6 lg:px-8 xl:px-12">
         <div class="flex items-center justify-between h-20">
-            <!-- Brand Logo -->
-            <a href="/" class="flex items-center gap-3 group">
-                <img src="/logodance.png" alt="Dynamice Children Academy Logo" class="h-12 w-auto object-contain transform group-hover:scale-105 transition-transform">
-                <div class="hidden sm:block">
-                    <span class="font-serif font-bold text-slate-900 text-lg leading-tight block">Dynamice Children Academy</span>
-                    <span class="text-[10px] uppercase font-bold tracking-widest text-amber-600 block">Excellence in Dance Since 1998</span>
-                </div>
+            <!-- Brand Logo (Only Logo) -->
+            <a href="/" class="flex items-center group">
+                <img src="/logodance.png" alt="Dynamice Children Academy Logo" class="h-12 sm:h-14 w-auto object-contain transform group-hover:scale-105 transition-transform">
             </a>
 
             <!-- Desktop Navigation Links -->

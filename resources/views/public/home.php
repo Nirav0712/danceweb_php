@@ -14,7 +14,7 @@ ob_start();
     ];
     ?>
     <!-- Full-Width Slider Container -->
-    <div class="relative w-full h-[320px] sm:h-[450px] md:h-[550px] lg:h-[680px] select-none" id="hero-carousel-container" aria-label="Hero Image Banner">
+    <div class="relative w-full h-[360px] sm:h-[480px] md:h-[600px] lg:h-[740px] xl:h-[800px] select-none" id="hero-carousel-container" aria-label="Hero Image Banner">
         <!-- Slides Track -->
         <div id="hero-slider-track" class="w-full h-full relative overflow-hidden">
             <?php foreach ($slides as $index => $item): ?>
@@ -57,8 +57,8 @@ ob_start();
 </section>
 
 <!-- Heading Immediately Below Hero -->
-<section class="bg-white py-8 sm:py-12 border-b border-slate-100">
-    <div class="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 text-center space-y-2">
+<section class="bg-white py-4 sm:py-6 border-b border-slate-100">
+    <div class="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 text-center space-y-1 sm:space-y-1.5">
         <?php
         $rawHeading = trim($sections['hero']['heading'] ?? 'Culture Is a Way of Life');
         // If the heading is "Culture Is a Way of Life", style "Way of Life" in amber
