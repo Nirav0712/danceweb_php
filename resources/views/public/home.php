@@ -88,7 +88,7 @@ ob_start();
 </section>
 
 <!-- Academy Stats Counter Bar -->
-<section class="bg-amber-600 text-white py-8 border-y border-amber-700 shadow-inner">
+<!-- <section class="bg-amber-600 text-white py-8 border-y border-amber-700 shadow-inner">
     <div class="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center divide-y md:divide-y-0 md:divide-x divide-amber-500/40">
             <div class="pt-2 md:pt-0">
@@ -109,7 +109,7 @@ ob_start();
             </div>
         </div>
     </div>
-</section>
+</section> -->
 
 <!-- Academy Curriculum & Visual Archive (Services, Disciplines & Stage Moments) -->
 <section id="curriculum-disciplines" class="py-12 sm:py-20 bg-slate-50 border-t border-b border-slate-200/60 w-full overflow-hidden">
