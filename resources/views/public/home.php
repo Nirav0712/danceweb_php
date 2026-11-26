@@ -58,7 +58,7 @@ ob_start();
 
 <!-- Heading Immediately Below Hero -->
 <section class="bg-white py-8 sm:py-12 border-b border-slate-100">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-2">
+    <div class="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 text-center space-y-2">
         <?php
         $rawHeading = trim($sections['hero']['heading'] ?? 'Culture Is a Way of Life');
         // If the heading is "Culture Is a Way of Life", style "Way of Life" in amber
@@ -89,7 +89,7 @@ ob_start();
 
 <!-- Academy Stats Counter Bar -->
 <section class="bg-amber-600 text-white py-8 border-y border-amber-700 shadow-inner">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center divide-y md:divide-y-0 md:divide-x divide-amber-500/40">
             <div class="pt-2 md:pt-0">
                 <span class="font-serif text-3xl sm:text-4xl font-bold block mb-1">25+</span>
@@ -112,10 +112,10 @@ ob_start();
 </section>
 
 <!-- Academy Curriculum & Visual Archive (Services, Disciplines & Stage Moments) -->
-<section id="curriculum-disciplines" class="py-16 sm:py-24 bg-slate-50 border-t border-b border-slate-200/60">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<section id="curriculum-disciplines" class="py-12 sm:py-20 bg-slate-50 border-t border-b border-slate-200/60">
+    <div class="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6">
         <!-- Section Header -->
-        <div class="text-center max-w-3xl mx-auto mb-10 sm:mb-14 space-y-3">
+        <div class="text-center max-w-3xl mx-auto mb-8 sm:mb-12 space-y-3">
             <span class="inline-block text-xs font-bold tracking-widest uppercase px-3 py-1 bg-amber-100 text-amber-800 rounded-full">
                 ACADEMY CURRICULUM & VISUAL ARCHIVE
             </span>
@@ -128,8 +128,8 @@ ob_start();
         </div>
 
         <!-- 7 Category Pill Tabs -->
-        <div class="mb-10 sm:mb-12">
-            <div class="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3" role="tablist" aria-label="Curriculum & Discipline Categories" id="discipline-tablist">
+        <div class="mb-8 sm:mb-10">
+            <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5" role="tablist" aria-label="Curriculum & Discipline Categories" id="discipline-tablist">
                 <?php
                 $tabColors = [
                     'service' => ['active' => 'bg-rose-600 text-white shadow-rose-200 border-rose-600', 'hover' => 'hover:border-rose-300 hover:text-rose-600'],
@@ -154,7 +154,7 @@ ob_start();
                     aria-controls="panel-<?= htmlspecialchars($key, ENT_QUOTES, 'UTF-8') ?>"
                     aria-selected="<?= $isActive ? 'true' : 'false' ?>"
                     tabindex="<?= $isActive ? '0' : '-1' ?>"
-                    class="discipline-tab-btn px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold tracking-wide uppercase transition-all duration-200 border shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 <?= $isActive ? $color['active'] . ' shadow-md' : 'bg-white text-slate-700 border-slate-200 ' . $color['hover'] ?>"
+                    class="discipline-tab-btn px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold tracking-wide uppercase transition-all duration-200 border shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 <?= $isActive ? $color['active'] . ' shadow-md' : 'bg-white text-slate-700 border-slate-200 ' . $color['hover'] ?>"
                 >
                     <?= htmlspecialchars($d['tabLabel'], ENT_QUOTES, 'UTF-8') ?>
                 </button>
@@ -166,7 +166,7 @@ ob_start();
         </div>
 
         <!-- Dynamic Category Content Panels -->
-        <div class="relative max-w-5xl mx-auto" id="discipline-panels-container">
+        <div class="relative max-w-6xl mx-auto" id="discipline-panels-container">
             <?php
             $panelIndex = 0;
             foreach ($disciplines as $key => $d):
@@ -181,7 +181,7 @@ ob_start();
                 <!-- Color Accent Bar -->
                 <div class="h-2 w-full bg-gradient-to-r <?= htmlspecialchars($d['accentGradient'], ENT_QUOTES, 'UTF-8') ?>"></div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center p-6 sm:p-10 lg:p-12">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center p-5 sm:p-7 lg:p-8">
                     <!-- Left Column: Content -->
                     <div class="lg:col-span-7 space-y-5">
                         <div class="space-y-1.5">
