@@ -72,14 +72,32 @@ class DanceCategoriesController extends BaseAdminController
     {
         $this->checkPermission('dance_forms:manage');
         $id = (int)($params['id'] ?? 0);
-        // Check if referenced in dance_forms
-        $count = Database::fetchOne('SELECT COUNT(*) as c FROM dance_forms WHERE category_id = :id', ['id' => $id])['c'] ?? 0;
-        if ($count > 0) {
-            return $this->redirect('/admin/dance-categories', null, 'Cannot delete category: forms are assigned to it.');
+
+        $category = Database::fetchOne('SELECT * FROM dance_categories WHERE id = :id', ['id' => $id]);
+        if (!$category) {
+            return $this->redirect('/admin/dance-categories', null, 'Category not found.');
         }
 
-        Database::query('DELETE FROM dance_categories WHERE id = :id', ['id' => $id]);
-        $this->logAudit('DELETE', 'DanceCategory', (string)$id);
-        return $this->redirect('/admin/dance-categories', 'Category deleted successfully.');
+        try {
+            Database::beginTransaction();
+
+            // 1. Delete associated dance_forms for this category to cleanly satisfy foreign key constraints
+            Database::query('DELETE FROM dance_forms WHERE category_id = :id', ['id' => $id]);
+
+            // 2. Unlink any gallery items that were tagged with this category (set to NULL so photos are preserved)
+            Database::query('UPDATE gallery_items SET category_id = NULL WHERE category_id = :id', ['id' => $id]);
+
+            // 3. Delete the category itself
+            Database::query('DELETE FROM dance_categories WHERE id = :id', ['id' => $id]);
+
+            Database::commit();
+
+            $this->logAudit('DELETE', 'DanceCategory', (string)$id, ['name' => $category['name']]);
+            return $this->redirect('/admin/dance-categories', 'Category "' . htmlspecialchars($category['name'], ENT_QUOTES, 'UTF-8') . '" deleted successfully.');
+        } catch (\Throwable $e) {
+            Database::rollBack();
+            \App\Core\Logger::error("DanceCategoriesController delete error: " . $e->getMessage());
+            return $this->redirect('/admin/dance-categories', null, 'Error deleting category: ' . $e->getMessage());
+        }
     }
 }

@@ -97,4 +97,19 @@ class Database
     {
         return static::getConnection()->lastInsertId();
     }
+
+    public static function beginTransaction(): bool
+    {
+        return static::getConnection()->beginTransaction();
+    }
+
+    public static function commit(): bool
+    {
+        return static::getConnection()->commit();
+    }
+
+    public static function rollBack(): bool
+    {
+        return static::getConnection()->rollBack();
+    }
 }
