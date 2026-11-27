@@ -56,28 +56,49 @@ ob_start();
     </div>
 </section>
 
-<!-- Heading Immediately Below Hero -->
-<section class="bg-white py-4 sm:py-6 border-b border-slate-100">
+<!-- Heading Immediately Below Hero (CMS Dynamic Rotating Heading) -->
+<section class="bg-white py-4 sm:py-6 border-b border-slate-100" id="hero-heading-section">
     <div class="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 text-center space-y-1 sm:space-y-1.5">
         <?php
-        $rawHeading = trim($sections['hero']['heading'] ?? 'Culture Is a Way of Life');
-        // If the heading is "Culture Is a Way of Life", style "Way of Life" in amber
-        if (stripos($rawHeading, 'Culture Is a Way of Life') !== false) {
-            $formattedHeading = 'Culture Is a <span class="text-amber-500 font-extrabold">Way of Life</span>';
+        $rawHeading = trim($sections['hero']['heading'] ?? 'Empowering Young Minds Through');
+        if (empty($rawHeading) || $rawHeading === 'Culture Is a Way of Life') {
+            $fixedHeading = 'Empowering Young Minds Through';
         } else {
-            // General case: preserve custom heading entered in admin panel
-            $parts = explode(' ', $rawHeading);
-            if (count($parts) > 2) {
-                $lastTwo = array_slice($parts, -2);
-                $initial = array_slice($parts, 0, -2);
-                $formattedHeading = htmlspecialchars(implode(' ', $initial), ENT_QUOTES, 'UTF-8') . ' <span class="text-amber-500 font-extrabold">' . htmlspecialchars(implode(' ', $lastTwo), ENT_QUOTES, 'UTF-8') . '</span>';
-            } else {
-                $formattedHeading = htmlspecialchars($rawHeading, ENT_QUOTES, 'UTF-8');
+            $fixedHeading = $rawHeading;
+        }
+
+        $phrasesList = [];
+        if (!empty($heroPhrases)) {
+            foreach ($heroPhrases as $p) {
+                if (is_array($p) && !empty($p['phrase'])) {
+                    $phrasesList[] = trim($p['phrase']);
+                } elseif (is_string($p) && !empty($p)) {
+                    $phrasesList[] = trim($p);
+                }
             }
         }
+        if (empty($phrasesList)) {
+            $phrasesList = ['Indian Dance', 'Classical Dance', 'Cultural Excellence', 'Artistic Expression', 'Creative Learning'];
+        }
+
+        $initialPhrase = $phrasesList[0] ?? 'Indian Dance';
+        $durationSeconds = isset($heroRotationDuration) ? max(2, min(15, (int)$heroRotationDuration)) : 3;
+        $transitionMode = isset($heroTransitionStyle) && in_array($heroTransitionStyle, ['slide-fade', 'fade', 'slide-up'], true) ? $heroTransitionStyle : 'slide-fade';
         ?>
-        <h2 class="font-serif text-2xl sm:text-[26px] font-bold text-slate-800 tracking-tight leading-snug">
-            <?= $formattedHeading ?>
+        <h2 class="font-serif text-2xl sm:text-[26px] font-bold text-slate-800 tracking-tight leading-snug"
+            id="hero-rotating-heading"
+            data-phrases="<?= htmlspecialchars(json_encode(array_values($phrasesList)), ENT_QUOTES, 'UTF-8') ?>"
+            data-duration="<?= $durationSeconds ?>"
+            data-transition="<?= htmlspecialchars($transitionMode, ENT_QUOTES, 'UTF-8') ?>"
+            aria-label="<?= htmlspecialchars($fixedHeading . ' ' . $initialPhrase, ENT_QUOTES, 'UTF-8') ?>">
+            <span class="hero-fixed-heading"><?= htmlspecialchars($fixedHeading, ENT_QUOTES, 'UTF-8') ?></span>
+            <span class="hero-phrase-wrapper inline-flex items-baseline justify-center relative overflow-hidden align-baseline ml-1 sm:ml-1.5" id="hero-phrase-wrapper">
+                <span class="hero-dynamic-phrase text-amber-500 font-extrabold inline-block transition-all duration-300 transform-gpu"
+                      id="hero-dynamic-phrase"
+                      aria-live="polite">
+                    <?= htmlspecialchars($initialPhrase, ENT_QUOTES, 'UTF-8') ?>
+                </span>
+            </span>
         </h2>
         <?php if (!empty($sections['hero']['subheading'])): ?>
         <p class="text-xs sm:text-sm text-slate-500 max-w-2xl mx-auto">
@@ -1067,6 +1088,132 @@ document.addEventListener('DOMContentLoaded', function () {
     renderDots();
     updateSlideVisibility();
     startAutoPlay();
+});
+
+// Dynamic CMS Hero Heading Rotator (Fade / Slide-Fade / Slide-Up)
+document.addEventListener('DOMContentLoaded', function() {
+    const headingEl = document.getElementById('hero-rotating-heading');
+    const phraseEl = document.getElementById('hero-dynamic-phrase');
+    const wrapperEl = document.getElementById('hero-phrase-wrapper');
+    if (!headingEl || !phraseEl) return;
+
+    let phrases = [];
+    try {
+        phrases = JSON.parse(headingEl.dataset.phrases || '[]');
+    } catch (e) {
+        phrases = [];
+    }
+
+    // Clean & filter phrases
+    phrases = phrases.map(p => typeof p === 'string' ? p.trim() : '').filter(p => p.length > 0);
+    if (phrases.length <= 1) return; // Only 1 phrase: static display, no rotation required
+
+    const durationSeconds = Math.max(2, Math.min(15, parseInt(headingEl.dataset.duration, 10) || 3));
+    const intervalMs = durationSeconds * 1000;
+    const transitionStyle = (headingEl.dataset.transition || 'slide-fade').toLowerCase();
+    const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    let currentIndex = 0;
+    let rotationTimer = null;
+    let isTransitioning = false;
+
+    // Prevent layout jumps by providing fluid inline width transitions
+    function syncWrapperWidth() {
+        if (!wrapperEl || !phraseEl) return;
+        const width = phraseEl.offsetWidth;
+        if (width > 0) {
+            wrapperEl.style.minWidth = width + 'px';
+        }
+    }
+    syncWrapperWidth();
+    window.addEventListener('resize', syncWrapperWidth, { passive: true });
+
+    function rotateNextPhrase() {
+        if (isTransitioning) return;
+        isTransitioning = true;
+
+        const nextIndex = (currentIndex + 1) % phrases.length;
+        const nextPhrase = phrases[nextIndex];
+
+        if (prefersReducedMotion) {
+            // Respect reduced motion: subtle opacity crossfade
+            phraseEl.style.transition = 'opacity 250ms ease';
+            phraseEl.style.opacity = '0';
+            setTimeout(() => {
+                phraseEl.textContent = nextPhrase;
+                currentIndex = nextIndex;
+                syncWrapperWidth();
+                phraseEl.style.opacity = '1';
+                setTimeout(() => { isTransitioning = false; }, 250);
+            }, 250);
+            return;
+        }
+
+        // Animate out
+        phraseEl.style.transition = 'opacity 260ms ease, transform 260ms cubic-bezier(0.4, 0, 0.2, 1)';
+        if (transitionStyle === 'slide-fade') {
+            phraseEl.style.opacity = '0';
+            phraseEl.style.transform = 'translateY(-8px)';
+        } else if (transitionStyle === 'slide-up') {
+            phraseEl.style.opacity = '0';
+            phraseEl.style.transform = 'translateY(-14px)';
+        } else { // fade
+            phraseEl.style.opacity = '0';
+            phraseEl.style.transform = 'none';
+        }
+
+        setTimeout(() => {
+            // Update text & position below before sliding in
+            phraseEl.textContent = nextPhrase;
+            currentIndex = nextIndex;
+            syncWrapperWidth();
+
+            phraseEl.style.transition = 'none';
+            if (transitionStyle === 'slide-fade') {
+                phraseEl.style.transform = 'translateY(8px)';
+            } else if (transitionStyle === 'slide-up') {
+                phraseEl.style.transform = 'translateY(14px)';
+            } else {
+                phraseEl.style.transform = 'none';
+            }
+            phraseEl.style.opacity = '0';
+
+            // Force reflow
+            void phraseEl.offsetHeight;
+
+            // Animate in
+            phraseEl.style.transition = 'opacity 320ms ease, transform 320ms cubic-bezier(0.16, 1, 0.3, 1)';
+            phraseEl.style.opacity = '1';
+            phraseEl.style.transform = 'translateY(0)';
+
+            const fixedPart = headingEl.querySelector('.hero-fixed-heading')?.textContent || '';
+            headingEl.setAttribute('aria-label', (fixedPart + ' ' + nextPhrase).trim());
+
+            setTimeout(() => {
+                isTransitioning = false;
+            }, 320);
+        }, 260);
+    }
+
+    function startTimer() {
+        stopTimer();
+        rotationTimer = setInterval(rotateNextPhrase, intervalMs);
+    }
+
+    function stopTimer() {
+        if (rotationTimer) {
+            clearInterval(rotationTimer);
+            rotationTimer = null;
+        }
+    }
+
+    // Pause on hover for desktop accessibility and comfortable reading
+    headingEl.addEventListener('mouseenter', stopTimer);
+    headingEl.addEventListener('mouseleave', startTimer);
+    headingEl.addEventListener('focusin', stopTimer);
+    headingEl.addEventListener('focusout', startTimer);
+
+    startTimer();
 });
 </script>
 <?php

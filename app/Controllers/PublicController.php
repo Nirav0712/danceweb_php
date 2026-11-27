@@ -194,6 +194,26 @@ class PublicController
         $page = Database::fetchOne("SELECT * FROM pages WHERE slug = 'home' LIMIT 1");
         $settings = ContentService::getSettings();
 
+        // Fetch CMS-managed rotating heading phrases for hero section
+        try {
+            $heroPhrases = Database::fetchAll("SELECT * FROM hero_rotating_phrases WHERE is_active = 1 ORDER BY sort_order ASC, id ASC");
+        } catch (\Throwable $e) {
+            $heroPhrases = [];
+        }
+        if (empty($heroPhrases)) {
+            $heroPhrases = [
+                ['id' => 1, 'phrase' => 'Indian Dance', 'sort_order' => 1, 'is_active' => 1],
+                ['id' => 2, 'phrase' => 'Classical Dance', 'sort_order' => 2, 'is_active' => 1],
+                ['id' => 3, 'phrase' => 'Cultural Excellence', 'sort_order' => 3, 'is_active' => 1],
+                ['id' => 4, 'phrase' => 'Artistic Expression', 'sort_order' => 4, 'is_active' => 1],
+                ['id' => 5, 'phrase' => 'Creative Learning', 'sort_order' => 5, 'is_active' => 1],
+            ];
+        }
+
+        $heroConfig = json_decode($sections['hero']['content'] ?? '', true) ?: [];
+        $heroRotationDuration = max(2, min(15, (int)($heroConfig['rotation_duration'] ?? 3)));
+        $heroTransitionStyle = in_array($heroConfig['transition_style'] ?? '', ['slide-fade', 'fade', 'slide-up'], true) ? $heroConfig['transition_style'] : 'slide-fade';
+
         // 8. Fetch disciplines / services curriculum data (CMS-integrated with exact visual showcase fallbacks)
         $disciplines = [
             'service' => [
@@ -378,6 +398,9 @@ class PublicController
             'page' => $page,
             'disciplines' => $disciplines,
             'settings' => $settings,
+            'heroPhrases' => $heroPhrases,
+            'heroRotationDuration' => $heroRotationDuration,
+            'heroTransitionStyle' => $heroTransitionStyle,
         ]));
     }
 

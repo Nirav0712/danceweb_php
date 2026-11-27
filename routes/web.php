@@ -133,6 +133,10 @@ $router->post('/admin/sections/{id}/delete', [SectionsController::class, 'delete
 // Module 03b: Homepage Hero Section & Banners Management
 $router->get('/admin/hero', [HeroController::class, 'index'], [$auth, $adminOrSuper]);
 $router->post('/admin/hero/heading', [HeroController::class, 'updateHeading'], [$auth, $adminOrSuper]);
+$router->post('/admin/hero/phrases', [HeroController::class, 'storePhrase'], [$auth, $adminOrSuper]);
+$router->post('/admin/hero/phrases/{id}/update', [HeroController::class, 'updatePhrase'], [$auth, $adminOrSuper]);
+$router->post('/admin/hero/phrases/{id}/delete', [HeroController::class, 'deletePhrase'], [$auth, $adminOrSuper]);
+$router->post('/admin/hero/phrases/{id}/toggle', [HeroController::class, 'togglePhrase'], [$auth, $adminOrSuper]);
 $router->post('/admin/hero/slides', [HeroController::class, 'storeSlide'], [$auth, $adminOrSuper]);
 $router->post('/admin/hero/slides/{id}/update', [HeroController::class, 'updateSlide'], [$auth, $adminOrSuper]);
 $router->post('/admin/hero/slides/{id}/delete', [HeroController::class, 'deleteSlide'], [$auth, $adminOrSuper]);
